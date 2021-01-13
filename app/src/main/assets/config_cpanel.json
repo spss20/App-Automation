@@ -1,0 +1,55 @@
+{
+  "endpoint": "webpanels",
+  "method": "POST",
+  "title" : "Make Admin Panel",
+  "minimumVersionCode": 2,
+  "schema": [
+    {
+      "type" : "textview",
+      "size" : "20",
+      "text" : "Make Admin Panel",
+      "gravity" : "center"
+    } ,
+    {
+      "type": "relation",
+      "endpoint" : "cpanels",
+      "text": "Select Cpanel",
+      "id" : "cpanel",
+      "isRequired" : true
+    },
+    {
+      "type": "edittext",
+      "hint": "SubDomain",
+      "id": "subdomain",
+      "regex": "^[a-zA-Z0-9]+$",
+      "isRequired": false
+    },
+    {
+      "type": "edittext",
+      "hint": "Company Name",
+      "id": "company_name",
+      "isRequired": true
+    },
+    {
+      "type": "button",
+      "action": "pick",
+      "mimetype": "image/png",
+      "text" : "Pick Company Logo",
+      "id": "company_logo",
+      "isRequired": true
+    },
+    {
+      "type" : "relation",
+      "endpoint" : "products",
+      "text" : "Select Product",
+      "id" : "product",
+      "isRequired": true
+    },
+    {
+      "type": "button",
+      "action": "submit",
+      "text": "Make Cpanel",
+      "id": "submit"
+    }
+  ]
+}

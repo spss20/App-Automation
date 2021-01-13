@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/see_product_demo"
+        android:title="Demos"
+        android:icon="@drawable/ic_demo"
+        android:checked="false"
+        />
+    <item android:id="@+id/product_website"
+        android:title="Website"
+        android:icon="@drawable/ic_website"
+        android:checked="false"
+        />
+    <item android:id="@+id/download_brochure"
+        android:title="Brochure"
+        android:icon="@drawable/ic_pdf"
+        android:checked="false"
+        />
+    <item android:id="@+id/build_apps"
+        android:title="Build"
+        android:icon="@drawable/ic_hammer"
+        android:checked="false"
+        />
+</menu>

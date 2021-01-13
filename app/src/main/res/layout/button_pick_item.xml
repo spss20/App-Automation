@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ssoftwares.appmaker.modals.DynamicLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/pick_bt"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTint="@color/black"
+        android:text="Pick Image"
+        app:icon="@drawable/ic_add" />
+
+    <TextView
+        android:id="@+id/file_name_tv"
+        android:layout_width="match_parent"
+        android:text="Nothing Selected"
+        android:paddingStart="10dp"
+        android:textSize="15sp"
+        android:gravity="start|center_vertical"
+        android:layout_height="match_parent"
+        android:textColor="@color/textBlack"
+        />
+
+</com.ssoftwares.appmaker.modals.DynamicLinearLayout>

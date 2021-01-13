@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:clickable="true"
+    android:foreground="?selectableItemBackground"
+    android:layout_height="100dp">
+
+    <ImageView
+        android:id="@+id/product_image"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/product_placeholder" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/lightestSkyBlue"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/product_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="sikarwarsoftwares.com"
+            style="@style/MediumTextBold"
+            android:layout_marginTop="10dp"
+            android:textAllCaps="true"
+            />
+
+        <TextView
+            android:id="@+id/product_short_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="User, Driver, Vendor App + Admin Panel"
+            style="@style/RegularText"
+            android:fontFamily="@font/muli_semibold"
+            android:layout_below="@+id/product_name"
+            />
+
+        <TextView
+            android:id="@+id/product_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Web Applications"
+            style="@style/RegularText"
+            android:textSize="14sp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="7dp"
+            />
+    </RelativeLayout>
+</LinearLayout>

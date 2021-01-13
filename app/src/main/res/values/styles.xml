@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="HeadingText">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/muli_bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="MediumTextBold">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/muli_bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="RegularText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/muli</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="BigHeadingtext">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/muli_bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+</resources>

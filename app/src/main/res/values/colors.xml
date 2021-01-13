@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#eb4c4c</color>
+    <color name="colorPrimaryLight">#f98166</color>
+    <color name="black">#FF000000</color>
+    <color name="textBlack" >#3a3b3c</color>
+    <color name="textBlue">#FF0D1333</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="textHintBlack">#8f9193</color>
+    <color name="lightestGrey">#edecec</color>
+    <color name="searchBoxGrey">#FFF5F5F7</color>
+    <color name="grey">#9E9E9E</color>
+    <color name="textBlueColor">#FF6E8AFA</color>
+    <color name="tranparentBlack">#66000000</color>
+    <color name="darkBlue">#23313f</color>
+    <color name="lightestSkyBlue">#e9ecef</color>
+    <color name="tranparentBlue">#66536DFE</color>
+</resources>

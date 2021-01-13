@@ -1,0 +1,65 @@
+{
+  "endpoint" : "webapps" ,
+  "method" : "POST",
+  "title" : "Create User App",
+  "minimumVersionCode" : 2,
+  "schema": [
+    {
+      "type" : "textview",
+      "size" : "20",
+      "text" : "Customer App",
+      "gravity" : "center"
+    } ,
+    {
+      "type" : "edittext",
+      "hint" : "App Name",
+      "id" : "appname",
+      "regex" : "^([a-zA-Z0-9_\\s])?$",
+      "isRequired" : true
+    } ,
+    {
+      "type" : "button" ,
+      "action" : "pick" ,
+      "mimetype" : "image/png",
+      "text" : "Pick App Icon" ,
+      "isRequired" : true,
+      "id" : "icon"
+    },
+    {
+      "type" : "edittext",
+      "hint" : "Package Name",
+      "id" : "package",
+      "regex" : "^([a-z0-9\\.])?$",
+      "stringregex" : "^([A-Za-z]{1}[A-Za-z\\d_]*\\.)+[A-Za-z][A-Za-z\\d_]*$",
+      "isRequired" : true
+    } ,
+    {
+      "type" : "edittext",
+      "hint" : "Website Url",
+      "id" : "website",
+      "stringregex" : "^(https?:\\/\\/)?([\\w\\d-_]+)\\.([\\w\\d-_\\.]+)\\/?\\??([^#\\n\\r]*)?#?([^\\n\\r]*)",
+      "isRequired" : true
+    } ,
+    {
+      "type" : "edittext",
+      "hint" : "Version Code (optional)",
+      "id" : "version_code",
+      "regex" : "[0-9]*",
+      "isRequired" : false
+    } ,
+    {
+      "type" : "edittext",
+      "hint" : "Version Name (optional)",
+      "id" : "version_name",
+      "regex" : "[0-9\\.]*",
+      "stringregex" : "^\\d+\\.\\d+?",
+      "isRequired" : false
+    } ,
+    {
+      "type" : "button" ,
+      "action" : "submit" ,
+      "text" : "Build App" ,
+      "id" : "submit"
+    }
+  ]
+}

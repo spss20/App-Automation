@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AppMaker</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="open">Drawer Opened</string>
+    <string name="close">Drawer Closed</string>
+    <string name="demo_text_placeholder">Login Credentials: \nemail: sppro.20@gmail.com \npass: hello123456</string>
+</resources>
