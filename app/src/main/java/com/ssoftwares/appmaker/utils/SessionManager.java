@@ -58,7 +58,8 @@ public class SessionManager {
     }
 
     public String getToken(){
-        return "Bearer " + preferences.getString("token" , null);
+        String token = preferences.getString("token" , null);
+        return token != null ? "Bearer " + token : null;
     }
 
     public void logout() {

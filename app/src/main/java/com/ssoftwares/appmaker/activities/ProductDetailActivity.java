@@ -57,9 +57,7 @@ public class ProductDetailActivity extends AppCompatActivity implements BottomNa
         productDescription.setOpenUrlInBrowser(true);
         if (product == null) {
             String id = getIntent().getStringExtra("product_id");
-            String name = getIntent().getStringExtra("name");
-            id = "1";
-            name = "Web application";
+            String name = getIntent().getStringExtra("product_name");
             getProduct(id);
             getSupportActionBar().setTitle(name);
         } else {

@@ -70,7 +70,10 @@ public class BuilderActivity extends AppCompatActivity {
 
         service = ApiClient.create();
         sessionManager = new SessionManager(this);
-
+        if (sessionManager.getToken() == null){
+            startActivity(new Intent(this , LoginActivity.class));
+            return;
+        }
 //        try {
 //            InputStream jsonInputStream = getAssets().open("config_cpanel.json");
 //            rootJson = new JSONObject(IOUtils.toString(jsonInputStream, "UTF-8"));
@@ -262,9 +265,9 @@ public class BuilderActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                            if (element.has("mimetype")) {
+                            if (element.has("mime")) {
                                 try {
-                                    intent.setType(element.getString("mimetype"));
+                                    intent.setType(element.getString("mime"));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -421,7 +424,7 @@ public class BuilderActivity extends AppCompatActivity {
         RequestBody dataBody = ApiClient.createPartFromString(data.toString());
 
         ApiService service = ApiClient.create();
-        service.createEntry(endpoint, dataBody, filesBodyList)
+        service.createEntry(sessionManager.getToken() , endpoint, dataBody, filesBodyList)
                 .enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

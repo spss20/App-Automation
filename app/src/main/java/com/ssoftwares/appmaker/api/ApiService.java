@@ -35,12 +35,10 @@ public interface ApiService {
             @Field("password") String password
     );
 
-    @Headers({
-            "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjA5MzA3ODM4LCJleHAiOjE2MTE4OTk4Mzh9.3-jvv-nKTFbJvqxoSqIyNFJrECGAFHmhAhUc2WqR1Ho"
-    })
     @Multipart
     @POST("{endpoint}")
     Call<JsonObject> createEntry(
+            @Header("Authorization") String token,
             @Path("endpoint") String endpoint,
             @Part("data") RequestBody data,
             @Part List<MultipartBody.Part> files
