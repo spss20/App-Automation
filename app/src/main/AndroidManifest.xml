@@ -23,7 +23,6 @@
         <activity android:name=".activities.MyCpanels" android:theme="@style/Theme.AppMaker.ActionBar">
 
         </activity>
-        <activity android:name=".activities.CreateCpanel" />
         <activity android:name=".activities.LoginActivity" />
         <activity
             android:name=".activities.ProductDemoActivity"
@@ -31,12 +30,15 @@
         <activity android:name=".activities.SubProductsActivity" />
         <activity
             android:name=".activities.ProductDetailActivity"
-            android:theme="@style/Theme.AppMaker.ActionBar" />
+            android:theme="@style/Theme.AppMaker.ActionBar" >
+
+        </activity>
         <activity android:name=".activities.ProductsActivity" />
         <activity android:name=".activities.BuilderActivity">
 
         </activity>
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.MainActivity"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

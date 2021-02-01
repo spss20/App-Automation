@@ -23,6 +23,7 @@ import com.ssoftwares.appmaker.api.ApiClient;
 import com.ssoftwares.appmaker.api.ApiService;
 import com.ssoftwares.appmaker.custom.MarkdownView;
 import com.ssoftwares.appmaker.modals.Product;
+import com.ssoftwares.appmaker.utils.SessionManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,32 +40,23 @@ public class ProductDetailActivity extends AppCompatActivity implements BottomNa
     ApiService service;
     ProductBannerAdapter adapter;
     MarkdownView productDescription;
+    BottomNavigationView productPageNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
-        product = (Product) getIntent().getParcelableExtra("data");
+        product = (Product) getIntent().getSerializableExtra("data");
         service = ApiClient.create();
 
         ViewPager2 viewPager = findViewById(R.id.viewpager);
         productDescription = findViewById(R.id.product_desc);
-        FloatingActionButton buildApps = findViewById(R.id.build_apps);
-        FloatingActionButton seeDemos = findViewById(R.id.see_product_demo);
-        FloatingActionButton downloadDescription = findViewById(R.id.download_description);
+
+        productPageNav = findViewById(R.id.product_page_nav);
+        productPageNav.setOnNavigationItemSelectedListener(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         productDescription.setOpenUrlInBrowser(true);
-        if (product == null) {
-            String id = getIntent().getStringExtra("product_id");
-            String name = getIntent().getStringExtra("product_name");
-            getProduct(id);
-            getSupportActionBar().setTitle(name);
-        } else {
-            getSupportActionBar().setTitle(product.getName());
-            updateMarkdown(product.getDescription());
-        }
-
 
         adapter = new ProductBannerAdapter(this, product != null ? product.getImages() : new ArrayList<>());
         viewPager.setAdapter(adapter);
@@ -74,9 +66,28 @@ public class ProductDetailActivity extends AppCompatActivity implements BottomNa
         indicator.setViewPager(viewPager);
         adapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
 
-        BottomNavigationView productPageNav = findViewById(R.id.product_page_nav);
-        productPageNav.setOnNavigationItemSelectedListener(this);
+        if (product == null) {
+            String id = getIntent().getStringExtra("product_id");
+            String name = getIntent().getStringExtra("product_name");
+//            id = "1";
+//            name = "Web Application";
+            getProduct(id);
+            getSupportActionBar().setTitle(name);
+        } else {
+           init();
+        }
 
+    }
+
+    private void init() {
+        getSupportActionBar().setTitle(product.getName());
+        updateMarkdown(product.getDescription());
+        adapter.updateData(product.getImages());
+        if (product.isAutomated())
+            productPageNav.getMenu().findItem(R.id.build_apps).setVisible(true);
+
+        if (product.getBrochure() != null)
+            productPageNav.getMenu().findItem(R.id.download_brochure).setVisible(true);
     }
 
     private void updateMarkdown(String d) {
@@ -97,8 +108,7 @@ public class ProductDetailActivity extends AppCompatActivity implements BottomNa
             public void onResponse(@NotNull Call<Product> call, @NotNull Response<Product> response) {
                 if (response.body() != null) {
                     product = response.body();
-                    adapter.updateData(product.getImages());
-                    updateMarkdown(product.getDescription());
+                    init();
                 } else {
                     Toast.makeText(ProductDetailActivity.this, "Cannot fetch product details", Toast.LENGTH_SHORT).show();
                 }
@@ -147,12 +157,17 @@ public class ProductDetailActivity extends AppCompatActivity implements BottomNa
                 //download brochure
                 break;
             case R.id.build_apps:
-                intent = new Intent(ProductDetailActivity.this, SubProductsActivity.class);
-                intent.putExtra("product_id", product.getId());
-                intent.putExtra("product_name", product.getName());
-                startActivity(intent);
+                if (new SessionManager(this).getToken() != null) {
+                    intent = new Intent(ProductDetailActivity.this, SubProductsActivity.class);
+                    intent.putExtra("product_id", product.getId());
+                    intent.putExtra("product_name", product.getName());
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(ProductDetailActivity.this , LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
         }
-        return false;
+        return true;
     }
 }

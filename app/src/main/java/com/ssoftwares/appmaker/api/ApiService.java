@@ -82,4 +82,10 @@ public interface ApiService {
             @Query("user_id") String user_id
     );
 
+    @GET("cpanels/{id}")
+    Call<Cpanel> getSingleCpanel(
+            @Header("Authorization") String token,
+            @Path("id") String id
+    );
+
 }

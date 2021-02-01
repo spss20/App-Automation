@@ -26,6 +26,11 @@
             android:checkable="false"
             android:icon="@drawable/ic_cpanel"
             />
+        <item android:id="@+id/clear_cache"
+            android:title="Clear Cache"
+            android:checkable="false"
+            android:icon="@drawable/ic_clear_cache"
+            />
      <item android:id="@+id/logout"
          android:title="Log In"
          android:checkable="false"

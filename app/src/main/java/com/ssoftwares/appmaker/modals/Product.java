@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Product implements Parcelable {
+public class Product implements Serializable {
     private String id;
     private String name;
     private String description;
@@ -16,6 +16,8 @@ public class Product implements Parcelable {
     private String created_at;
     private List<Image> images;
     private List<Category> categories;
+    private Image brochure;
+    private boolean isAutomated;
 
     public String getId() {
         return id;
@@ -79,39 +81,6 @@ public class Product implements Parcelable {
         }
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(name);
-        dest.writeString(description);
-        dest.writeString(slug);
-        dest.writeString(created_at);
-        if (images == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(images);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {
-        @Override
-        public Product createFromParcel(Parcel in) {
-            return new Product(in);
-        }
-
-        @Override
-        public Product[] newArray(int size) {
-            return new Product[size];
-        }
-    };
-
     public String getShort_description() {
         return short_description;
     }
@@ -126,5 +95,21 @@ public class Product implements Parcelable {
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
+    }
+
+    public boolean isAutomated() {
+        return isAutomated;
+    }
+
+    public void setAutomated(boolean automated) {
+        isAutomated = automated;
+    }
+
+    public Image getBrochure() {
+        return brochure;
+    }
+
+    public void setBrochure(Image brochure) {
+        this.brochure = brochure;
     }
 }

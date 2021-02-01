@@ -12,6 +12,10 @@ import com.ssoftwares.appmaker.modals.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class SessionManager {
 
     private Context mContext;
@@ -66,6 +70,26 @@ public class SessionManager {
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove("token");
         editor.remove("user");
+        editor.apply();
+    }
+
+    public void saveConfig(String configHash  , String configJson) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("config", configJson);
+        editor.putString("config_md5", configHash);
+        editor.apply();
+    }
+
+    public String getConfig (){
+        return preferences.getString("config" , null);
+    }
+    public String getConfigHash (){
+        return preferences.getString("config_md5" , null);
+    }
+
+    public void clearCache() {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove("config");
         editor.apply();
     }
 }

@@ -11,50 +11,62 @@
       "gravity" : "center"
     } ,
     {
+      "type" : "enum",
+      "values" : ["dokan" , "wcfm"],
+      "text" : "Select Vendor Plugin Used",
+      "id" : "type"
+    },
+    {
+      "type" : "constant",
+      "id" : "name",
+      "value" : "Surya Pratap"
+    },
+    {
+      "type" : "boolean",
+      "text" : "Refunds/Cancel",
+      "default" : true,
+      "id" : "isRefund"
+    },
+    {
       "type" : "edittext",
       "hint" : "App Name",
       "id" : "appname",
-      "regex" : "^([a-zA-Z0-9_\\s])?$",
+      "regex" : "^([a-zA-Z0-9_\\s])+$",
+      "minLength" : 6,
+      "maxLength" : 16,
       "isRequired" : true
     } ,
     {
       "type" : "button" ,
       "action" : "pick" ,
-      "mimetype" : "image/png",
+      "mime" : "image/png",
       "text" : "Pick App Icon" ,
       "isRequired" : true,
       "id" : "icon"
     },
     {
-      "type" : "edittext",
-      "hint" : "Package Name",
-      "id" : "package",
-      "regex" : "^([a-z0-9\\.])?$",
-      "stringregex" : "^([A-Za-z]{1}[A-Za-z\\d_]*\\.)+[A-Za-z][A-Za-z\\d_]*$",
+      "type" : "button" ,
+      "action" : "pick" ,
+      "extension" : "json",
+      "mime" : "*/*",
+      "text" : "Pick Google JSon" ,
+      "isRequired" : true,
+      "id" : "googleJson"
+    },
+    {
+      "type" : "relation",
+      "endpoint" : "products",
+      "text" : "Select Product",
+      "id" : "product",
+      "isRequired": true
+    },
+    {
+      "type": "relation",
+      "endpoint" : "cpanels",
+      "text": "Select Cpanel",
+      "id" : "cpanel",
       "isRequired" : true
-    } ,
-    {
-      "type" : "edittext",
-      "hint" : "Website Url",
-      "id" : "website",
-      "stringregex" : "^(https?:\\/\\/)?([\\w\\d-_]+)\\.([\\w\\d-_\\.]+)\\/?\\??([^#\\n\\r]*)?#?([^\\n\\r]*)",
-      "isRequired" : true
-    } ,
-    {
-      "type" : "edittext",
-      "hint" : "Version Code (optional)",
-      "id" : "version_code",
-      "regex" : "[0-9]*",
-      "isRequired" : false
-    } ,
-    {
-      "type" : "edittext",
-      "hint" : "Version Name (optional)",
-      "id" : "version_name",
-      "regex" : "[0-9\\.]*",
-      "stringregex" : "^\\d+\\.\\d+?",
-      "isRequired" : false
-    } ,
+    },
     {
       "type" : "button" ,
       "action" : "submit" ,

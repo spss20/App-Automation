@@ -58,7 +58,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="35dp"
                     android:fontFamily="@font/muli_bold"
-                    android:text="Hey Alex,"
+                    android:text="Hey Surya,"
+                    android:visibility="visible"
                     android:textColor="@color/black"
                     android:textSize="25sp" />
 
@@ -66,13 +67,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Find a course you want to learn"
+                    android:visibility="visible"
+                    android:text="Find an app you want to build"
                     android:textSize="21sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="30dp"
+                    android:visibility="visible"
                     android:background="@drawable/search_bg"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp">

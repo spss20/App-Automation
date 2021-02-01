@@ -72,6 +72,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             userName.setText("User not logged");
             navigationView.getMenu().findItem(R.id.logout).setTitle("Login");
+            //set visibility to false giving to non authenticated user
+            navigationView.getMenu().findItem(R.id.create_cpanel).setVisible(false);
+            navigationView.getMenu().findItem(R.id.create_admin_panel).setVisible(false);
+            navigationView.getMenu().findItem(R.id.my_cpanels).setVisible(false);
+
         }
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -200,6 +205,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent = new Intent(this , BuilderActivity.class);
                 intent.putExtra("config_name" , "admin_panel");
                 startActivity(intent);
+                break;
+            case R.id.clear_cache:
+                sessionManager.clearCache();
+                Toast.makeText(this, "Cache cleared successfully", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.logout:
                 if (sessionManager.getUser() != null){

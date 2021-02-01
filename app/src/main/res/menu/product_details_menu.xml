@@ -14,11 +14,13 @@
     <item android:id="@+id/download_brochure"
         android:title="Brochure"
         android:icon="@drawable/ic_pdf"
+        android:visible="false"
         android:checked="false"
         />
     <item android:id="@+id/build_apps"
         android:title="Build"
         android:icon="@drawable/ic_hammer"
+        android:visible="false"
         android:checked="false"
         />
 </menu>

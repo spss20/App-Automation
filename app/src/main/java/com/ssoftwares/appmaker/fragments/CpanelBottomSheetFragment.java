@@ -1,10 +1,14 @@
 package com.ssoftwares.appmaker.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.se.omapi.Session;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,7 +25,10 @@ import com.ssoftwares.appmaker.api.ApiClient;
 import com.ssoftwares.appmaker.api.ApiService;
 import com.ssoftwares.appmaker.interfaces.CpanelSelectedListener;
 import com.ssoftwares.appmaker.modals.Cpanel;
+import com.ssoftwares.appmaker.modals.Product;
+import com.ssoftwares.appmaker.modals.SelectItemDynamicLayout;
 import com.ssoftwares.appmaker.utils.AppUtils;
+import com.ssoftwares.appmaker.utils.Dimensions;
 import com.ssoftwares.appmaker.utils.SessionManager;
 
 import java.util.ArrayList;
@@ -45,24 +52,24 @@ public class CpanelBottomSheetFragment extends BottomSheetDialogFragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        service = ApiClient.create();
-        sessionManager = new SessionManager(getContext());
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        service = ApiClient.create();
+        sessionManager = new SessionManager(getContext());
         return inflater.inflate(R.layout.activity_cpanel, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         RecyclerView cpanelRecycler = view.findViewById(R.id.cpanel_recycler);
-        adapter = new CpanelAdapter(getContext(), new ArrayList<>() , listener);
+        adapter = new CpanelAdapter(getContext(), new ArrayList<>(), new CpanelSelectedListener() {
+            @Override
+            public void onSelected(Cpanel cpanel) {
+                listener.onSelected(cpanel);
+            }
+        });
         cpanelRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         cpanelRecycler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         cpanelRecycler.setAdapter(adapter);
@@ -90,5 +97,4 @@ public class CpanelBottomSheetFragment extends BottomSheetDialogFragment {
                     }
                 });
     }
-
 }

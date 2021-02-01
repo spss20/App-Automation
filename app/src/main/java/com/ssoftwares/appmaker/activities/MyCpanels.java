@@ -1,6 +1,8 @@
 package com.ssoftwares.appmaker.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -41,6 +43,12 @@ public class MyCpanels extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         service = ApiClient.create();
         sessionManager = new SessionManager(this);
+
+        if (sessionManager.getToken() == null){
+            Intent intent = new Intent(this , LoginActivity.class);
+            startActivity(intent);
+            return;
+        }
         //setAdapter
         RecyclerView cpanelRecycler = findViewById(R.id.cpanel_recycler);
         adapter = new CpanelAdapter(this, new ArrayList<>(), new CpanelSelectedListener() {
@@ -63,9 +71,6 @@ public class MyCpanels extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<List<Cpanel>> call, Response<List<Cpanel>> response) {
                         if (response.body() != null) {
-                            for (int i = 0 ; i<5 ; i++){
-                                response.body().add(response.body().get(0));
-                            }
                             adapter.updateData(response.body());
                         } else {
                             if (response.code() == 401)

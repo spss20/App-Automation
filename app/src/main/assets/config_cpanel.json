@@ -33,7 +33,7 @@
     {
       "type": "button",
       "action": "pick",
-      "mimetype": "image/png",
+      "mime": "image/png",
       "text" : "Pick Company Logo",
       "id": "company_logo",
       "isRequired": true

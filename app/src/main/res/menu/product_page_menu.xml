@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:title="About us" />
-    <item android:title="Get product pdf" />
-    <item android:title="Block" />
+    <item android:title="Report Bug" />
 </menu>

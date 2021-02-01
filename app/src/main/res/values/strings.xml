@@ -5,4 +5,8 @@
     <string name="open">Drawer Opened</string>
     <string name="close">Drawer Closed</string>
     <string name="demo_text_placeholder">Login Credentials: \nemail: sppro.20@gmail.com \npass: hello123456</string>
+    <string-array name="enum_values">
+        <item>Dokan</item>
+        <item>WCFM</item>
+    </string-array>
 </resources>

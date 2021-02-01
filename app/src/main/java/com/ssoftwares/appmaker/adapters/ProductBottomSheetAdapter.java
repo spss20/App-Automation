@@ -50,10 +50,12 @@ public class ProductBottomSheetAdapter extends RecyclerView.Adapter<ProductBotto
             } else
                 holder.productCategory.append(categories.get(i).getName() + ", ");
         }
-        Image image = product.getImages().get(0);
-        if (image.getFormats() != null){
-            Picasso.get().load(image.getFormats().getThumbnail().getImageUrl())
-                    .into(holder.productImage);
+        if (product.getImages().size() != 0) {
+            Image image = product.getImages().get(0);
+            if (image.getFormats() != null) {
+                Picasso.get().load(image.getFormats().getThumbnail().getImageUrl())
+                        .into(holder.productImage);
+            }
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
