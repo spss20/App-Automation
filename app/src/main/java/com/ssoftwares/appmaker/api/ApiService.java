@@ -35,6 +35,13 @@ public interface ApiService {
             @Field("password") String password
     );
 
+    @FormUrlEncoded
+    @POST("auth/local/register")
+    Call<JsonObject> register(
+            @Field("identifier") String email,
+            @Field("password") String password
+    );
+
     @Multipart
     @POST("{endpoint}")
     Call<JsonObject> createEntry(

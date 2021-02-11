@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ActionBarDrawerToggle tl;
     SessionManager sessionManager;
     NavigationView navigationView;
+    TextView textViewAllPopular, textViewAllTrending, textViewAllNewest, textViewAllCatgeory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +65,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView = findViewById(R.id.drawer_nav);
         TextView userName = navigationView.getHeaderView(0).findViewById(R.id.user_name);
+        textViewAllPopular = findViewById(R.id.textAllPopular);
+        textViewAllTrending = findViewById(R.id.textAllTrendingProducts);
+        textViewAllNewest = findViewById(R.id.textAllNewestProducts);
+        textViewAllCatgeory = findViewById(R.id.allCategory);
 
         User user = sessionManager.getUser();
         if (user != null) {
-           userName.setText(user.getUsername());
-           navigationView.getMenu().findItem(R.id.logout).setTitle("Logout");
+            userName.setText(user.getUsername());
+            navigationView.getMenu().findItem(R.id.logout).setTitle("Logout");
         } else {
             userName.setText("User not logged");
             navigationView.getMenu().findItem(R.id.logout).setTitle("Login");
@@ -87,12 +92,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Toolbar toolbar = findViewById(R.id.tool_bar);
         dl = findViewById(R.id.drawer_view);
-        tl = new ActionBarDrawerToggle(this , dl , toolbar , R.string.open , R.string.close);
+        tl = new ActionBarDrawerToggle(this, dl, toolbar, R.string.open, R.string.close);
         dl.addDrawerListener(tl);
         tl.syncState();
 
         ViewPager2 viewPager = findViewById(R.id.viewpager);
-        bannerAdapter = new BannerAdapter(this , new ArrayList<>());
+        bannerAdapter = new BannerAdapter(this, new ArrayList<>());
         viewPager.setAdapter(bannerAdapter);
 //        viewPager.setClipToPadding(false);
 //        viewPager.setPadding(40 , 0 , 40 , 0);
@@ -105,7 +110,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         RecyclerView categoryRecyler = findViewById(R.id.category_recycler);
-        categoryRecyler.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+        categoryRecyler.setLayoutManager(new LinearLayoutManager(this,
+                RecyclerView.HORIZONTAL, false));
         categoryAdapter = new CategoryAdapter(this, new ArrayList<>());
         categoryRecyler.setAdapter(categoryAdapter);
         getCategories();
@@ -128,6 +134,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         newestProductRecycler.setAdapter(newestProductAdapter);
         getProducts("newest");
 
+
+        textViewAllPopular.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ProductsActivity.class);
+                intent.putExtra("tag", "popular");
+                intent.putExtra("category_name", "Popular Products");
+                startActivity(intent);
+
+            }
+        });
+        textViewAllCatgeory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
+
+                startActivity(intent);
+            }
+        });
+        textViewAllNewest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ProductsActivity.class);
+                intent.putExtra("tag", "newest");
+                intent.putExtra("category_name", "Newest Products");
+                startActivity(intent);
+
+            }
+        });
+        textViewAllTrending.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ProductsActivity.class);
+                intent.putExtra("tag", "trending");
+                intent.putExtra("category_name", "Trending Products");
+                startActivity(intent);
+
+            }
+        });
+
     }
 
     private void getBanners() {
@@ -148,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void getProducts(String tag) {
-        service.getProducts(tag , null).enqueue(new Callback<List<Product>>() {
+        service.getProducts(tag, null).enqueue(new Callback<List<Product>>() {
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 if (response.body() != null) {
@@ -191,19 +237,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Intent intent;
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.my_cpanels:
-                intent = new Intent(this , MyCpanels.class);
+                intent = new Intent(this, MyCpanels.class);
                 startActivity(intent);
                 break;
             case R.id.create_cpanel:
-                intent = new Intent(this , BuilderActivity.class);
-                intent.putExtra("config_name" , "cpanel");
+                intent = new Intent(this, BuilderActivity.class);
+                intent.putExtra("config_name", "cpanel");
                 startActivity(intent);
                 break;
             case R.id.create_admin_panel:
-                intent = new Intent(this , BuilderActivity.class);
-                intent.putExtra("config_name" , "admin_panel");
+                intent = new Intent(this, BuilderActivity.class);
+                intent.putExtra("config_name", "admin_panel");
                 startActivity(intent);
                 break;
             case R.id.clear_cache:
@@ -211,14 +257,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(this, "Cache cleared successfully", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.logout:
-                if (sessionManager.getUser() != null){
+                if (sessionManager.getUser() != null) {
                     sessionManager.logout();
                     navigationView.getMenu().getItem(3).setTitle("Log In");
                     TextView userName = navigationView.getHeaderView(0).findViewById(R.id.user_name);
                     userName.setText("User not logged");
                     Toast.makeText(this, "Successfully logged out", Toast.LENGTH_SHORT).show();
                 } else {
-                    intent = new Intent(this , LoginActivity.class);
+                    intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                 }
                 break;
