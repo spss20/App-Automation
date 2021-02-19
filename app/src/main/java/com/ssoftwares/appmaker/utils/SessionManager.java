@@ -90,6 +90,7 @@ public class SessionManager {
     public void clearCache() {
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove("config");
+        editor.remove("config_md5");
         editor.apply();
     }
 }

@@ -38,8 +38,9 @@
     } ,
     {
       "type" : "button" ,
-      "action" : "pick" ,
+      "action" : "pickImage" ,
       "mime" : "image/png",
+      "dimension" : "400x400",
       "text" : "Pick App Icon" ,
       "isRequired" : true,
       "id" : "icon"

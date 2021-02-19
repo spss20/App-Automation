@@ -14,6 +14,9 @@ public class DynamicLinearLayout extends LinearLayout {
     private int requestCode = -1;
     private Uri uri;
     private String extension;
+    private String action;
+    private String fileName;
+    private String fileBase64;
 
     public DynamicLinearLayout(Context context) {
         super(context);
@@ -69,5 +72,29 @@ public class DynamicLinearLayout extends LinearLayout {
 
     public void setExtension(String extension) {
         this.extension = extension;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFileBase64() {
+        return fileBase64;
+    }
+
+    public void setFileBase64(String fileBase64) {
+        this.fileBase64 = fileBase64;
     }
 }
