@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.ProductsActivity">
+    tools:context=".activities.CategoryActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,18 +33,13 @@
             android:gravity="center_vertical"
             android:textColor="@color/textBlack"
             android:textSize="25sp"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
-        <Spinner
-            android:id="@+id/typeSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
     </LinearLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/products_recycler"
+        android:id="@+id/category_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="0dp" />
