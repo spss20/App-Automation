@@ -3,7 +3,7 @@ package com.ssoftwares.appmaker.modals;
 public class Banner {
     String id;
     Product product;
-    Image image;
+    Attachment image;
 
     public String getId() {
         return id;
@@ -13,7 +13,7 @@ public class Banner {
         return product;
     }
 
-    public Image getImage() {
+    public Attachment getImage() {
         return image;
     }
 }

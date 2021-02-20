@@ -5,17 +5,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.ssoftwares.appmaker.fragments.BannerFragment;
 import com.ssoftwares.appmaker.fragments.ImageFragment;
-import com.ssoftwares.appmaker.modals.Image;
+import com.ssoftwares.appmaker.modals.Attachment;
 
 import java.util.List;
 
 public class ProductBannerAdapter extends FragmentStateAdapter {
 
-    private List<Image> imagesList;
+    private List<Attachment> imagesList;
 
-    public ProductBannerAdapter(@NonNull FragmentActivity fragmentActivity , List<Image> images) {
+    public ProductBannerAdapter(@NonNull FragmentActivity fragmentActivity , List<Attachment> images) {
         super(fragmentActivity);
         this.imagesList = images;
     }
@@ -31,7 +30,7 @@ public class ProductBannerAdapter extends FragmentStateAdapter {
         return imagesList.size();
     }
 
-    public void updateData(List<Image> imagesList){
+    public void updateData(List<Attachment> imagesList){
         this.imagesList = imagesList;
         notifyDataSetChanged();
     }

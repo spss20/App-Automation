@@ -3,24 +3,24 @@ package com.ssoftwares.appmaker.modals;
 import java.io.Serializable;
 
 public class Formats implements Serializable {
-    Image thumbnail;
-    Image large;
-    Image medium;
-    Image small;
+    Attachment thumbnail;
+    Attachment large;
+    Attachment medium;
+    Attachment small;
 
-    public Image getThumbnail() {
+    public Attachment getThumbnail() {
         return thumbnail;
     }
 
-    public Image getLarge() {
+    public Attachment getLarge() {
         return large;
     }
 
-    public Image getMedium() {
+    public Attachment getMedium() {
         return medium;
     }
 
-    public Image getSmall() {
+    public Attachment getSmall() {
         return small;
     }
 }

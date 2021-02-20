@@ -5,7 +5,7 @@ public class Demo {
     String title;
     String credentials;
     String url;
-    Image image;
+    Attachment image;
     File file;
 
     public String getId() {
@@ -24,7 +24,7 @@ public class Demo {
         return url;
     }
 
-    public Image getImage() {
+    public Attachment getImage() {
         return image;
     }
 

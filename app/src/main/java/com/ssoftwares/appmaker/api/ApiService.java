@@ -6,6 +6,7 @@ import com.ssoftwares.appmaker.modals.Banner;
 import com.ssoftwares.appmaker.modals.Category;
 import com.ssoftwares.appmaker.modals.Cpanel;
 import com.ssoftwares.appmaker.modals.Demo;
+import com.ssoftwares.appmaker.modals.Order;
 import com.ssoftwares.appmaker.modals.Product;
 import com.ssoftwares.appmaker.modals.SubProduct;
 
@@ -117,4 +118,13 @@ public interface ApiService {
             @Part MultipartBody.Part config
     );
 
+    @GET("orders")
+    Call<List<Order>> getOrders(
+            @Header("Authorization") String token
+    );
+
+    @GET
+    Call<JsonObject> fetchJson(
+            @Url String url
+    );
 }
