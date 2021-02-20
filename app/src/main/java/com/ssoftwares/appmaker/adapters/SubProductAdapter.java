@@ -44,17 +44,15 @@ public class SubProductAdapter extends RecyclerView.Adapter<SubProductAdapter.Su
         if (subProduct.getImages()!= null && subProduct.getImages().size() != 0)
             Picasso.get().load(subProduct.getImages().get(0).getImageUrl()).into(holder.subproductImage);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (subProduct.getApischema() == null){
-                    Toast.makeText(mContext, "Error: Json schema invalid, contact admin to fix this problem", Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent = new Intent(mContext, BuilderActivity.class);
-                    intent.putExtra("config", subProduct.getApischema().toString());
-                    intent.putExtra("subproduct_name" , subProduct.getName());
-                    mContext.startActivity(intent);
-                }
+        holder.itemView.setOnClickListener(v -> {
+            if (subProduct.getApischema() == null){
+                Toast.makeText(mContext, "Error: Json schema invalid, contact admin to fix this problem", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(mContext, BuilderActivity.class);
+                intent.putExtra("config", subProduct.getApischema().toString());
+                intent.putExtra("subproduct_name" , subProduct.getName());
+                intent.putExtra("subproduct_id" , subProduct.getId());
+                mContext.startActivity(intent);
             }
         });
     }

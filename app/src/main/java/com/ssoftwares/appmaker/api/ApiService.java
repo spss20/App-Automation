@@ -13,6 +13,8 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -93,6 +95,14 @@ public interface ApiService {
     Call<Cpanel> getSingleCpanel(
             @Header("Authorization") String token,
             @Path("id") String id
+    );
+
+    @Multipart
+    @POST("orders")
+    Call<ResponseBody> createOrder(
+            @Header("Authorization") String token,
+            @Part("data") RequestBody data,
+            @Part MultipartBody.Part config
     );
 
 }

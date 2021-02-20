@@ -17,6 +17,7 @@ public class DynamicLinearLayout extends LinearLayout {
     private String action;
     private String fileName;
     private String fileBase64;
+    private String dimension;
 
     public DynamicLinearLayout(Context context) {
         super(context);
@@ -96,5 +97,35 @@ public class DynamicLinearLayout extends LinearLayout {
 
     public void setFileBase64(String fileBase64) {
         this.fileBase64 = fileBase64;
+    }
+
+    public String getDimension() {
+        return dimension;
+    }
+
+    public void setDimension(String dimension) {
+        this.dimension = dimension;
+    }
+
+    public int getImageWidth(){
+        if (dimension == null)
+            return 200;
+        try {
+            return Integer.parseInt(dimension.split("x")[0]);
+        } catch (NumberFormatException e){
+            e.printStackTrace();
+            return 200;
+        }
+    }
+
+    public int getImageHeight(){
+        if (dimension == null)
+            return 200;
+        try {
+            return Integer.parseInt(dimension.split("x")[1]);
+        } catch (NumberFormatException e){
+            e.printStackTrace();
+            return 200;
+        }
     }
 }

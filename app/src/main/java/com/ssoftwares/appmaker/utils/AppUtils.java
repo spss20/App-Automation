@@ -176,4 +176,26 @@ public class AppUtils {
             throw new RuntimeException(e);
         }
     }
+
+    public static int getImageWidth(String dimension){
+        if (dimension == null)
+            return 200;
+        try {
+            return Integer.parseInt(dimension.split("x")[0]);
+        } catch (NumberFormatException e){
+            e.printStackTrace();
+            return 200;
+        }
+    }
+
+    public static int getImageHeight(String dimension){
+        if (dimension == null)
+            return 200;
+        try {
+            return Integer.parseInt(dimension.split("x")[1]);
+        } catch (NumberFormatException e){
+            e.printStackTrace();
+            return 200;
+        }
+    }
 }

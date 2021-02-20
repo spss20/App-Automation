@@ -2,15 +2,20 @@ package com.ssoftwares.appmaker.api;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Base64;
+import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 
+import com.ssoftwares.appmaker.modals.DynamicLinearLayout;
 import com.ssoftwares.appmaker.utils.AppUtils;
 
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLConnection;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -63,5 +68,22 @@ public class ApiClient {
             // MultipartBody.Part is used to send also the actual file name
             return MultipartBody.Part.createFormData(keyName,
                     AppUtils.getFileName(context, fileUri), requestFile);
+    }
+
+    @NonNull
+    public static MultipartBody.Part prepareFilePart(String keyName, DynamicLinearLayout dl) {
+        byte[] fileBytes = Base64.decode(dl.getFileBase64() , Base64.DEFAULT);
+        // create RequestBody instance from file
+        String mime = URLConnection.guessContentTypeFromName(dl.getFileName());
+        Log.v("MemeType" , mime);
+        RequestBody requestFile =
+                RequestBody.create(
+                        fileBytes,
+                        MediaType.parse(mime)
+                );
+
+        // MultipartBody.Part is used to send also the actual file name
+        return MultipartBody.Part.createFormData(keyName,
+                dl.getFileName(), requestFile);
     }
 }
