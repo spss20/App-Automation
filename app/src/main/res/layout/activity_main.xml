@@ -31,11 +31,11 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
                         android:text="Welcome Back !"
-                        android:textSize="16sp"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:layout_centerVertical="true"/>
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -97,12 +97,15 @@
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/ic_search" />
 
-                    <TextView
+                    <EditText
+                        android:id="@+id/editTextSearch"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="16dp"
-                        android:text="Search for anything"
+                        android:background="@color/searchBoxGrey"
+                        android:hint="Search for anything"
+                        android:padding="5dp"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -138,12 +141,12 @@
                         android:textSize="20sp" />
 
                     <TextView
+                        android:id="@+id/allCategory"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:fontFamily="@font/muli_semibold"
                         android:text="See All"
-                        android:id="@+id/allCategory"
                         android:textColor="@color/textBlueColor"
                         android:textSize="18sp" />
                 </RelativeLayout>
@@ -168,9 +171,9 @@
                         android:textSize="20sp" />
 
                     <TextView
+                        android:id="@+id/textAllPopular"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textAllPopular"
                         android:layout_alignParentEnd="true"
                         android:fontFamily="@font/muli_semibold"
                         android:text="See All"
@@ -199,12 +202,12 @@
                         android:textSize="20sp" />
 
                     <TextView
+                        android:id="@+id/textAllTrendingProducts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:fontFamily="@font/muli_semibold"
                         android:text="See All"
-                        android:id="@+id/textAllTrendingProducts"
                         android:textColor="@color/textBlueColor"
                         android:textSize="18sp" />
                 </RelativeLayout>
@@ -230,12 +233,12 @@
                         android:textSize="20sp" />
 
                     <TextView
+                        android:id="@+id/textAllNewestProducts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:fontFamily="@font/muli_semibold"
                         android:text="See All"
-                        android:id="@+id/textAllNewestProducts"
                         android:textColor="@color/textBlueColor"
                         android:textSize="18sp" />
                 </RelativeLayout>

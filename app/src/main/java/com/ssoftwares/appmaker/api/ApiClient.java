@@ -52,7 +52,7 @@ public class ApiClient {
 
     @NonNull
     public static RequestBody createPartFromString(String descriptionString) {
-        return RequestBody.create(descriptionString, okhttp3.MultipartBody.FORM);
+        return RequestBody.create(descriptionString, MultipartBody.FORM);
     }
 
     @NonNull

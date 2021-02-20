@@ -26,6 +26,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 
 public interface ApiService {
@@ -40,8 +41,13 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("auth/local/register")
     Call<JsonObject> register(
-            @Field("identifier") String email,
-            @Field("password") String password
+            @Field("username") String username,
+            @Field("email") String email,
+            @Field("password") String password,
+            @Field("confirmed") boolean confirmed,
+            @Field("blocked") boolean blocked,
+            @Field("phone") String phone
+
     );
 
     @Multipart
@@ -51,7 +57,7 @@ public interface ApiService {
             @Path("endpoint") String endpoint,
             @Part("data") RequestBody data,
             @Part List<MultipartBody.Part> files
-            );
+    );
 
     @GET("banners")
     Call<List<Banner>> getBanners();
@@ -63,6 +69,12 @@ public interface ApiService {
     Call<List<Product>> getProducts(
             @Query("tag") String tag,
             @Query("categories") String id
+    );
+
+    @GET
+    Call<JsonObject> filterProducts(
+            @Url String url
+
     );
 
     @GET("products/{id}")
