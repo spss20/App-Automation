@@ -3,9 +3,12 @@ package com.ssoftwares.appmaker.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.se.omapi.Session;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,12 +23,14 @@ import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.JsonObject;
 import com.ssoftwares.appmaker.R;
 import com.ssoftwares.appmaker.adapters.BannerAdapter;
 import com.ssoftwares.appmaker.adapters.CategoryAdapter;
 import com.ssoftwares.appmaker.adapters.ProductAdapter;
 import com.ssoftwares.appmaker.api.ApiClient;
 import com.ssoftwares.appmaker.api.ApiService;
+import com.ssoftwares.appmaker.api.CommonApis;
 import com.ssoftwares.appmaker.modals.Banner;
 import com.ssoftwares.appmaker.modals.Category;
 import com.ssoftwares.appmaker.modals.Product;
@@ -40,7 +45,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CommonApis.onSearchResult {
 
     CategoryAdapter categoryAdapter;
     ProductAdapter popularProductAdapter;
@@ -54,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SessionManager sessionManager;
     NavigationView navigationView;
     TextView textViewAllPopular, textViewAllTrending, textViewAllNewest, textViewAllCatgeory;
+    EditText editTextSearch;
+    CommonApis commonApis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         textViewAllTrending = findViewById(R.id.textAllTrendingProducts);
         textViewAllNewest = findViewById(R.id.textAllNewestProducts);
         textViewAllCatgeory = findViewById(R.id.allCategory);
-
+        editTextSearch = findViewById(R.id.editTextSearch);
         User user = sessionManager.getUser();
         if (user != null) {
             userName.setText(user.getUsername());
@@ -173,8 +180,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
+        commonApis = new CommonApis(service, this, this);
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                commonApis.search(s.toString(), "contains", "name", "products");
+            }
+        });
 
     }
+
 
     private void getBanners() {
         service.getBanners().enqueue(new Callback<List<Banner>>() {
@@ -270,5 +295,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onSuccess(JsonObject result) {
+        Log.d("TAG", "onSuccess: " + result.getAsString());
+    }
+
+    @Override
+    public void onFailed(String message) {
+
     }
 }
