@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,7 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppMaker"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.MyCpanels" android:theme="@style/Theme.AppMaker.ActionBar">
+        <activity
+            android:name=".activities.MyCpanels"
+            android:theme="@style/Theme.AppMaker.ActionBar">
 
         </activity>
         <activity android:name=".activities.LoginActivity" />
@@ -30,15 +33,16 @@
         <activity android:name=".activities.SubProductsActivity" />
         <activity
             android:name=".activities.ProductDetailActivity"
-            android:theme="@style/Theme.AppMaker.ActionBar" >
+            android:theme="@style/Theme.AppMaker.ActionBar">
 
         </activity>
         <activity android:name=".activities.ProductsActivity" />
+        <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.BuilderActivity">
 
         </activity>
         <activity android:name=".activities.MainActivity"
-            >
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

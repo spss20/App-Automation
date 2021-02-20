@@ -4,15 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.ssoftwares.appmaker.R;
 import com.ssoftwares.appmaker.api.ApiClient;
 import com.ssoftwares.appmaker.api.ApiService;
+import com.ssoftwares.appmaker.modals.errormodels.BaseError;
 import com.ssoftwares.appmaker.utils.AppUtils;
 import com.ssoftwares.appmaker.utils.SessionManager;
 
@@ -26,6 +30,8 @@ public class LoginActivity extends AppCompatActivity {
     TextInputEditText password;
     Button signIn;
     ApiService service;
+    TextView createAccountTextView;
+    TextView textViewMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +43,9 @@ public class LoginActivity extends AppCompatActivity {
         username = findViewById(R.id.user_name);
         password = findViewById(R.id.password);
         signIn = findViewById(R.id.sign_in);
+        textViewMessage = findViewById(R.id.textViewMessage);
+        textViewMessage.setVisibility(View.GONE);
+        createAccountTextView = findViewById(R.id.createAccountTextView);
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,6 +56,37 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        createAccountTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    public void showErrorTextView(String msg, int duration) {
+        textViewMessage.setText(msg);
+        textViewMessage.setVisibility(View.VISIBLE);
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(duration);
+                } catch (InterruptedException e) {
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Do some stuff
+                        textViewMessage.setVisibility(View.GONE);
+                    }
+                });
+            }
+        };
+        thread.start();
     }
 
     private boolean validation() {
@@ -60,6 +100,13 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
+    public void showMessageSnackBar(String message) {
+        View contextView = findViewById(R.id.mainLayLogin);
+        Snackbar.make(contextView, message, Snackbar.LENGTH_LONG).setBackgroundTint(
+                getColor(R.color.colorPrimary)).setTextColor(getColor(R.color.white))
+                .show();
+    }
+
     private void submit() {
         service.login(username.getText().toString(), password.getText().toString())
                 .enqueue(new Callback<JsonObject>() {
@@ -67,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         if (response.body() != null) {
                             JsonObject user = response.body().get("user").getAsJsonObject();
-                            if (user.get("confirmed").getAsBoolean()){
+                            if (user.get("confirmed").getAsBoolean()) {
                                 new SessionManager(LoginActivity.this).saveUser(response.body());
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 finish();
@@ -76,8 +123,13 @@ public class LoginActivity extends AppCompatActivity {
                                         "Contact Administrator to confirm your account", Toast.LENGTH_SHORT).show();
                             }
                         } else {
+                            //BaseError baseError = new Gson().fromJson(response.toString(), BaseError.class);
+                            showErrorTextView("Invalid username/email or password",
+                                    3000);
+
                             if (response.code() == 400)
-                                Toast.makeText(LoginActivity.this, "Invalid username/email or password", Toast.LENGTH_SHORT).show();
+                                showMessageSnackBar("Invalid username/email or password");
+                                //Toast.makeText(LoginActivity.this, "Invalid username/email or password", Toast.LENGTH_SHORT).show();
                             else
                                 Toast.makeText(LoginActivity.this, "Unknown Error Occurred", Toast.LENGTH_SHORT).show();
                         }

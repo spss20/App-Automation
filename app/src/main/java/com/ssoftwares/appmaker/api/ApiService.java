@@ -44,7 +44,8 @@ public interface ApiService {
             @Field("password") String password,
             @Field("confirmed") boolean confirmed,
             @Field("blocked") boolean blocked,
-            @Field("phone") String phone
+            @Field("phone") String phone,
+            @Field("company_name") String company_name
 
     );
 
