@@ -96,6 +96,10 @@ public interface ApiService {
             @Query("name") String config_name
     );
 
+    @GET("settings")
+    Call<JsonObject> getSettings(
+    );
+
     @GET("cpanels")
     Call<List<Cpanel>> getCpanels(
             @Header("Authorization") String token,

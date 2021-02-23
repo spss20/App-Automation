@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ import com.ssoftwares.appmaker.api.ApiClient;
 import com.ssoftwares.appmaker.api.ApiService;
 import com.ssoftwares.appmaker.utils.AppUtils;
 import com.ssoftwares.appmaker.utils.SessionManager;
+import com.ssoftwares.appmaker.utils.SnackUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -52,6 +54,8 @@ public class RegisterActivity extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     BottomSheetDialog bottomSheetDialog;
     ProgressDialog progressDialog;
+    SnackUtils snackUtils;
+    RelativeLayout signupMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +68,13 @@ public class RegisterActivity extends AppCompatActivity {
         textInputLayoutCompany = findViewById(R.id.textInputCompanyName);
         buttonSubmit = findViewById(R.id.sign_up);
         loginTextView = findViewById(R.id.loginTextView);
+        signupMain = findViewById(R.id.signupMain);
         firebaseAuth = FirebaseAuth.getInstance();
         service = ApiClient.create();
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
-
+        snackUtils = new SnackUtils(this);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,16 +146,21 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.d("TAG", "signInWithCredential:success");
 
                             FirebaseUser user = task.getResult().getUser();
-                            Toast.makeText(RegisterActivity.this, "OTP Verified", Toast.LENGTH_SHORT).show();
+
+                            // Toast.makeText(RegisterActivity.this, "OTP Verified", Toast.LENGTH_SHORT).show();
                             bottomSheetDialog.dismiss();
+                            snackUtils.showMessageSnackBar("OTP Verified", signupMain, 1);
+
                             submit();
                             // ...
                         } else {
-                            Toast.makeText(RegisterActivity.this, "Incorrect OTP", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(RegisterActivity.this, "Incorrect OTP", Toast.LENGTH_SHORT).show();
                             // Sign in failed, display a message and update the UI
                             Log.w("TAG", "signInWithCredential:failure", task.getException());
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
+                                snackUtils.showMessageSnackBar("Incorrect OTP", signupMain, 0);
+
                             }
                         }
                     }
@@ -170,7 +180,7 @@ public class RegisterActivity extends AppCompatActivity {
                     //     user action.
                     progressDialog.dismiss();
                     Log.d("TAG", "onVerificationCompleted:" + credential);
-                    Toast.makeText(RegisterActivity.this, "OTP Verified", Toast.LENGTH_SHORT).show();
+                    snackUtils.showMessageSnackBar("OTP Verified", signupMain, 0);
 
                     signInWithPhoneAuthCredential(credential);
                 }
@@ -190,9 +200,9 @@ public class RegisterActivity extends AppCompatActivity {
                         // The SMS quota for the project has been exceeded
                         // ...
                         Toast.makeText(RegisterActivity.this, "The SMS quota for the project has been exceeded", Toast.LENGTH_SHORT).show();
-
+                        snackUtils.showMessageSnackBar("The SMS quota for the project has been exceeded", signupMain, 0);
                     } else {
-                        Toast.makeText(RegisterActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        snackUtils.showMessageSnackBar(e.getMessage(), signupMain, 0);
 
                     }
 
@@ -248,7 +258,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String code = otpView.getText().toString();
                 if (code.isEmpty() || code.length() < 6) {
-                    Toast.makeText(RegisterActivity.this, "Enter 6 Digit Code", Toast.LENGTH_SHORT).show();
+                    snackUtils.showMessageSnackBar("Enter 6 Digit Code", signupMain, 0);
                     return;
                 }
 
@@ -279,14 +289,16 @@ public class RegisterActivity extends AppCompatActivity {
                                 startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                                 finish();
                             } else {
-                                Toast.makeText(RegisterActivity.this, "Sorry! You are not confirmed by the admin. " +
-                                        "Contact Administrator to confirm your account", Toast.LENGTH_SHORT).show();
+                                snackUtils.showMessageSnackBar("Sorry! You are not confirmed by the admin. \n Contact Administrator to confirm your account", signupMain, 0);
+
                             }
                         } else {
-                            if (response.code() == 400)
-                                Toast.makeText(RegisterActivity.this, "Already Registered", Toast.LENGTH_SHORT).show();
-                            else
-                                Toast.makeText(RegisterActivity.this, "Unknown Error Occurred", Toast.LENGTH_SHORT).show();
+
+                            if (response.code() == 400) {
+                                snackUtils.showMessageSnackBar("Already Registered", signupMain, 0);
+
+                            } else
+                                snackUtils.showMessageSnackBar("Unknown Error Occurred", signupMain, 0);
                         }
                     }
 

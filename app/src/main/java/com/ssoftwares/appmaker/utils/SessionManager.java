@@ -47,6 +47,7 @@ public class SessionManager {
            return null;
     }
 
+
     public String getUserId(){
         String user = preferences.getString("user" , null);
         if (user != null){
