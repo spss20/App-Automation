@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Output"
-        android:textColor="@color/textBlack"
+        android:textColor="@color/black"
         android:fontFamily="sans-serif-medium"
         android:textSize="20sp"
         android:layout_gravity="center_horizontal"
@@ -29,13 +29,28 @@
         android:textSize="15sp"
         />
 
-    <Button
-        android:id="@+id/btn_ok"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OK"
-        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        />
+        android:layout_gravity="center">
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:layout_gravity="center_horizontal"
+            />
+        <Button
+            android:id="@+id/view_stepped_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View Stepped"
+            android:layout_marginStart="@dimen/dimen_20dp"
+            android:layout_gravity="center_horizontal"
+            />
+    </LinearLayout>
+
 </LinearLayout>

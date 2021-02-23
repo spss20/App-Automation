@@ -39,6 +39,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         Order order = orderList.get(position);
+        if (order.getSubproduct() != null)
         holder.subproductName.setText(order.getSubproduct().getName());
         
         holder.itemView.setOnClickListener(v -> {

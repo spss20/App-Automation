@@ -15,4 +15,5 @@
     <color name="darkBlue">#23313f</color>
     <color name="lightestSkyBlue">#e9ecef</color>
     <color name="tranparentBlue">#66536DFE</color>
+    <color name="colorPrimaryTransparent" >#1Aeb4c4c</color>
 </resources>

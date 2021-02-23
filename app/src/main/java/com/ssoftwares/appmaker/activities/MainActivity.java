@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.getMenu().findItem(R.id.logout).setTitle("Login");
             //set visibility to false giving to non authenticated user
             navigationView.getMenu().findItem(R.id.create_cpanel).setVisible(false);
+            navigationView.getMenu().findItem(R.id.my_apps).setVisible(false);
             navigationView.getMenu().findItem(R.id.create_admin_panel).setVisible(false);
             navigationView.getMenu().findItem(R.id.my_cpanels).setVisible(false);
 

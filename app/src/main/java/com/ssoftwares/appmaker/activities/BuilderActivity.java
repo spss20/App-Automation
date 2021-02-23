@@ -43,6 +43,7 @@ import com.ssoftwares.appmaker.modals.DynamicSpinner;
 import com.ssoftwares.appmaker.modals.DynamicSwitch;
 import com.ssoftwares.appmaker.modals.Product;
 import com.ssoftwares.appmaker.modals.SelectItemDynamicLayout;
+import com.ssoftwares.appmaker.modals.Step;
 import com.ssoftwares.appmaker.utils.AppUtils;
 import com.ssoftwares.appmaker.utils.Dimensions;
 import com.ssoftwares.appmaker.utils.IdInputFilter;
@@ -90,7 +91,8 @@ public class BuilderActivity extends AppCompatActivity {
     private LinearLayout rootView;
     private ApiService service;
     private SessionManager sessionManager;
-    private int subProductId;
+    private String subProductId;
+    private List<Step> stepList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +100,7 @@ public class BuilderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_builder);
 
         service = ApiClient.create();
+        stepList = new ArrayList<>();
         sessionManager = new SessionManager(this);
         if (sessionManager.getToken() == null) {
             Intent intent = new Intent(this, LoginActivity.class);
@@ -129,7 +132,7 @@ public class BuilderActivity extends AppCompatActivity {
         String data = getIntent().getStringExtra("config");
         if (data != null) {
             configHash = AppUtils.getMd5(data);
-            subProductId = getIntent().getIntExtra("subproduct_id", -1);
+            subProductId = getIntent().getStringExtra("subproduct_id");
             try {
                 //Check if a cache of same config file already exists
                 if (sessionManager.getConfigHash() != null) {
@@ -164,6 +167,20 @@ public class BuilderActivity extends AppCompatActivity {
                     JSONObject element = schema.getJSONObject(i);
                     inflateView(element.getString("type"), element);
                 }
+
+                //Get build steps array to show in dialog
+                if (rootJson.has("steps")) {
+                    JSONArray stepsSchema = rootJson.getJSONArray("steps");
+                    for (int j = 0; j < stepsSchema.length(); j++) {
+                        JSONObject element = stepsSchema.getJSONObject(j);
+                        Step step = new Step();
+                        step.setOrder(element.getInt("order"));
+                        step.setStepName(element.getString("name"));
+                        step.setStepSlug(element.getString("slug"));
+                        step.setStepMessage(element.getString("message"));
+                        stepList.add(step);
+                    }
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -194,6 +211,19 @@ public class BuilderActivity extends AppCompatActivity {
                                     for (int i = 0; i < schema.length(); i++) {
                                         JSONObject element = schema.getJSONObject(i);
                                         inflateView(element.getString("type"), element);
+                                    }
+                                    //Get build steps array to show in dialog
+                                    if (rootJson.has("steps")) {
+                                        JSONArray stepsSchema = rootJson.getJSONArray("steps");
+                                        for (int j = 0; j < stepsSchema.length(); j++) {
+                                            JSONObject element = stepsSchema.getJSONObject(j);
+                                            Step step = new Step();
+                                            step.setOrder(element.getInt("order"));
+                                            step.setStepName(element.getString("name"));
+                                            step.setStepSlug(element.getString("slug"));
+                                            step.setStepMessage(element.getString("message"));
+                                            stepList.add(step);
+                                        }
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -736,7 +766,11 @@ public class BuilderActivity extends AppCompatActivity {
                         if (response.body().has("outputUrl")) {
                             String outputUrl = response.body().get("outputUrl").getAsString();
                             int orderId = response.body().get("id").getAsInt();
-                            AppUtils.showResultDialog(BuilderActivity.this, outputUrl);
+                            if (stepList.size() > 0)
+                                AppUtils.showResultDialog(BuilderActivity.this, outputUrl, stepList);
+                            else
+                                AppUtils.showResultDialog(BuilderActivity.this, outputUrl);
+
                             try {
                                 createOrder(orderId, outputUrl);
                             } catch (JSONException e) {
@@ -761,7 +795,7 @@ public class BuilderActivity extends AppCompatActivity {
         JSONObject data = new JSONObject();
         data.put("outputUrl", outputUrl);
         data.put("orderId", orderId);
-        if (subProductId != -1)
+        if (subProductId != null)
             data.put("subproduct", new JSONArray().put(subProductId));
 
         RequestBody dataBody = ApiClient.createPartFromString(data.toString());

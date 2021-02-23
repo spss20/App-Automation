@@ -5,6 +5,7 @@ import com.ssoftwares.appmaker.api.ApiClient;
 import java.io.Serializable;
 
 public class Attachment implements Serializable {
+
     private String width;
     private String height;
     private String name;
