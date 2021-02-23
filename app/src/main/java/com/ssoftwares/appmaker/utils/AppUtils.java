@@ -81,6 +81,7 @@ public class AppUtils {
 
     public static void handleNoInternetConnection(Context context) {
         Toast.makeText(context, "No Internet. Please check your internet connection", Toast.LENGTH_SHORT).show();
+
     }
 
     public static void showResultDialogRaw(Activity activity, String scripturl, boolean isDynamic) {

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingStart="20dp"
+    android:id="@+id/signupMain"
     android:paddingEnd="20dp"
     tools:context=".activities.LoginActivity">
 
@@ -53,7 +54,24 @@
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white" />
+                    android:background="@color/white"
+                    android:text="Tarun" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputCompanyName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:hint="Company Name"
+                app:startIconDrawable="@drawable/ic_baseline_corporate_fare_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/companyName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:text="Tarun" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -68,7 +86,8 @@
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white" />
+                    android:background="@color/white"
+                    android:text="tarunplay3551@gmail.com" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -77,14 +96,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:hint="Mobile Number"
-                app:passwordToggleEnabled="true"
+
+
                 app:startIconDrawable="@drawable/ic_outline_phone_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/mobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white" />
+                    android:background="@color/white"
+                    android:text="7417391228" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -94,13 +115,16 @@
                 android:layout_marginTop="20dp"
                 android:hint="Password"
                 app:passwordToggleEnabled="true"
+
                 app:startIconDrawable="@drawable/ic_password_lock">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white" />
+                    android:background="@color/white"
+                    android:inputType="textPassword"
+                    android:text="123456" />
             </com.google.android.material.textfield.TextInputLayout>
 
 

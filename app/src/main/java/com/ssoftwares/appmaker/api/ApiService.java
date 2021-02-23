@@ -47,7 +47,8 @@ public interface ApiService {
             @Field("password") String password,
             @Field("confirmed") boolean confirmed,
             @Field("blocked") boolean blocked,
-            @Field("phone") String phone
+            @Field("phone") String phone,
+            @Field("company_name") String company_name
 
     );
 
@@ -96,6 +97,10 @@ public interface ApiService {
     @GET("configs")
     Call<JsonArray> getConfig(
             @Query("name") String config_name
+    );
+
+    @GET("settings")
+    Call<JsonObject> getSettings(
     );
 
     @GET("cpanels")

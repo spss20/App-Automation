@@ -10,6 +10,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="android:fontFamily">@font/muli</item>
+        <item name="otpViewStyle">@style/OtpWidget.OtpView</item>
     </style>
 
     <style name="Theme.AppMaker.ActionBar" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
@@ -22,6 +23,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="android:fontFamily">@font/muli</item>
+        <item name="otpViewStyle">@style/OtpWidget.OtpView</item>
     </style>
 
 </resources>

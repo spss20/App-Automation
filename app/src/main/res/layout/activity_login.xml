@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayLogin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingStart="20dp"
@@ -24,10 +25,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Username / Email"
             android:layout_marginTop="30dp"
-            app:startIconDrawable="@drawable/ic_user_avatar"
-            >
+            android:hint="Username / Email"
+            app:startIconDrawable="@drawable/ic_user_avatar">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/user_name"
@@ -39,29 +39,29 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:hint="Password"
             app:passwordToggleEnabled="true"
-            android:layout_marginTop="20dp"
             app:startIconDrawable="@drawable/ic_password_lock">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white" />
+                android:background="@color/white"
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Forgot Password?"
-            android:fontFamily="@font/muli_bold"
-            android:textColor="@color/colorPrimary"
-            android:clickable="true"
-            android:background="?selectableItemBackgroundBorderless"
             android:layout_gravity="end"
             android:layout_marginTop="10dp"
-            />
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:fontFamily="@font/muli_bold"
+            android:text="Forgot Password?"
+            android:textColor="@color/colorPrimary" />
     </LinearLayout>
 
     <LinearLayout
@@ -74,43 +74,44 @@
             android:id="@+id/sign_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign In"
+            android:layout_marginTop="20dp"
             android:background="@drawable/button_bg"
             android:fontFamily="@font/muli_bold"
+            android:text="Sign In"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            />
+            android:textSize="18sp" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp"
-            android:layout_gravity="center_horizontal">
+            android:orientation="horizontal">
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Not registered yet?"
                 style="@style/RegularText"
-                />
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Create account."
+                android:text="Not registered yet?" />
+
+            <TextView
+                android:id="@+id/createAccountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:clickable="true"
                 android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
                 android:fontFamily="@font/muli_bold"
-                android:textColor="@color/colorPrimary"
-                />
+                android:text="Create account."
+                android:textColor="@color/colorPrimary" />
         </LinearLayout>
 
         <View
             android:layout_width="200dp"
             android:layout_height="5dp"
-            android:background="@drawable/black_line"
-            android:layout_marginTop="30dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="10dp"
-            />
+            android:background="@drawable/black_line" />
     </LinearLayout>
 </RelativeLayout>
