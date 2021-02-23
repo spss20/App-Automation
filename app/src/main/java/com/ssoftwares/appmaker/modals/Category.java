@@ -1,10 +1,5 @@
 package com.ssoftwares.appmaker.modals;
 
-import com.google.gson.JsonObject;
-import com.ssoftwares.appmaker.api.ApiClient;
-
-import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,7 +8,7 @@ public class Category implements Serializable {
     private String id;
     private String name;
     private String appCount;
-    private Image image;
+    private Attachment image;
     private List<Product> products;
 
     public Category() {}
@@ -34,7 +29,7 @@ public class Category implements Serializable {
         this.appCount = appCount;
     }
 
-    public Image getImage(){
+    public Attachment getImage(){
         return image;
     }
 

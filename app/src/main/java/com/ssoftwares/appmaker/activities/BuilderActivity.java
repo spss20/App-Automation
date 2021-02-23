@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,11 +28,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.ssoftwares.appmaker.BuildConfig;
 import com.ssoftwares.appmaker.R;
 import com.ssoftwares.appmaker.api.ApiClient;
 import com.ssoftwares.appmaker.api.ApiService;
@@ -56,15 +55,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -89,7 +90,7 @@ public class BuilderActivity extends AppCompatActivity {
     private LinearLayout rootView;
     private ApiService service;
     private SessionManager sessionManager;
-
+    private int subProductId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,29 +105,31 @@ public class BuilderActivity extends AppCompatActivity {
             return;
         }
         initParams();
-        try {
-            InputStream jsonInputStream = getAssets().open("config.json");
-            String data = IOUtils.toString(jsonInputStream, "UTF-8");
-            configHash = AppUtils.getMd5(data);
-            try {
-                //Check if a cache of same config file already exists
-                if (sessionManager.getConfigHash() != null) {
-                    if (sessionManager.getConfigHash().equals(AppUtils.getMd5(data))) {
-                        data = sessionManager.getConfig();
-                    }
-                }
-                rootJson = new JSONObject(data);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            rootJson = new JSONObject(data);
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            InputStream jsonInputStream = getAssets().open("config.json");
+//            String data = IOUtils.toString(jsonInputStream, "UTF-8");
+//            configHash = AppUtils.getMd5(data);
+//            try {
+//                //Check if a cache of same config file already exists
+//                if (sessionManager.getConfigHash() != null) {
+//                    if (sessionManager.getConfigHash().equals(AppUtils.getMd5(data))) {
+//                        data = sessionManager.getConfig();
+//                    }
+//                }
+//                rootJson = new JSONObject(data);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            rootJson = new JSONObject(data);
+//            subProductId = 5;
+//        } catch (IOException | JSONException e) {
+//            e.printStackTrace();
+//        }
 
         String data = getIntent().getStringExtra("config");
         if (data != null) {
             configHash = AppUtils.getMd5(data);
+            subProductId = getIntent().getIntExtra("subproduct_id", -1);
             try {
                 //Check if a cache of same config file already exists
                 if (sessionManager.getConfigHash() != null) {
@@ -159,7 +162,7 @@ public class BuilderActivity extends AppCompatActivity {
                 JSONArray schema = rootJson.getJSONArray("schema");
                 for (int i = 0; i < schema.length(); i++) {
                     JSONObject element = schema.getJSONObject(i);
-                    inflateView(rootView, element.getString("type"), element);
+                    inflateView(element.getString("type"), element);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -190,7 +193,7 @@ public class BuilderActivity extends AppCompatActivity {
                                     JSONArray schema = rootJson.getJSONArray("schema");
                                     for (int i = 0; i < schema.length(); i++) {
                                         JSONObject element = schema.getJSONObject(i);
-                                        inflateView(rootView, element.getString("type"), element);
+                                        inflateView(element.getString("type"), element);
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -206,7 +209,7 @@ public class BuilderActivity extends AppCompatActivity {
         }
     }
 
-    private void inflateView(LinearLayout rootView, String type, JSONObject element) throws JSONException {
+    private void inflateView(String type, JSONObject element) throws JSONException {
 
         switch (type) {
             case "boolean":
@@ -364,6 +367,7 @@ public class BuilderActivity extends AppCompatActivity {
         for (int i = 1; i < (jsonValues.length() + 1); i++) {
             values[i] = jsonValues.getString(i - 1);
         }
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(BuilderActivity.this,
                 android.R.layout.simple_spinner_item, values) {
             @Override
@@ -381,6 +385,16 @@ public class BuilderActivity extends AppCompatActivity {
         };
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
+
+        if (element.has("value")) {
+            String value = element.getString("value");
+            for (int j = 0; j < values.length; j++) {
+                if (values[j].equals(value)) {
+                    spinner.setSelection(j);
+                    break;
+                }
+            }
+        }
         rootView.addView(spinner);
     }
 
@@ -389,11 +403,17 @@ public class BuilderActivity extends AppCompatActivity {
         dynamicSwitch.setApiKey(element.getString("id"));
         dynamicSwitch.setLayoutParams(params15dp);
 
-        if (element.has("default")) dynamicSwitch.setChecked(element.getBoolean("default"));
-        else dynamicSwitch.setChecked(false);
-
         if (element.has("text")) dynamicSwitch.setText(element.getString("text"));
+
+        if (element.has("value")) {
+            boolean isChecked = element.getBoolean("value");
+            dynamicSwitch.setChecked(isChecked);
+        } else {
+            if (element.has("default")) dynamicSwitch.setChecked(element.getBoolean("default"));
+            else dynamicSwitch.setChecked(false);
+        }
         rootView.addView(dynamicSwitch);
+
     }
 
     private void inflateButton(JSONObject element) throws JSONException {
@@ -403,6 +423,7 @@ public class BuilderActivity extends AppCompatActivity {
             pickLayout.setApiKey(element.getString("id"));
             pickLayout.setLayoutParams(params15dp);
             pickLayout.setAction(action);
+
             Button pickFileButton = pickLayout.findViewById(R.id.pick_bt);
             TextView fileNameTv = pickLayout.findViewById(R.id.file_name_tv);
 
@@ -412,7 +433,7 @@ public class BuilderActivity extends AppCompatActivity {
             if (element.has("value")) {
                 String base = element.getString("value");
                 pickLayout.setFileBase64(base);
-                if (element.has("fileName")){
+                if (element.has("fileName")) {
                     fileNameTv.setText(element.getString("fileName"));
                     pickLayout.setFileName(element.getString("fileName"));
                 }
@@ -435,7 +456,47 @@ public class BuilderActivity extends AppCompatActivity {
             rootView.addView(pickLayout);
 
         } else if (action.equalsIgnoreCase("pickImage")) {
-            DynamicLinearLayout pickLayout = (DynamicLinearLayout) getLayoutInflater().inflate(R.layout.button_pick_image, null);
+            DynamicLinearLayout pickLayout = null;
+            LinearLayout.LayoutParams imageCanvasParams = null;
+
+            try {
+                if (element.has("dimension")) {
+                    String dimension = element.getString("dimension");
+                    float x = 1;
+                    float y = 1;
+                    float w = AppUtils.getImageWidth(dimension);
+                    float h = AppUtils.getImageHeight(dimension);
+                    if (w > h) {
+                        pickLayout = (DynamicLinearLayout) getLayoutInflater().inflate(R.layout.button_pick_image_vertical, null);
+                        x = w / h;
+                        int width = Math.round(x / y * 300);
+                        imageCanvasParams = new LinearLayout.LayoutParams(width, 300);
+                    }
+                    if (h > w || h == w) {
+                        pickLayout = (DynamicLinearLayout) getLayoutInflater().inflate(R.layout.button_pick_image, null);
+                        y = h / w;
+                        int height = Math.round(y / x * 400);
+                        imageCanvasParams =
+                                new LinearLayout.LayoutParams(400, height);
+                    }
+                    RelativeLayout imageCanvas = pickLayout.findViewById(R.id.image_canvas);
+                    imageCanvasParams.gravity = Gravity.CENTER_HORIZONTAL;
+                    imageCanvas.setLayoutParams(imageCanvasParams);
+
+                    TextView resolutionTv = pickLayout.findViewById(R.id.image_resolution);
+                    resolutionTv.setText(dimension);
+                    pickLayout.setDimension(dimension);
+
+                } else {
+                    pickLayout = (DynamicLinearLayout) getLayoutInflater().inflate(R.layout.button_pick_image, null);
+                    pickLayout.findViewById(R.id.image_resolution).setVisibility(View.GONE);
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                pickLayout = (DynamicLinearLayout) getLayoutInflater().inflate(R.layout.button_pick_image, null);
+                pickLayout.findViewById(R.id.image_resolution).setVisibility(View.GONE);
+            }
+
             pickLayout.setApiKey(element.getString("id"));
             pickLayout.setLayoutParams(params15dp);
             pickLayout.setAction(action);
@@ -455,7 +516,7 @@ public class BuilderActivity extends AppCompatActivity {
                 pickLayout.findViewById(R.id.image_placeholder).setVisibility(View.GONE);
                 pickLayout.findViewById(R.id.image_resolution).setVisibility(View.GONE);
                 pickLayout.setFileBase64(base);
-                if (element.has("fileName")){
+                if (element.has("fileName")) {
                     fileNameTv.setText(element.getString("fileName"));
                     pickLayout.setFileName(element.getString("fileName"));
                 }
@@ -464,6 +525,7 @@ public class BuilderActivity extends AppCompatActivity {
             int requestCode = new Random().nextInt(10000);
             pickLayout.setRequestCode(requestCode);
 
+            DynamicLinearLayout finalPickLayout = pickLayout;
             pickFileButton.setOnClickListener(v -> {
                 if (checkForPermission()) {
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -474,7 +536,7 @@ public class BuilderActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    startActivityForResult(intent, pickLayout.getRequestCode());
+                    startActivityForResult(intent, finalPickLayout.getRequestCode());
                 }
             });
             rootView.addView(pickLayout);
@@ -613,14 +675,14 @@ public class BuilderActivity extends AppCompatActivity {
                 data.put(childView.getApiKey(), text);
             } else if (view instanceof DynamicLinearLayout) {
                 DynamicLinearLayout childView = (DynamicLinearLayout) view;
-                if (childView.getUri() == null) {
+                if (childView.getFileBase64() == null) {
                     if (childView.isRequired()) {
                         Toast.makeText(this, "" + childView.getApiKey().toUpperCase() + " is required", Toast.LENGTH_SHORT).show();
                         return;
                     } else continue;
                 }
-                MultipartBody.Part fileBody = ApiClient.prepareFilePart(BuilderActivity.this,
-                        "files." + childView.getApiKey(), childView.getUri());
+                MultipartBody.Part fileBody = ApiClient.prepareFilePart(
+                        "files." + childView.getApiKey(), childView);
                 filesBodyList.add(fileBody);
             } else if (view instanceof SelectItemDynamicLayout) {
                 SelectItemDynamicLayout childView = (SelectItemDynamicLayout) view;
@@ -667,12 +729,19 @@ public class BuilderActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         AppUtils.dissmissLoadingBar();
-                        if (response.body() == null) {
+                        if (response.body() == null || response.code() != 200) {
                             Toast.makeText(BuilderActivity.this, "Api Execution Failed", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         if (response.body().has("outputUrl")) {
-                            AppUtils.showResultDialog(BuilderActivity.this, response.body().get("outputUrl").getAsString());
+                            String outputUrl = response.body().get("outputUrl").getAsString();
+                            int orderId = response.body().get("id").getAsInt();
+                            AppUtils.showResultDialog(BuilderActivity.this, outputUrl);
+                            try {
+                                createOrder(orderId, outputUrl);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         } else {
                             Toast.makeText(BuilderActivity.this, "ERR: No Output Url Found", Toast.LENGTH_SHORT).show();
                         }
@@ -683,6 +752,42 @@ public class BuilderActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable t) {
                         Toast.makeText(BuilderActivity.this, "Please check your internet connection", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void createOrder(int orderId, String outputUrl) throws JSONException {
+        saveConfigValues();
+        JSONObject data = new JSONObject();
+        data.put("outputUrl", outputUrl);
+        data.put("orderId", orderId);
+        if (subProductId != -1)
+            data.put("subproduct", new JSONArray().put(subProductId));
+
+        RequestBody dataBody = ApiClient.createPartFromString(data.toString());
+
+        RequestBody requestFile =
+                RequestBody.create(
+                        rootJson.toString(),
+                        MediaType.parse("application/json")
+                );
+        String fileName = UUID.randomUUID().toString().substring(0, 8) + ".json";
+        MultipartBody.Part configPart = MultipartBody.Part.createFormData("files.config", fileName, requestFile);
+
+        service.createOrder(sessionManager.getToken(), dataBody, configPart)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            Log.v(TAG, "Order Created Successfully");
+                        } else {
+                            Toast.makeText(BuilderActivity.this, "Failed to create order", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(BuilderActivity.this, "Failed to create order", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -698,7 +803,7 @@ public class BuilderActivity extends AppCompatActivity {
                     if (requestCode == ((DynamicLinearLayout) view).getRequestCode()) {
                         DynamicLinearLayout dynamicLinearLayout = (DynamicLinearLayout) view;
 
-                        if (data == null || data.getData() == null){
+                        if (data == null || data.getData() == null) {
                             Uri uCropUri = UCrop.getOutput(data);
                             if (uCropUri != null) {
                                 ((ImageView) dynamicLinearLayout.findViewById(R.id.selected_image)).setImageURI(uCropUri);
@@ -710,7 +815,7 @@ public class BuilderActivity extends AppCompatActivity {
                                 try {
                                     InputStream in = getContentResolver().openInputStream(uCropUri);
                                     byte[] imageBytes = IOUtils.toByteArray(in);
-                                    dynamicLinearLayout.setFileBase64(Base64.encodeToString(imageBytes , Base64.DEFAULT));
+                                    dynamicLinearLayout.setFileBase64(Base64.encodeToString(imageBytes, Base64.DEFAULT));
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -725,7 +830,11 @@ public class BuilderActivity extends AppCompatActivity {
                             String[] fileNameSplitted = fileName.split("\\.");
                             if (fileNameSplitted.length > 1) {
                                 if (fileNameSplitted[fileNameSplitted.length - 1].equalsIgnoreCase(dynamicLinearLayout.getExtension())) {
-                                    processIntentData(uri , dynamicLinearLayout , fileName);
+                                    try {
+                                        processIntentData(uri, dynamicLinearLayout, fileName);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else {
                                     Toast.makeText(this, "Invalid File. Please select a file with valid extension", Toast.LENGTH_SHORT).show();
                                 }
@@ -733,39 +842,49 @@ public class BuilderActivity extends AppCompatActivity {
                                 Toast.makeText(this, "Invalid File. Please select a file with valid extension", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                           processIntentData(uri , dynamicLinearLayout , fileName);
+                            try {
+                                processIntentData(uri, dynamicLinearLayout, fileName);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
             }
-        }
-        else if (requestCode == UCrop.RESULT_ERROR){
+        } else if (requestCode == UCrop.RESULT_ERROR) {
             final Throwable cropError = UCrop.getError(data);
-            Log.v("uCrop Error" , cropError.getLocalizedMessage());
+            Log.v("uCrop Error", cropError.getLocalizedMessage());
         }
     }
 
-    private void processIntentData(Uri uri, DynamicLinearLayout dynamicLinearLayout, String fileName) {
+    private void processIntentData(Uri uri, DynamicLinearLayout dynamicLinearLayout, String fileName) throws IOException {
         dynamicLinearLayout.setUri(uri);
         if (dynamicLinearLayout.getAction().equalsIgnoreCase("pickImage")) {
-            try {
+            if (dynamicLinearLayout.getDimension() != null) {
+                float x = 1;
+                float y = 1;
+                float w = dynamicLinearLayout.getImageWidth();
+                float h = dynamicLinearLayout.getImageHeight();
+                if (w > h)
+                    x = w / h;
+                if (h > w)
+                    y = h / w;
+
                 UCrop.of(uri, getImageFileUri())
-                        .withAspectRatio(16, 9)
-                        .withMaxResultSize(800, 450)
+                        .withAspectRatio(x, y)
+                        .withMaxResultSize(dynamicLinearLayout.getImageWidth(), dynamicLinearLayout.getImageHeight())
                         .start(this, dynamicLinearLayout.getRequestCode());
-            } catch (IOException e) {
-                e.printStackTrace();
+            } else {
+                UCrop.of(uri, getImageFileUri())
+                        .withMaxResultSize(1080, 1080)
+                        .start(this, dynamicLinearLayout.getRequestCode());
             }
         } else {
             dynamicLinearLayout.setFileName(fileName);
             ((TextView) dynamicLinearLayout.findViewById(R.id.file_name_tv)).setText(fileName);
-            try {
-                InputStream in = getContentResolver().openInputStream(uri);
-                byte[] imageBytes = IOUtils.toByteArray(in);
-                dynamicLinearLayout.setFileBase64(Base64.encodeToString(imageBytes , Base64.DEFAULT));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            InputStream in = getContentResolver().openInputStream(uri);
+            byte[] imageBytes = IOUtils.toByteArray(in);
+            dynamicLinearLayout.setFileBase64(Base64.encodeToString(imageBytes, Base64.DEFAULT));
         }
     }
 
@@ -780,6 +899,10 @@ public class BuilderActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        saveConfigValues();
+    }
+
+    private void saveConfigValues() {
         if (configHash == null)
             return;
         Log.v("Hash", configHash);
@@ -803,19 +926,17 @@ public class BuilderActivity extends AppCompatActivity {
                             childObject.put("value", text);
                         }
                     }
-                }
-                else if (view instanceof DynamicLinearLayout) {
+                } else if (view instanceof DynamicLinearLayout) {
                     DynamicLinearLayout childView = (DynamicLinearLayout) view;
                     for (int j = 0; j < schema.length(); j++) {
                         JSONObject childObject = schema.getJSONObject(j);
                         if (childObject.has("id") &&
                                 childObject.getString("id").equals(childView.getApiKey())) {
                             childObject.put("value", childView.getFileBase64());
-                            childObject.put("fileName" , childView.getFileName());
+                            childObject.put("fileName", childView.getFileName());
                         }
                     }
-                }
-                else if (view instanceof SelectItemDynamicLayout) {
+                } else if (view instanceof SelectItemDynamicLayout) {
                     SelectItemDynamicLayout childView = (SelectItemDynamicLayout) view;
                     String selected = childView.getSelectedId();
                     if (selected != null) {
@@ -825,6 +946,28 @@ public class BuilderActivity extends AppCompatActivity {
                                     childObject.getString("id").equals(childView.getApiKey())) {
                                 childObject.put("value", selected);
                             }
+                        }
+                    }
+                } else if (view instanceof DynamicSpinner) {
+                    DynamicSpinner childView = (DynamicSpinner) view;
+                    if (childView.getSelectedItemPosition() != 0) {
+                        String selectedEnum = (String) childView.getSelectedItem();
+                        for (int j = 0; j < schema.length(); j++) {
+                            JSONObject childObject = schema.getJSONObject(j);
+                            if (childObject.has("id") &&
+                                    childObject.getString("id").equals(childView.getApiKey())) {
+                                childObject.put("value", selectedEnum);
+                            }
+                        }
+                    }
+
+                } else if (view instanceof DynamicSwitch) {
+                    DynamicSwitch childView = (DynamicSwitch) view;
+                    for (int j = 0; j < schema.length(); j++) {
+                        JSONObject childObject = schema.getJSONObject(j);
+                        if (childObject.has("id") &&
+                                childObject.getString("id").equals(childView.getApiKey())) {
+                            childObject.put("value", childView.isChecked());
                         }
                     }
                 }

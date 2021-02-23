@@ -2,8 +2,6 @@ package com.ssoftwares.appmaker.modals;
 
 import com.google.gson.JsonObject;
 
-import org.json.JSONObject;
-
 import java.util.List;
 
 public class SubProduct {
@@ -12,7 +10,7 @@ public class SubProduct {
     String name;
     String description;
     JsonObject apischema;
-    List<Image> images;
+    List<Attachment> images;
 
     public String getId() {
         return id;
@@ -30,7 +28,7 @@ public class SubProduct {
         return apischema;
     }
 
-    public List<Image> getImages() {
+    public List<Attachment> getImages() {
         return images;
     }
 }

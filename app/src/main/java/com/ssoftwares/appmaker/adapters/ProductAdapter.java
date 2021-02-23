@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 import com.ssoftwares.appmaker.R;
 import com.ssoftwares.appmaker.activities.ProductDetailActivity;
-import com.ssoftwares.appmaker.modals.Image;
 import com.ssoftwares.appmaker.modals.Product;
 
 import java.util.List;

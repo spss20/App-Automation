@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 import com.ssoftwares.appmaker.R;
 import com.ssoftwares.appmaker.interfaces.ProductSelectedListener;
 import com.ssoftwares.appmaker.modals.Category;
-import com.ssoftwares.appmaker.modals.Image;
+import com.ssoftwares.appmaker.modals.Attachment;
 import com.ssoftwares.appmaker.modals.Product;
 
 import java.util.List;
@@ -51,7 +51,7 @@ public class ProductBottomSheetAdapter extends RecyclerView.Adapter<ProductBotto
                 holder.productCategory.append(categories.get(i).getName() + ", ");
         }
         if (product.getImages().size() != 0) {
-            Image image = product.getImages().get(0);
+            Attachment image = product.getImages().get(0);
             if (image.getFormats() != null) {
                 Picasso.get().load(image.getFormats().getThumbnail().getImageUrl())
                         .into(holder.productImage);

@@ -6,20 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.squareup.picasso.Picasso;
 import com.ssoftwares.appmaker.R;
-import com.ssoftwares.appmaker.modals.Banner;
-import com.ssoftwares.appmaker.modals.Image;
+import com.ssoftwares.appmaker.modals.Attachment;
 
 public class ImageFragment extends Fragment {
 
-    private final Image image;
+    private final Attachment image;
 
-    public ImageFragment(Image image){
+    public ImageFragment(Attachment image){
         this.image = image;
     }
 

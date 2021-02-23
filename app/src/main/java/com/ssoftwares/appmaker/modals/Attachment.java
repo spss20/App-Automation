@@ -4,7 +4,7 @@ import com.ssoftwares.appmaker.api.ApiClient;
 
 import java.io.Serializable;
 
-public class Image implements Serializable {
+public class Attachment implements Serializable {
     private String width;
     private String height;
     private String name;
@@ -25,6 +25,10 @@ public class Image implements Serializable {
 
     public String getImageUrl(){
         return ApiClient.BASE_URL + url;
+    }
+
+    public String getAttachmentUrl(){
+        return url;
     }
 
     public Formats getFormats() {

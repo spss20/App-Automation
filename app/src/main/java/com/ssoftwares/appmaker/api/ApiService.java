@@ -6,6 +6,7 @@ import com.ssoftwares.appmaker.modals.Banner;
 import com.ssoftwares.appmaker.modals.Category;
 import com.ssoftwares.appmaker.modals.Cpanel;
 import com.ssoftwares.appmaker.modals.Demo;
+import com.ssoftwares.appmaker.modals.Order;
 import com.ssoftwares.appmaker.modals.Product;
 import com.ssoftwares.appmaker.modals.SubProduct;
 
@@ -13,6 +14,8 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -112,4 +115,21 @@ public interface ApiService {
             @Path("id") String id
     );
 
+    @Multipart
+    @POST("orders")
+    Call<ResponseBody> createOrder(
+            @Header("Authorization") String token,
+            @Part("data") RequestBody data,
+            @Part MultipartBody.Part config
+    );
+
+    @GET("orders")
+    Call<List<Order>> getOrders(
+            @Header("Authorization") String token
+    );
+
+    @GET
+    Call<JsonObject> fetchJson(
+            @Url String url
+    );
 }

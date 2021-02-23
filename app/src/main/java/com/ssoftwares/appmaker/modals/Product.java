@@ -1,7 +1,6 @@
 package com.ssoftwares.appmaker.modals;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,9 +13,9 @@ public class Product implements Serializable {
     private String short_description;
     private String slug;
     private String created_at;
-    private List<Image> images;
+    private List<Attachment> images;
     private List<Category> categories;
-    private Image brochure;
+    private Attachment brochure;
     private boolean isAutomated;
 
     public String getId() {
@@ -59,11 +58,11 @@ public class Product implements Serializable {
         this.created_at = created_at;
     }
 
-    public List<Image> getImages() {
+    public List<Attachment> getImages() {
         return images;
     }
 
-    public void setImages(List<Image> images) {
+    public void setImages(List<Attachment> images) {
         this.images = images;
     }
 
@@ -74,8 +73,8 @@ public class Product implements Serializable {
         slug = in.readString();
         created_at = in.readString();
         if (in.readByte() == 0x01) {
-            images = new ArrayList<Image>();
-            in.readList(images, Image.class.getClassLoader());
+            images = new ArrayList<Attachment>();
+            in.readList(images, Attachment.class.getClassLoader());
         } else {
             images = null;
         }
@@ -105,11 +104,11 @@ public class Product implements Serializable {
         isAutomated = automated;
     }
 
-    public Image getBrochure() {
+    public Attachment getBrochure() {
         return brochure;
     }
 
-    public void setBrochure(Image brochure) {
+    public void setBrochure(Attachment brochure) {
         this.brochure = brochure;
     }
 }

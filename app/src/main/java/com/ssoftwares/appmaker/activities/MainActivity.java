@@ -272,6 +272,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.putExtra("config_name", "cpanel");
                 startActivity(intent);
                 break;
+            case R.id.my_apps:
+                intent  = new Intent(this , MyApps.class);
+                startActivity(intent);
+                break;
             case R.id.create_admin_panel:
                 intent = new Intent(this, BuilderActivity.class);
                 intent.putExtra("config_name", "admin_panel");
