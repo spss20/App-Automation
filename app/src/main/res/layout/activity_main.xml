@@ -70,6 +70,7 @@
                     android:layout_marginTop="35dp"
                     android:fontFamily="@font/muli_bold"
                     android:text="Hey Surya,"
+                    android:id="@+id/textViewName"
                     android:textColor="@color/black"
                     android:textSize="25sp"
                     android:visibility="visible" />

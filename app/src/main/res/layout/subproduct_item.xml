@@ -4,15 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="250dp"
+
     android:clickable="true"
-    android:focusable="true"
-    android:foreground="?selectableItemBackground"
+    android:foreground="?attr/selectableItemBackground"
+    android:background="@color/white"
     app:cardCornerRadius="10dp"
     tools:layout_width="200dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground">
 
         <ImageView
             android:id="@+id/subproduct_image"
@@ -32,9 +34,9 @@
                 style="@style/HeadingText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:gravity="center"
                 android:text="UserApp"
                 android:textColor="@color/white" />
         </FrameLayout>

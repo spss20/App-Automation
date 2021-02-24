@@ -21,7 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppMaker"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.ForgotPassword"></activity>
+        <activity android:name=".activities.SplashBuilderActivity"></activity>
+        <activity android:name=".activities.ForgotPassword" />
         <activity android:name=".activities.MainActivity" />
         <activity
             android:name=".activities.MyCpanels"
@@ -37,6 +38,8 @@
         <activity android:name=".activities.ProductsActivity" />
         <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.BuilderActivity" />
+        <activity android:name=".activities.CategoryActivity" />
+        <activity android:name=".activities.MyApps" />
         <activity
             android:name=".activities.SplashActivity"
             android:windowSoftInputMode="adjustPan">

@@ -23,7 +23,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
     private List<Order> orderList;
     private OnClickInterface onClickInterface;
 
-    public OrdersAdapter(Context mContext, List<Order> orderList , OnClickInterface onClickInterface) {
+    public OrdersAdapter(Context mContext, List<Order> orderList, OnClickInterface onClickInterface) {
         this.mContext = mContext;
         this.orderList = orderList;
         this.onClickInterface = onClickInterface;
@@ -32,15 +32,15 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
     @NonNull
     @Override
     public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.order_item , parent , false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.order_item, parent, false);
         return new OrderViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         Order order = orderList.get(position);
-        holder.subproductName.setText(order.getSubproduct().getName());
-        
+        holder.subproductName.setText(""+order.getOrderId());
+
         holder.itemView.setOnClickListener(v -> {
             onClickInterface.onClick(order);
         });
@@ -64,8 +64,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
         }
     }
 
-    public void updateData(List<Order> orderList){
+    public void updateData(List<Order> orderList) {
         this.orderList = orderList;
         notifyDataSetChanged();
-    };
+    }
+
+    ;
 }

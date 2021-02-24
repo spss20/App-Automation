@@ -5,6 +5,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="10dp"
+    android:clickable="true"
+    android:background="@color/white"
     tools:context=".fragments.BannerFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -13,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
+        android:background="?attr/selectableItemBackground"
         android:adjustViewBounds="true"
         android:src="@drawable/product_placeholder" />
 

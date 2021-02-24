@@ -91,12 +91,13 @@ public class BuilderActivity extends AppCompatActivity {
     private ApiService service;
     private SessionManager sessionManager;
     private int subProductId;
+    TextView textViewClear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_builder);
-
+        textViewClear = findViewById(R.id.textViewClear);
         service = ApiClient.create();
         sessionManager = new SessionManager(this);
         if (sessionManager.getToken() == null) {
@@ -177,7 +178,8 @@ public class BuilderActivity extends AppCompatActivity {
                         public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
                             if (response.body() != null) {
                                 try {
-                                    String data = response.body().getAsJsonArray().get(0).getAsJsonObject().get("data").getAsJsonObject().toString();
+                                    String data = response.body().getAsJsonArray()
+                                            .get(0).getAsJsonObject().get("data").getAsJsonObject().toString();
                                     configHash = AppUtils.getMd5(data);
                                     //Check if a cache of same config file already exists
                                     if (sessionManager.getConfigHash() != null) {
@@ -356,8 +358,51 @@ public class BuilderActivity extends AppCompatActivity {
         rootView.addView(editext);
     }
 
+    //    private void inflateEnum(JSONObject element) throws JSONException {
+//        DynamicSpinner spinner = (DynamicSpinner) getLayoutInflater()
+//                .inflate(R.layout.enum_item, null);
+//        spinner.setApiKey(element.getString("id"));
+//        spinner.setLayoutParams(params15dp);
+//
+//        JSONArray jsonValues = element.getJSONArray("values");
+//        String[] values = new String[jsonValues.length() + 1];
+//        values[0] = element.getString("text");
+//        for (int i = 1; i < (jsonValues.length() + 1); i++) {
+//            values[i] = jsonValues.getString(i - 1);
+//        }
+//
+//        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(BuilderActivity.this,
+//                android.R.layout.simple_spinner_item, values) {
+//            @Override
+//            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+//                View view = super.getDropDownView(position, convertView, parent);
+//                TextView tv = (TextView) view;
+//                tv.setGravity(Gravity.CENTER_HORIZONTAL);
+//                if (position == 0) {
+//                    tv.setTextColor(Color.GRAY);
+//                } else {
+//                    tv.setTextColor(Color.BLACK);
+//                }
+//                return view;
+//            }
+//        };
+//        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinner.setAdapter(arrayAdapter);
+//
+//        if (element.has("value")) {
+//            String value = element.getString("value");
+//            for (int j = 0; j < values.length; j++) {
+//                if (values[j].equals(value)) {
+//                    spinner.setSelection(j);
+//                    break;
+//                }
+//            }
+//        }
+//        rootView.addView(spinner);
+//    }
     private void inflateEnum(JSONObject element) throws JSONException {
-        DynamicSpinner spinner = (DynamicSpinner) getLayoutInflater().inflate(R.layout.enum_item, null);
+        DynamicSpinner spinner = (DynamicSpinner) getLayoutInflater()
+                .inflate(R.layout.enum_item, null);
         spinner.setApiKey(element.getString("id"));
         spinner.setLayoutParams(params15dp);
 
@@ -369,9 +414,10 @@ public class BuilderActivity extends AppCompatActivity {
         }
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(BuilderActivity.this,
-                android.R.layout.simple_spinner_item, values) {
+                R.layout.layout_spinnertype, values) {
             @Override
-            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            public View getDropDownView(int position, @Nullable View convertView,
+                                        @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
                 tv.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -383,7 +429,7 @@ public class BuilderActivity extends AppCompatActivity {
                 return view;
             }
         };
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        arrayAdapter.setDropDownViewResource(R.layout.layout_spinnertype);
         spinner.setAdapter(arrayAdapter);
 
         if (element.has("value")) {
@@ -399,7 +445,8 @@ public class BuilderActivity extends AppCompatActivity {
     }
 
     private void inflateBoolean(JSONObject element) throws JSONException {
-        DynamicSwitch dynamicSwitch = (DynamicSwitch) getLayoutInflater().inflate(R.layout.switch_item, null);
+        DynamicSwitch dynamicSwitch =
+                (DynamicSwitch) getLayoutInflater().inflate(R.layout.switch_item, null);
         dynamicSwitch.setApiKey(element.getString("id"));
         dynamicSwitch.setLayoutParams(params15dp);
 
@@ -488,12 +535,14 @@ public class BuilderActivity extends AppCompatActivity {
                     pickLayout.setDimension(dimension);
 
                 } else {
-                    pickLayout = (DynamicLinearLayout) getLayoutInflater().inflate(R.layout.button_pick_image, null);
+                    pickLayout = (DynamicLinearLayout) getLayoutInflater()
+                            .inflate(R.layout.button_pick_image, null);
                     pickLayout.findViewById(R.id.image_resolution).setVisibility(View.GONE);
                 }
             } catch (NumberFormatException e) {
                 e.printStackTrace();
-                pickLayout = (DynamicLinearLayout) getLayoutInflater().inflate(R.layout.button_pick_image, null);
+                pickLayout = (DynamicLinearLayout)
+                        getLayoutInflater().inflate(R.layout.button_pick_image, null);
                 pickLayout.findViewById(R.id.image_resolution).setVisibility(View.GONE);
             }
 

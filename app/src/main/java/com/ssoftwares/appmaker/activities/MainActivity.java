@@ -1,5 +1,7 @@
 package com.ssoftwares.appmaker.activities;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.se.omapi.Session;
@@ -8,7 +10,12 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,8 +29,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.JsonObject;
+import com.ssoftwares.appmaker.BuildConfig;
 import com.ssoftwares.appmaker.R;
 import com.ssoftwares.appmaker.adapters.BannerAdapter;
 import com.ssoftwares.appmaker.adapters.CategoryAdapter;
@@ -36,6 +45,7 @@ import com.ssoftwares.appmaker.modals.Category;
 import com.ssoftwares.appmaker.modals.Product;
 import com.ssoftwares.appmaker.modals.User;
 import com.ssoftwares.appmaker.utils.SessionManager;
+import com.ssoftwares.appmaker.utils.SnackUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +72,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     EditText editTextSearch;
     CommonApis commonApis;
 
+    String versionName;
+    BottomSheetDialog bottomSheetDialog;
+
+    Dialog dialogMaintains;
+    SnackUtils snackUtils;
+    RelativeLayout mainSplash;
+    private static final String TAG = "MainActivity";
+    TextView textViewName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,10 +96,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         textViewAllNewest = findViewById(R.id.textAllNewestProducts);
         textViewAllCatgeory = findViewById(R.id.allCategory);
         editTextSearch = findViewById(R.id.editTextSearch);
+        mainSplash = findViewById(R.id.mainSplash);
+        textViewName = findViewById(R.id.textViewName);
+
         User user = sessionManager.getUser();
+        Log.d(TAG, "onCreate: " + user.getEmail());
         if (user != null) {
             userName.setText(user.getUsername());
             navigationView.getMenu().findItem(R.id.logout).setTitle("Logout");
+            textViewName.setText("Hey " + user.getUsername() + ",");
         } else {
             userName.setText("User not logged");
             navigationView.getMenu().findItem(R.id.logout).setTitle("Login");
@@ -200,6 +224,114 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    public void showUpdateDialog() {
+        bottomSheetDialog =
+                new BottomSheetDialog(MainActivity.this,
+                        R.style.AppBottomSheetDialogTheme);
+        bottomSheetDialog.setCancelable(true);
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
+        bottomSheetDialog.setContentView(R.layout.layout_update_dialog);
+        bottomSheetDialog.setCancelable(false);
+        bottomSheetDialog.setCanceledOnTouchOutside(false);
+        bottomSheetDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+
+
+        //  bottomSheetDialog.set(DialogFragment.STYLE_NO_FRAME, R.style.AppBottomSheetDialogTheme);
+        bottomSheetDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        Button buttonSubmit = (Button)
+                bottomSheetDialog.findViewById(R.id.submitOTP);
+        ImageView imageView = bottomSheetDialog.findViewById(R.id.closeButton);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.cancel();
+
+            }
+        });
+        buttonSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        bottomSheetDialog.show();
+        // Save verification ID and resending token so we can use them later
+
+    }
+
+
+    public void showMaintanceDialog(Context mContext) {
+        dialogMaintains = new Dialog(mContext, R.style.AppBottomSheetDialogTheme);
+
+        dialogMaintains.setContentView(R.layout.layout_maintance_dialog);
+
+        dialogMaintains.setCancelable(false);
+        dialogMaintains.setCanceledOnTouchOutside(false);
+        dialogMaintains.getWindow().setSoftInputMode(WindowManager
+                .LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        Window window = dialogMaintains.getWindow();
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+
+
+        //  bottomSheetDialog.set(DialogFragment.STYLE_NO_FRAME, R.style.AppBottomSheetDialogTheme);
+        dialogMaintains.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        ImageView imageView = dialogMaintains.findViewById(R.id.closeButton);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogMaintains.cancel();
+
+            }
+        });
+
+        dialogMaintains.show();
+        // Save verification ID and resending token so we can use them later
+
+    }
+
+    public void getSettings() {
+        service.getSettings().enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
+                JsonObject jsonObject = response.body();
+                versionName = BuildConfig.VERSION_NAME;
+                Log.d(TAG, "onResponse: Current version  " + versionName + "" + response.body());
+                if (jsonObject.has("maintenance")) {
+                    if (jsonObject.get("maintenance").getAsBoolean()) {
+                        Log.d(TAG, "onResponse: Under Maintenance");
+                        showMaintanceDialog(MainActivity.this);
+                        return;
+                    } else {
+                        // showMaintanceDialog(SplashActivity.this);
+                    }
+
+                }
+
+                if (jsonObject.has("app_version")) {
+                    if (!versionName.equals(jsonObject.get("app_version"))) {
+                        Log.d(TAG, "onResponse: New Update Available");
+                        showUpdateDialog();
+                        return;
+                    } else {
+                        Intent intent = new Intent(MainActivity.this,
+                                LoginActivity.class);
+                        startActivity(intent);
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+    }
+
 
     private void getBanners() {
         service.getBanners().enqueue(new Callback<List<Banner>>() {
@@ -273,7 +405,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent);
                 break;
             case R.id.my_apps:
-                intent  = new Intent(this , MyApps.class);
+                intent = new Intent(this, MyApps.class);
                 startActivity(intent);
                 break;
             case R.id.create_admin_panel:
@@ -292,6 +424,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     TextView userName = navigationView.getHeaderView(0).findViewById(R.id.user_name);
                     userName.setText("User not logged");
                     Toast.makeText(this, "Successfully logged out", Toast.LENGTH_SHORT).show();
+                    intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
                 } else {
                     intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);

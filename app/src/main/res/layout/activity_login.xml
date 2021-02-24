@@ -57,6 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginTop="10dp"
+            android:id="@+id/forgotPassword"
             android:background="?selectableItemBackgroundBorderless"
             android:clickable="true"
             android:fontFamily="@font/muli_bold"

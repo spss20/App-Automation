@@ -38,14 +38,14 @@ public class MyApps extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_apps);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("My Apps");
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setTitle("My Apps");
 
         sessionManager = new SessionManager(this);
         service = ApiClient.create();
 
         RecyclerView ordersRecycler = findViewById(R.id.orders_recycler);
-        adapter = new OrdersAdapter(this, new ArrayList<>() , onClickInterface);
+        adapter = new OrdersAdapter(this, new ArrayList<>(), onClickInterface);
         ordersRecycler.setLayoutManager(new LinearLayoutManager(this));
         ordersRecycler.setAdapter(adapter);
 
@@ -74,14 +74,14 @@ public class MyApps extends AppCompatActivity {
         @Override
         public void onClick(Object object) {
             Order order = (Order) object;
-            String url = order.getConfig().getAttachmentUrl().replace("%2f" , "/");
+            String url = order.getConfig().getAttachmentUrl().replace("%2f", "/");
             service.fetchJson(order.getConfig().getImageUrl())
                     .enqueue(new Callback<JsonObject>() {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                            if (response.isSuccessful()){
-                                Intent intent = new Intent(MyApps.this , BuilderActivity.class);
-                                intent.putExtra("config" , response.body().toString());
+                            if (response.isSuccessful()) {
+                                Intent intent = new Intent(MyApps.this, BuilderActivity.class);
+                                intent.putExtra("config", response.body().toString());
                                 startActivity(intent);
                             } else
                                 Toast.makeText(MyApps.this, "Cannot fetch json file", Toast.LENGTH_SHORT).show();
@@ -98,7 +98,7 @@ public class MyApps extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
         }

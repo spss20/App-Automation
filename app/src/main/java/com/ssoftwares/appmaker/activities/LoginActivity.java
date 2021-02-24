@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView createAccountTextView;
     SnackUtils snackUtils;
     View mainView;
+    TextView forgotPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,15 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         signIn = findViewById(R.id.sign_in);
         mainView = findViewById(R.id.mainLayLogin);
+        forgotPassword = findViewById(R.id.forgotPassword);
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, ForgotPassword.class);
+                startActivity(intent);
+
+            }
+        });
 
         createAccountTextView = findViewById(R.id.createAccountTextView);
         snackUtils = new SnackUtils(this);
