@@ -107,7 +107,8 @@ public interface ApiService {
     @GET("cpanels")
     Call<List<Cpanel>> getCpanels(
             @Header("Authorization") String token,
-            @Query("user_id") String user_id
+            @Query("user_id") String user_id,
+            @Query("_sort") String sort
     );
 
     @GET("cpanels/{id}")
@@ -124,7 +125,6 @@ public interface ApiService {
             @Part MultipartBody.Part config,
             @Part MultipartBody.Part orderImage
     );
-
 
     @GET("orders")
     Call<List<Order>> getOrders(

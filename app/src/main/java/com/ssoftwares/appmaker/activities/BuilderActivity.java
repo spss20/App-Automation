@@ -817,7 +817,8 @@ public class BuilderActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
-                            Log.v(TAG, "Order Created Successfully");
+                            Toast.makeText(BuilderActivity.this,
+                                    "You may cancel or dismiss dialog now and can view the progress later in MyApps section in HOME", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(BuilderActivity.this, "Failed to create order", Toast.LENGTH_SHORT).show();
                         }

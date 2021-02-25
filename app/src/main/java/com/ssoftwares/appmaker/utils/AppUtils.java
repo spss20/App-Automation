@@ -209,7 +209,7 @@ public class AppUtils {
             @Override
             public void onClick(View v) {
                 resultDialog.dismiss();
-                activity.finish();
+//                activity.finish();
             }
         });
         progressText.setText("Initialising & Configuring project");

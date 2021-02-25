@@ -17,8 +17,13 @@ import com.ssoftwares.appmaker.api.ApiClient;
 import com.ssoftwares.appmaker.api.ApiService;
 import com.ssoftwares.appmaker.interfaces.OnClickInterface;
 import com.ssoftwares.appmaker.modals.Order;
+import com.ssoftwares.appmaker.modals.Step;
 import com.ssoftwares.appmaker.utils.AppUtils;
 import com.ssoftwares.appmaker.utils.SessionManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +50,8 @@ public class MyApps extends AppCompatActivity {
         service = ApiClient.create();
 
         RecyclerView ordersRecycler = findViewById(R.id.orders_recycler);
-        adapter = new OrdersAdapter(this, new ArrayList<>() , onClickInterface);
+        adapter = new OrdersAdapter(this, new ArrayList<>() , onOrderClick ,
+                onShowOutputClick);
         ordersRecycler.setLayoutManager(new LinearLayoutManager(this));
         ordersRecycler.setAdapter(adapter);
 
@@ -70,11 +76,10 @@ public class MyApps extends AppCompatActivity {
                 });
     }
 
-    private OnClickInterface onClickInterface = new OnClickInterface() {
+    private final OnClickInterface onOrderClick = new OnClickInterface() {
         @Override
         public void onClick(Object object) {
             Order order = (Order) object;
-            String url = order.getConfig().getAttachmentUrl().replace("%2f" , "/");
             service.fetchJson(order.getConfig().getImageUrl())
                     .enqueue(new Callback<JsonObject>() {
                         @Override
@@ -93,6 +98,48 @@ public class MyApps extends AppCompatActivity {
                         }
                     });
 
+        }
+    };
+
+    private final OnClickInterface onShowOutputClick = new OnClickInterface() {
+        @Override
+        public void onClick(Object object) {
+            Order order = (Order) object;
+            service.fetchJson(order.getConfig().getImageUrl())
+                    .enqueue(new Callback<JsonObject>() {
+                        @Override
+                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                            if (response.isSuccessful()){
+                                try {
+                                    JSONObject rootJson = new JSONObject(response.body().toString());
+                                    if (rootJson.has("steps")) {
+                                        JSONArray stepsSchema = rootJson.getJSONArray("steps");
+                                        List<Step> stepList = new ArrayList<>();
+                                        for (int j = 0; j < stepsSchema.length(); j++) {
+                                            JSONObject element = stepsSchema.getJSONObject(j);
+                                            Step step = new Step();
+                                            step.setOrder(element.getInt("order"));
+                                            step.setStepName(element.getString("name"));
+                                            step.setStepSlug(element.getString("slug"));
+                                            step.setStepMessage(element.getString("message"));
+                                            stepList.add(step);
+                                        }
+                                        if (stepList.size() != 0)
+                                            AppUtils.showResultDialog(MyApps.this, order.getOutputUrl(), stepList);
+                                    } else
+                                        AppUtils.showResultDialog(MyApps.this, order.getOutputUrl());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            } else
+                                Toast.makeText(MyApps.this, "Cannot fetch json file", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(Call<JsonObject> call, Throwable t) {
+                            AppUtils.handleNoInternetConnection(MyApps.this);
+                        }
+                    });
         }
     };
 
