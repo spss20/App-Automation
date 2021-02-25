@@ -21,7 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppMaker"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.SplashBuilderActivity"></activity>
+        <activity android:name=".activities.PagesActivity"></activity>
+        <activity android:name=".activities.SplashBuilderActivity" />
         <activity android:name=".activities.ForgotPassword" />
         <activity android:name=".activities.MainActivity" />
         <activity

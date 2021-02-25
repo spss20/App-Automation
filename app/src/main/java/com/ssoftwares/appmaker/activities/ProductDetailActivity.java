@@ -48,10 +48,8 @@ public class ProductDetailActivity extends AppCompatActivity implements BottomNa
         setContentView(R.layout.activity_product_detail);
         product = (Product) getIntent().getSerializableExtra("data");
         service = ApiClient.create();
-
         ViewPager2 viewPager = findViewById(R.id.viewpager);
         productDescription = findViewById(R.id.product_desc);
-
         productPageNav = findViewById(R.id.product_page_nav);
         productPageNav.setOnNavigationItemSelectedListener(this);
 
@@ -74,7 +72,7 @@ public class ProductDetailActivity extends AppCompatActivity implements BottomNa
             getProduct(id);
             getSupportActionBar().setTitle(name);
         } else {
-           init();
+            init();
         }
 
     }
@@ -91,7 +89,8 @@ public class ProductDetailActivity extends AppCompatActivity implements BottomNa
     }
 
     private void updateMarkdown(String d) {
-        String description = d.replaceAll("/uploads", ApiClient.BASE_URL + "/uploads");
+        String description = d.replaceAll("/uploads",
+                ApiClient.BASE_URL + "/uploads");
         productDescription.setMarkDownText(description);
         productDescription.evaluateJavascript("(function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();",
                 new ValueCallback<String>() {
@@ -158,12 +157,14 @@ public class ProductDetailActivity extends AppCompatActivity implements BottomNa
                 break;
             case R.id.build_apps:
                 if (new SessionManager(this).getToken() != null) {
-                    intent = new Intent(ProductDetailActivity.this, SubProductsActivity.class);
+                    intent = new Intent(ProductDetailActivity.this,
+                            SubProductsActivity.class);
                     intent.putExtra("product_id", product.getId());
                     intent.putExtra("product_name", product.getName());
+                    intent.putExtra("is_AdminPanel", product.isAdminPanel());
                     startActivity(intent);
                 } else {
-                    intent = new Intent(ProductDetailActivity.this , LoginActivity.class);
+                    intent = new Intent(ProductDetailActivity.this, LoginActivity.class);
                     startActivity(intent);
                 }
                 break;

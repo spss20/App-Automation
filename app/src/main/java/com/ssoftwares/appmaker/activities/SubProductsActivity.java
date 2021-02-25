@@ -32,6 +32,8 @@ public class SubProductsActivity extends AppCompatActivity {
 
     SubProductAdapter adapter;
     ApiService service;
+    ArrayList<SubProduct> subProductArrayList = new ArrayList<>();
+    String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,8 @@ public class SubProductsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sub_products);
 
         String productId = getIntent().getStringExtra("product_id");
-        String name = getIntent().getStringExtra("product_name");
+        name = getIntent().getStringExtra("product_name");
+        boolean isAdminPanel = getIntent().getBooleanExtra("is_AdminPanel", false);
         if (productId == null) finish();
         service = ApiClient.create();
 
@@ -51,27 +54,38 @@ public class SubProductsActivity extends AppCompatActivity {
         toolbarTitle.setText("Build " + name);
 
         RecyclerView subProductRecycler = findViewById(R.id.subproduct_recycler);
-        subProductRecycler.setLayoutManager(new GridLayoutManager(this , 2));
+        subProductRecycler.setLayoutManager(new GridLayoutManager(this, 2));
         int px15 = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 15,
                 getResources().getDisplayMetrics()
         );
-        subProductRecycler.addItemDecoration(new SpaceItemDecoration(2 , px15 , true));
+        subProductRecycler.addItemDecoration(new SpaceItemDecoration(2, px15, true));
 
-        adapter = new SubProductAdapter(this , new ArrayList<>());
+        adapter = new SubProductAdapter(this, new ArrayList<>());
         subProductRecycler.setAdapter(adapter);
 
-        getSubProducts(productId);
+        getSubProducts(productId, isAdminPanel);
     }
 
-    private void getSubProducts(String productId) {
+    private void getSubProducts(String productId, boolean isAdminPanel) {
         service.getSubProducts(productId)
                 .enqueue(new Callback<List<SubProduct>>() {
                     @Override
-                    public void onResponse(Call<List<SubProduct>> call, Response<List<SubProduct>> response) {
-                        if (response.body() != null){
-                            adapter.updateData(response.body());
+                    public void onResponse(Call<List<SubProduct>> call,
+                                           Response<List<SubProduct>> response) {
+                        if (response.body() != null) {
+                            subProductArrayList.clear();
+                            if (isAdminPanel) {
+                                SubProduct subProduct = new SubProduct();
+                                subProduct.setId(productId);
+                                subProduct.setName("Admin Panel " + name);
+                                subProduct.setDescription("admin");
+                                subProductArrayList.add(subProduct);
+
+                            }
+                            subProductArrayList.addAll(response.body());
+                            adapter.updateData(subProductArrayList);
                         } else
                             Toast.makeText(SubProductsActivity.this, "Failed to fetch subcategories", Toast.LENGTH_SHORT).show();
                     }
@@ -85,7 +99,7 @@ public class SubProductsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
         }

@@ -32,7 +32,7 @@ public class SubProductAdapter extends RecyclerView.Adapter<SubProductAdapter.Su
     @NonNull
     @Override
     public SubProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.subproduct_item , parent , false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.subproduct_item, parent, false);
         return new SubProductViewHolder(view);
     }
 
@@ -41,18 +41,27 @@ public class SubProductAdapter extends RecyclerView.Adapter<SubProductAdapter.Su
         SubProduct subProduct = subProductList.get(position);
         holder.subproductName.setText(subProduct.getName());
 
-        if (subProduct.getImages()!= null && subProduct.getImages().size() != 0)
+        if (subProduct.getImages() != null && subProduct.getImages().size() != 0)
             Picasso.get().load(subProduct.getImages().get(0).getImageUrl()).into(holder.subproductImage);
 
         holder.itemView.setOnClickListener(v -> {
-            if (subProduct.getApischema() == null){
-                Toast.makeText(mContext, "Error: Json schema invalid, contact admin to fix this problem", Toast.LENGTH_SHORT).show();
-            } else {
+            if (subProduct.getDescription().equals("admin")) {
                 Intent intent = new Intent(mContext, BuilderActivity.class);
-                intent.putExtra("config", subProduct.getApischema().toString());
-                intent.putExtra("subproduct_name" , subProduct.getName());
-                intent.putExtra("subproduct_id" , subProduct.getId());
+                intent.putExtra("config_name", "admin_panel");
+                intent.putExtra("subproduct_name", subProduct.getName());
+                intent.putExtra("product_id", subProduct.getId());
                 mContext.startActivity(intent);
+            } else {
+                if (subProduct.getApischema() == null) {
+                    Toast.makeText(mContext, "Error: Json schema invalid, contact admin to fix this problem", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(mContext, BuilderActivity.class);
+                    intent.putExtra("config", subProduct.getApischema().toString());
+                    intent.putExtra("subproduct_name", subProduct.getName());
+                    intent.putExtra("subproduct_id", subProduct.getId());
+                    mContext.startActivity(intent);
+                }
+
             }
         });
     }
@@ -65,6 +74,7 @@ public class SubProductAdapter extends RecyclerView.Adapter<SubProductAdapter.Su
     public static class SubProductViewHolder extends RecyclerView.ViewHolder {
         ImageView subproductImage;
         TextView subproductName;
+
         public SubProductViewHolder(@NonNull View itemView) {
             super(itemView);
             subproductImage = itemView.findViewById(R.id.subproduct_image);
@@ -72,7 +82,7 @@ public class SubProductAdapter extends RecyclerView.Adapter<SubProductAdapter.Su
         }
     }
 
-    public void updateData(List<SubProduct> subProductList){
+    public void updateData(List<SubProduct> subProductList) {
         this.subProductList = subProductList;
         notifyDataSetChanged();
     }

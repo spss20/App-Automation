@@ -99,6 +99,11 @@ public interface ApiService {
             @Query("name") String config_name
     );
 
+    @GET("static-pages")
+    Call<JsonObject> getStatic_Pages(
+
+    );
+
     @GET("settings")
     Call<JsonObject> getSettings(
     );

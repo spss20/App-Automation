@@ -417,6 +417,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 sessionManager.clearCache();
                 Toast.makeText(this, "Cache cleared successfully", Toast.LENGTH_SHORT).show();
                 break;
+
+            case R.id.privacy_policy:
+                intent = new Intent(this, PagesActivity.class);
+                intent.putExtra("page_name", "privacy_policy");
+                intent.putExtra("tittle", "Privacy Policy");
+                startActivity(intent);
+                break;
+            case R.id.terms_condition:
+                intent = new Intent(this, PagesActivity.class);
+                intent.putExtra("page_name", "terms_condition");
+                intent.putExtra("tittle", "Terms & Conditions");
+                startActivity(intent);
+                break;
+            case R.id.about_us:
+                intent = new Intent(this, PagesActivity.class);
+                intent.putExtra("page_name", "about_us");
+                intent.putExtra("tittle", "About Us");
+                startActivity(intent);
+                break;
             case R.id.logout:
                 if (sessionManager.getUser() != null) {
                     sessionManager.logout();

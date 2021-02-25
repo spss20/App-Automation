@@ -91,7 +91,9 @@ public class BuilderActivity extends AppCompatActivity {
     private ApiService service;
     private SessionManager sessionManager;
     private int subProductId;
+    String productId;
     TextView textViewClear;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +172,7 @@ public class BuilderActivity extends AppCompatActivity {
             }
         else {
             String name = getIntent().getStringExtra("config_name");
+            productId = getIntent().getStringExtra("product_id");
             if (name == null)
                 return;
             service.getConfig(name)
@@ -179,7 +182,8 @@ public class BuilderActivity extends AppCompatActivity {
                             if (response.body() != null) {
                                 try {
                                     String data = response.body().getAsJsonArray()
-                                            .get(0).getAsJsonObject().get("data").getAsJsonObject().toString();
+                                            .get(0).getAsJsonObject().get("data")
+                                            .getAsJsonObject().toString();
                                     configHash = AppUtils.getMd5(data);
                                     //Check if a cache of same config file already exists
                                     if (sessionManager.getConfigHash() != null) {
@@ -266,11 +270,20 @@ public class BuilderActivity extends AppCompatActivity {
             selectButton.setText(element.getString("text"));
             if (element.has("isRequired"))
                 selectProduct.setRequired(element.getBoolean("isRequired"));
-            if (element.has("value")) {
-                String selectedId = element.getString("value");
-                selectProduct.setSelectedId(selectedId);
-                getSingleProduct(selectedId, selectProduct);
+
+            if (productId != null) {
+                // String selectedId = element.getString("value");
+                selectProduct.setSelectedId(String.valueOf(productId));
+                getSingleProduct(String.valueOf(productId),
+                        selectProduct);
+            } else {
+                if (element.has("value")) {
+                    String selectedId = element.getString("value");
+                    selectProduct.setSelectedId(selectedId);
+                    getSingleProduct(selectedId, selectProduct);
+                }
             }
+
             selectButton.setOnClickListener(v -> {
                 ProductBottomSheetFragment productFragment = ProductBottomSheetFragment.newInstance(
                         product -> {
