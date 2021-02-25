@@ -53,7 +53,7 @@ public class MyApps extends AppCompatActivity {
     }
 
     private void fetchOrders() {
-        service.getOrders(sessionManager.getToken())
+        service.getOrders(sessionManager.getToken() , "id:DESC")
                 .enqueue(new Callback<List<Order>>() {
                     @Override
                     public void onResponse(Call<List<Order>> call, Response<List<Order>> response) {

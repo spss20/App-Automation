@@ -791,10 +791,13 @@ public class BuilderActivity extends AppCompatActivity {
     }
 
     private void createOrder(int orderId, String outputUrl) throws JSONException {
+        String orderName = extractOrderName();
+
         saveConfigValues();
         JSONObject data = new JSONObject();
         data.put("outputUrl", outputUrl);
         data.put("orderId", orderId);
+        data.put("orderName", orderName);
         if (subProductId != null)
             data.put("subproduct", new JSONArray().put(subProductId));
 
@@ -808,7 +811,8 @@ public class BuilderActivity extends AppCompatActivity {
         String fileName = UUID.randomUUID().toString().substring(0, 8) + ".json";
         MultipartBody.Part configPart = MultipartBody.Part.createFormData("files.config", fileName, requestFile);
 
-        service.createOrder(sessionManager.getToken(), dataBody, configPart)
+        MultipartBody.Part orderImage = getOrderImage();
+        service.createOrder(sessionManager.getToken(), dataBody, configPart, orderImage)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -824,6 +828,35 @@ public class BuilderActivity extends AppCompatActivity {
                         Toast.makeText(BuilderActivity.this, "Failed to create order", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private MultipartBody.Part getOrderImage() throws JSONException {
+        for (int j = 0; j < rootView.getChildCount(); j++) {
+            View childView = rootView.getChildAt(j);
+            if (childView instanceof DynamicLinearLayout) {
+                DynamicLinearLayout pickImage = (DynamicLinearLayout) childView;
+                if (pickImage.getFileBase64() != null) {
+                    return ApiClient.prepareFilePart("files.orderImage", pickImage);
+                }
+            }
+        }
+        return null;
+    }
+
+    private String extractOrderName() throws JSONException {
+        for (int j = 0; j < rootView.getChildCount(); j++) {
+            View childView = rootView.getChildAt(j);
+            if (childView instanceof DynamicEditText) {
+                DynamicEditText editText = (DynamicEditText) childView;
+                String orderName = editText.getEditText().getText().toString();
+                if (!orderName.isEmpty())
+                return orderName;
+            }
+        }
+        if (rootJson.has("title")) {
+            return rootJson.getString("title").replace("Create", "").trim();
+        }
+        return "UnNamed Project";
     }
 
     @Override

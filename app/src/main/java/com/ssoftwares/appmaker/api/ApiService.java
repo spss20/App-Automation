@@ -27,6 +27,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryName;
 import retrofit2.http.Url;
 
 
@@ -120,12 +121,15 @@ public interface ApiService {
     Call<ResponseBody> createOrder(
             @Header("Authorization") String token,
             @Part("data") RequestBody data,
-            @Part MultipartBody.Part config
+            @Part MultipartBody.Part config,
+            @Part MultipartBody.Part orderImage
     );
+
 
     @GET("orders")
     Call<List<Order>> getOrders(
-            @Header("Authorization") String token
+            @Header("Authorization") String token,
+            @Query("_sort") String sort
     );
 
     @GET

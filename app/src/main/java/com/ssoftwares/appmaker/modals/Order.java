@@ -6,6 +6,8 @@ public class Order {
     private int orderId;
     private SubProduct subproduct;
     private Attachment config;
+    private String orderName;
+    private Attachment orderImage;
 
     public String getOutputUrl() {
         return outputUrl;
@@ -37,5 +39,21 @@ public class Order {
 
     public void setConfig(Attachment config) {
         this.config = config;
+    }
+
+    public String getOrderName() {
+        return orderName;
+    }
+
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
+    }
+
+    public Attachment getOrderImage() {
+        return orderImage;
+    }
+
+    public void setOrderImage(Attachment orderImage) {
+        this.orderImage = orderImage;
     }
 }

@@ -27,7 +27,12 @@
             android:name=".activities.MyApps"
             android:theme="@style/Theme.AppMaker.ActionBar" />
         <activity android:name=".activities.ForgotPassword"></activity>
-        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.MyCpanels"
             android:theme="@style/Theme.AppMaker.ActionBar" />
@@ -41,17 +46,11 @@
             android:theme="@style/Theme.AppMaker.ActionBar" />
         <activity android:name=".activities.ProductsActivity" />
         <activity android:name=".activities.BuilderActivity" />
-        <activity android:name=".activities.MainActivity">
         <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".activities.BuilderActivity" />
         <activity
             android:name=".activities.SplashActivity"
             android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
