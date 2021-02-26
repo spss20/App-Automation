@@ -156,6 +156,12 @@ public class BuilderActivity extends AppCompatActivity {
                 finish();
             }
         });
+        textViewClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         if (rootJson != null)
             try {
                 if (rootJson.has("title"))

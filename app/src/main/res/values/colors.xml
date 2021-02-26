@@ -13,6 +13,7 @@
     <color name="textBlueColor">#FF6E8AFA</color>
     <color name="tranparentBlack">#66000000</color>
     <color name="darkBlue">#23313f</color>
+    <color name="tranparentcolorPrimary">#30eb4c4c</color>
     <color name="lightestSkyBlue">#e9ecef</color>
     <color name="tranparentBlue">#66536DFE</color>
 </resources>

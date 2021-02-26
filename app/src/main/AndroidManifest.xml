@@ -21,7 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppMaker"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.PagesActivity"></activity>
+        <activity android:name=".activities.ProfileActivity"></activity>
+        <activity android:name=".activities.PagesActivity" />
         <activity android:name=".activities.SplashBuilderActivity" />
         <activity android:name=".activities.ForgotPassword" />
         <activity android:name=".activities.MainActivity" />
@@ -33,6 +34,10 @@
             android:name=".activities.ProductDemoActivity"
             android:theme="@style/Theme.AppMaker.ActionBar" />
         <activity android:name=".activities.SubProductsActivity" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activities.ProductDetailActivity"
             android:theme="@style/Theme.AppMaker.ActionBar" />

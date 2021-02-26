@@ -23,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,21 +33,27 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.ssoftwares.appmaker.BuildConfig;
 import com.ssoftwares.appmaker.R;
 import com.ssoftwares.appmaker.adapters.BannerAdapter;
 import com.ssoftwares.appmaker.adapters.CategoryAdapter;
 import com.ssoftwares.appmaker.adapters.ProductAdapter;
+import com.ssoftwares.appmaker.adapters.ProductBottomSheetAdapter;
 import com.ssoftwares.appmaker.api.ApiClient;
 import com.ssoftwares.appmaker.api.ApiService;
 import com.ssoftwares.appmaker.api.CommonApis;
+import com.ssoftwares.appmaker.interfaces.ProductSelectedListener;
 import com.ssoftwares.appmaker.modals.Banner;
 import com.ssoftwares.appmaker.modals.Category;
 import com.ssoftwares.appmaker.modals.Product;
 import com.ssoftwares.appmaker.modals.User;
 import com.ssoftwares.appmaker.utils.SessionManager;
 import com.ssoftwares.appmaker.utils.SnackUtils;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +63,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CommonApis.onSearchResult {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        CommonApis.onSearchResult, ProductSelectedListener {
 
     CategoryAdapter categoryAdapter;
     ProductAdapter popularProductAdapter;
@@ -80,6 +89,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RelativeLayout mainSplash;
     private static final String TAG = "MainActivity";
     TextView textViewName;
+    RelativeLayout searchLayout;
+    NestedScrollView mainNested;
+    CardView cardViewSearch;
+    ImageView imageViewClose, imageViewProfile;
+    RecyclerView recyclerViewSearch;
+    ProductBottomSheetAdapter productBottomSheetAdapter;
+    ArrayList<Product> productSearchArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +114,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         editTextSearch = findViewById(R.id.editTextSearch);
         mainSplash = findViewById(R.id.mainSplash);
         textViewName = findViewById(R.id.textViewName);
+        mainNested = findViewById(R.id.mainNested);
+        searchLayout = findViewById(R.id.searchLayout);
+        cardViewSearch = findViewById(R.id.searchCard);
+        imageViewClose = findViewById(R.id.closeImageView);
+        recyclerViewSearch = findViewById(R.id.recyclerViewSearch);
+        imageViewProfile = findViewById(R.id.imageViewProfile);
+        mainNested.setVisibility(View.VISIBLE);
+        searchLayout.setVisibility(View.GONE);
 
         User user = sessionManager.getUser();
         Log.d(TAG, "onCreate: " + user.getEmail());
@@ -134,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        viewPager.setPadding(40 , 0 , 40 , 0);
         viewPager.setPageTransformer(new MarginPageTransformer(20));
         getBanners();
-
+        setUpSearchRecyclerView();
         CircleIndicator3 indicator = findViewById(R.id.indicator);
         indicator.setViewPager(viewPager);
         bannerAdapter.registerAdapterDataObserver(indicator.getAdapterDataObserver());
@@ -218,9 +242,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 commonApis.search(s.toString(), "contains", "name", "products");
+                if (editTextSearch.getText().length() > 0) {
+                    searchLayout.setVisibility(View.VISIBLE);
+                    mainNested.setVisibility(View.GONE);
+
+                } else {
+
+                    searchLayout.setVisibility(View.GONE);
+                    mainNested.setVisibility(View.VISIBLE);
+                }
             }
         });
+
+//        cardViewSearch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                searchLayout.setVisibility(View.VISIBLE);
+//                mainNested.setVisibility(View.GONE);
+//            }
+//        });
+
+        imageViewClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editTextSearch.getText().clear();
+                searchLayout.setVisibility(View.GONE);
+                mainNested.setVisibility(View.VISIBLE);
+            }
+        });
+        imageViewProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+
+                startActivity(intent);
+            }
+        });
+
+
+    }
+
+    public void setUpSearchRecyclerView() {
+        recyclerViewSearch = findViewById(R.id.recyclerViewSearch);
+        recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewSearch.setHasFixedSize(true);
+        productBottomSheetAdapter = new ProductBottomSheetAdapter(MainActivity.this,
+                productSearchArrayList, this);
+        recyclerViewSearch.setAdapter(productBottomSheetAdapter);
+
 
     }
 
@@ -454,13 +525,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+
     @Override
-    public void onSuccess(JsonObject result) {
-        Log.d("TAG", "onSuccess: " + result.getAsString());
+    public void onSuccess(ArrayList<Product> result) {
+        Log.d("TAG", "onSuccess: " + result);
+        productSearchArrayList.clear();
+
+        productSearchArrayList.addAll(result);
+
+        productBottomSheetAdapter.notifyDataSetChanged();
+
+
     }
 
     @Override
     public void onFailed(String message) {
+
+    }
+
+    @Override
+    public void onSelected(Product product) {
 
     }
 }
