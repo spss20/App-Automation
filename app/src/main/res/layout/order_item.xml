@@ -17,6 +17,7 @@
         android:background="?attr/selectableItemBackground">
 
         <ImageView
+            android:id="@+id/order_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/ic_order_background"
@@ -25,7 +26,7 @@
             />
 
         <TextView
-            android:id="@+id/app_name"
+            android:id="@+id/order_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Yaha Sab Milta Hai"
@@ -43,26 +44,26 @@
             android:text="User App"
             android:textSize="15sp"
             android:textColor="@color/white"
-            android:layout_below="@id/app_name"
+            android:layout_below="@id/order_name"
             android:layout_marginStart="20dp"
             />
 
         <TextView
-            android:id="@+id/product_name"
+            android:id="@+id/show_output"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/textview_bg"
             android:elevation="5dp"
+            android:text="Show Output"
             android:fontFamily="@font/slabo_13px"
             android:paddingStart="15dp"
             android:paddingTop="5dp"
             android:paddingEnd="15dp"
             android:paddingBottom="5dp"
-            android:text="FluxStore Single Vendor"
             android:textColor="@color/white"
             android:textSize="15sp" />
     </RelativeLayout>

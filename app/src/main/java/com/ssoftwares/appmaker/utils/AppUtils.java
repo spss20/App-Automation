@@ -2,23 +2,41 @@ package com.ssoftwares.appmaker.utils;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.provider.OpenableColumns;
+import android.provider.Settings;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.FileProvider;
 
+import com.shuhart.stepview.StepView;
+import com.ssoftwares.appmaker.BuildConfig;
 import com.ssoftwares.appmaker.R;
+import com.ssoftwares.appmaker.modals.Step;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,10 +45,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AppUtils {
 
-    public static String getFileName(Context context , Uri uri) {
+    public static String getFileName(Context context, Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
             Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
@@ -51,16 +71,20 @@ public class AppUtils {
         }
         return result;
     }
+
     private static Dialog resultDialog;
     private static Dialog dialog;
     private static boolean isProcessCompleted = false;
+    private static String rawOutput;
+    private static int retry = 0;
+    private static List<Step> stepList;
 
-    public static void handleNoInternetConnection(Context context){
+    public static void handleNoInternetConnection(Context context) {
         Toast.makeText(context, "No Internet. Please check your internet connection", Toast.LENGTH_SHORT).show();
 
     }
 
-    public static void showResultDialog(Activity activity, String scripturl) {
+    public static void showResultDialogRaw(Activity activity, String scripturl, boolean isDynamic) {
         if (resultDialog != null) {
             resultDialog.dismiss();
             resultDialog = null;
@@ -69,22 +93,18 @@ public class AppUtils {
         resultDialog = new Dialog(activity);
         resultDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         resultDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        resultDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT ,
+        resultDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT);
         resultDialog.setContentView(R.layout.dialog_result);
         resultDialog.setCancelable(false);
         resultDialog.show();
         TextView outputTv = resultDialog.findViewById(R.id.output_text);
         outputTv.setMovementMethod(new ScrollingMovementMethod());
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        outputTv.setText("Fetching Data...");
-                    }
-                });
+                activity.runOnUiThread(() -> outputTv.setText("Fetching Data..."));
                 try {
                     URL url = new URL(scripturl);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -93,11 +113,10 @@ public class AppUtils {
                     InputStreamReader inputStreamReader = new InputStreamReader(stream);
                     BufferedReader br = new BufferedReader(inputStreamReader);
                     String line;
-                    while ((line = br.readLine()) != null){
+                    while ((line = br.readLine()) != null) {
                         final String finalLine = line;
                         if (line.contains("78599")) {
                             isProcessCompleted = true;
-//                            break;
                         } else {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
@@ -112,18 +131,22 @@ public class AppUtils {
                     stream.close();
                     connection.disconnect();
 
-                    if (!isProcessCompleted){
+                    if (!isProcessCompleted) {
                         Thread.sleep(4000);
                         new Thread(this).start();
                     }
 
                 } catch (IOException | InterruptedException e) {
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (retry < 4) {
+                        try {
+                            Thread.sleep(3000);
+                            new Thread(this).start();
+                        } catch (InterruptedException interruptedException) {
+                            interruptedException.printStackTrace();
                         }
-                    });
+                    } else {
+                        activity.runOnUiThread(() -> Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show());
+                    }
                     e.printStackTrace();
                 }
 
@@ -131,6 +154,13 @@ public class AppUtils {
         });
         thread.start();
 
+        resultDialog.findViewById(R.id.view_stepped_progress).setOnClickListener((v) -> {
+            resultDialog.dismiss();
+            if (isDynamic)
+                showResultDialog(activity, scripturl, stepList);
+            else
+                showResultDialog(activity, scripturl);
+        });
         resultDialog.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,11 +169,449 @@ public class AppUtils {
         });
     }
 
-    public static void dismissResultDialog(){
+    public static void showResultDialog(Activity activity, String scripturl) {
+        if (resultDialog != null) {
+            resultDialog.dismiss();
+            resultDialog = null;
+        }
+        retry = 0;
+        isProcessCompleted = false;
+        StringBuilder stringBuilder = new StringBuilder();
+        resultDialog = new Dialog(activity);
+        resultDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        resultDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        resultDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT);
+        resultDialog.setContentView(R.layout.dialog_stepper);
+        resultDialog.setCancelable(false);
+
+        resultDialog.show();
+        final StepView stepView = resultDialog.findViewById(R.id.step_view);
+        final TextView progressText = resultDialog.findViewById(R.id.progress_text);
+        final ProgressBar progressBar = resultDialog.findViewById(R.id.progress_bar);
+        final ImageView errorBar = resultDialog.findViewById(R.id.error_bar);
+        final Button downloadApk = resultDialog.findViewById(R.id.download_apk);
+        final Button cancelButton = resultDialog.findViewById(R.id.cancel_button);
+        final ImageView copyUrl = resultDialog.findViewById(R.id.copy_url);
+        final Button viewRaw = resultDialog.findViewById(R.id.view_raw);
+
+        viewRaw.setOnClickListener((v) -> {
+            resultDialog.dismiss();
+            showResultDialogRaw(activity, scripturl , false);
+        });
+        List<String> steps = new ArrayList<>();
+        steps.add("Configuring");
+        steps.add("Building");
+        steps.add("Apk Built Success");
+        stepView.setSteps(steps);
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resultDialog.dismiss();
+//                activity.finish();
+            }
+        });
+        progressText.setText("Initialising & Configuring project");
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    stringBuilder.setLength(0);
+                    URL url = new URL(scripturl);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.connect();
+                    InputStream stream = url.openStream();
+                    InputStreamReader inputStreamReader = new InputStreamReader(stream);
+                    BufferedReader br = new BufferedReader(inputStreamReader);
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        stringBuilder.append(line + " ");
+                        final String finalLine = line;
+                        if (line.contains("78599")) {
+                            isProcessCompleted = true;
+                        } else {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    switch (finalLine) {
+                                        case "STARTING BUILD":
+                                            if (stepView.getCurrentStep() < 1)
+                                                stepView.go(1, true);
+                                            progressText.setText("Building app in progress");
+                                            break;
+                                        case "BUILD SUCCESSFUL":
+                                            if (stepView.getCurrentStep() < 2)
+                                                stepView.go(2, true);
+                                            stepView.done(true);
+                                            progressText.setText("Build Successful, baking apk file");
+                                            break;
+                                        case "BUILD FAILED":
+                                            progressBar.setVisibility(View.GONE);
+                                            errorBar.setVisibility(View.VISIBLE);
+                                            progressText.setText("Error: Build Failed");
+                                        default:
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    br.close();
+                    inputStreamReader.close();
+                    stream.close();
+                    connection.disconnect();
+
+                    if (!isProcessCompleted) {
+                        Thread.sleep(4000);
+                        new Thread(this).start();
+                    } else {
+                        activity.runOnUiThread(() -> {
+                            rawOutput = stringBuilder.toString();
+                            Log.v("rawOutput", rawOutput);
+                            if (rawOutput.contains("APK=")) {
+                                int startIndex = rawOutput.indexOf("APK=") + 4;
+                                int endIndex = rawOutput.indexOf(" ", startIndex);
+                                if (startIndex != -1 && endIndex != -1) {
+                                    String downloadUrl = rawOutput.substring(startIndex, endIndex);
+//                                    progressLayout.setVisibility(View.GONE);
+                                    progressBar.setVisibility(View.GONE);
+                                    progressText.setText("Copy Download Url");
+                                    cancelButton.setText("Dismiss");
+                                    copyUrl.setVisibility(View.VISIBLE);
+                                    copyUrl.setOnClickListener((v -> {
+                                        ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                                        ClipData clip = ClipData.newPlainText("downloadUrl", downloadUrl);
+                                        clipboard.setPrimaryClip(clip);
+                                        Toast.makeText(activity, "Download url copied, paste it in browser to download apk", Toast.LENGTH_SHORT).show();
+                                    }));
+                                    Log.v("DownloadUrl", downloadUrl);
+                                    downloadApk.setVisibility(View.VISIBLE);
+                                    downloadApk.setOnClickListener((v) -> downloadFile(activity, downloadUrl));
+                                } else {
+                                    progressBar.setVisibility(View.GONE);
+                                    errorBar.setVisibility(View.VISIBLE);
+                                    progressText.setText("Error: Apk Download Url not found");
+                                }
+                            }
+                        });
+                    }
+
+                } catch (IOException | InterruptedException e) {
+                    if (retry < 3) {
+                        try {
+                            Thread.sleep(3000);
+                            new Thread(this).start();
+                        } catch (InterruptedException interruptedException) {
+                            interruptedException.printStackTrace();
+                        }
+                        retry++;
+                    } else {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.GONE);
+                                errorBar.setVisibility(View.VISIBLE);
+                                progressText.setText("Error: Log Url not found");
+                            }
+                        });
+                    }
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        thread.start();
+    }
+
+    public static void showResultDialog(Activity activity, String scripturl, List<Step> stepList) {
+        if (resultDialog != null) {
+            resultDialog.dismiss();
+            resultDialog = null;
+        }
+        retry = 0;
+        isProcessCompleted = false;
+        StringBuilder stringBuilder = new StringBuilder();
+        resultDialog = new Dialog(activity);
+        resultDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        resultDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        resultDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT);
+        resultDialog.setContentView(R.layout.dialog_stepper);
+        resultDialog.setCancelable(false);
+
+        resultDialog.show();
+        final StepView stepView = resultDialog.findViewById(R.id.step_view);
+        final TextView progressText = resultDialog.findViewById(R.id.progress_text);
+        final ProgressBar progressBar = resultDialog.findViewById(R.id.progress_bar);
+        final ImageView errorBar = resultDialog.findViewById(R.id.error_bar);
+        final Button downloadApk = resultDialog.findViewById(R.id.download_apk);
+        final Button cancelButton = resultDialog.findViewById(R.id.cancel_button);
+        final ImageView copyUrl = resultDialog.findViewById(R.id.copy_url);
+        final Button viewRaw = resultDialog.findViewById(R.id.view_raw);
+
+        viewRaw.setOnClickListener((v) -> {
+            resultDialog.dismiss();
+            AppUtils.stepList = stepList;
+            showResultDialogRaw(activity, scripturl , true);
+        });
+
+        List<String> steps = new ArrayList<>();
+        for (Step step : stepList)
+            steps.add(step.getStepName());
+        stepView.setSteps(steps);
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resultDialog.dismiss();
+                activity.finish();
+            }
+        });
+        progressText.setText(stepList.get(0).getStepMessage());
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    stringBuilder.setLength(0);
+                    URL url = new URL(scripturl);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.connect();
+                    InputStream stream = url.openStream();
+                    InputStreamReader inputStreamReader = new InputStreamReader(stream);
+                    BufferedReader br = new BufferedReader(inputStreamReader);
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        stringBuilder.append(line + " ");
+                        if (line.contains("78599")) {
+                            isProcessCompleted = true;
+                        } else {
+                            for (Step step : stepList) {
+                                if (line.contains(step.getStepSlug())) {
+                                    activity.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (stepView.getCurrentStep() < step.getOrder()) {
+                                                stepView.go(step.getOrder(), true);
+                                                if (step.getOrder() == (stepList.size() - 1))
+                                                    stepView.done(true);
+                                                progressText.setText(step.getStepMessage());
+                                            }
+                                        }
+                                    });
+
+                                }
+                            }
+                        }
+                    }
+                    br.close();
+                    inputStreamReader.close();
+                    stream.close();
+                    connection.disconnect();
+
+                    if (!isProcessCompleted) {
+                        Thread.sleep(4000);
+                        new Thread(this).start();
+                    } else {
+                        activity.runOnUiThread(() -> {
+                            rawOutput = stringBuilder.toString();
+                            Log.v("rawOutput", rawOutput);
+                            if (rawOutput.contains("APK=")) {
+                                int startIndex = rawOutput.lastIndexOf("APK=") + "APK=".length();
+                                int endIndex = rawOutput.indexOf(" ", startIndex);
+                                if (startIndex != -1 && endIndex != -1) {
+                                    String downloadUrl = rawOutput.substring(startIndex, endIndex);
+                                    progressBar.setVisibility(View.GONE);
+                                    progressText.setText("Copy Download Url");
+                                    cancelButton.setText("Dismiss");
+                                    copyUrl.setVisibility(View.VISIBLE);
+                                    copyUrl.setOnClickListener((v -> {
+                                        ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                                        ClipData clip = ClipData.newPlainText("downloadUrl", downloadUrl);
+                                        clipboard.setPrimaryClip(clip);
+                                        Toast.makeText(activity, "Download url copied, paste it in browser to download apk", Toast.LENGTH_SHORT).show();
+                                    }));
+                                    Log.v("DownloadUrl", downloadUrl);
+                                    downloadApk.setText("Download Apk");
+                                    downloadApk.setVisibility(View.VISIBLE);
+                                    downloadApk.setOnClickListener((v) -> downloadFile(activity, downloadUrl));
+                                } else {
+                                    progressBar.setVisibility(View.GONE);
+                                    errorBar.setVisibility(View.VISIBLE);
+                                    progressText.setText("Error: Apk Download Url not found");
+                                }
+                            } else if (rawOutput.contains("ADMIN_PANEL=")) {
+                                int startIndex = rawOutput.lastIndexOf("ADMIN_PANEL=") + "ADMIN_PANEL=".length();
+                                int endIndex = rawOutput.indexOf(" ", startIndex);
+                                if (startIndex != -1 && endIndex != -1) {
+                                    String browserUrl = rawOutput.substring(startIndex, endIndex);
+                                    progressBar.setVisibility(View.GONE);
+                                    progressText.setText("Copy Admin Panel Url");
+                                    cancelButton.setText("Dismiss");
+                                    copyUrl.setVisibility(View.VISIBLE);
+                                    copyUrl.setOnClickListener((v -> {
+                                        ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                                        ClipData clip = ClipData.newPlainText("adminPanel", browserUrl);
+                                        clipboard.setPrimaryClip(clip);
+                                        Toast.makeText(activity, "Admin Panel url copied.", Toast.LENGTH_SHORT).show();
+                                    }));
+                                    Log.v("DownloadUrl", browserUrl);
+                                    downloadApk.setText("Open Admin Panel");
+                                    downloadApk.setVisibility(View.VISIBLE);
+                                    downloadApk.setOnClickListener((v) -> {
+                                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(browserUrl));
+                                        activity.startActivity(intent);
+                                    });
+                                } else {
+                                    progressBar.setVisibility(View.GONE);
+                                    errorBar.setVisibility(View.VISIBLE);
+                                    progressText.setText("Error: Admin panel url not found");
+                                }
+                            } else if (rawOutput.contains("CPANEL_URL=")) {
+                                int startIndex = rawOutput.lastIndexOf("CPANEL_URL=") + "CPANEL_URL=".length();
+                                int endIndex = rawOutput.indexOf(" ", startIndex);
+                                if (startIndex != -1 && endIndex != -1) {
+                                    String browserUrl = rawOutput.substring(startIndex, endIndex);
+                                    progressBar.setVisibility(View.GONE);
+                                    progressText.setText("Copy Cpanel Url");
+                                    cancelButton.setText("Dismiss");
+                                    copyUrl.setVisibility(View.VISIBLE);
+                                    copyUrl.setOnClickListener((v -> {
+                                        ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                                        ClipData clip = ClipData.newPlainText("cpanel", browserUrl);
+                                        clipboard.setPrimaryClip(clip);
+                                        Toast.makeText(activity, "Cpanel url copied.", Toast.LENGTH_SHORT).show();
+                                    }));
+                                    Log.v("DownloadUrl", browserUrl);
+                                    downloadApk.setText("Open Cpanel");
+                                    downloadApk.setVisibility(View.VISIBLE);
+                                    downloadApk.setOnClickListener((v) -> {
+                                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(browserUrl));
+                                        activity.startActivity(intent);
+                                    });
+                                } else {
+                                    progressBar.setVisibility(View.GONE);
+                                    errorBar.setVisibility(View.VISIBLE);
+                                    progressText.setText("Error: Admin panel url not found");
+                                }
+                            } else {
+                                progressBar.setVisibility(View.GONE);
+                                progressText.setText("Process Finished");
+                            }
+                        });
+                    }
+
+                } catch (IOException | InterruptedException e) {
+                    if (retry < 3) {
+                        try {
+                            Thread.sleep(3000);
+                            new Thread(this).start();
+                        } catch (InterruptedException interruptedException) {
+                            interruptedException.printStackTrace();
+                        }
+                        retry++;
+                    } else {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.GONE);
+                                errorBar.setVisibility(View.VISIBLE);
+                                progressText.setText("Error: Log Url not found");
+                            }
+                        });
+                    }
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        thread.start();
+    }
+
+    private static void downloadFile(Context mContext, String downloadUrl) {
+        if (!checkInstallPermission(mContext))
+            return;
+
+        DownloadManager dm = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
+
+        DownloadManager.Request request = new DownloadManager.Request(
+                Uri.parse(downloadUrl));
+        request.setTitle("Downloading Apk");
+        request.setDescription("downloading apk..");
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOCUMENTS, "MyApp4.apk");
+
+        final BroadcastReceiver onComplete = new BroadcastReceiver() {
+            public void onReceive(Context ctxt, Intent intent) {
+                long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+
+                if (downloadId == -1)
+                    return;
+
+                // query download status
+                Cursor cursor = dm.query(new DownloadManager.Query().setFilterById(downloadId));
+                if (cursor.moveToFirst()) {
+                    int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+                    if (status == DownloadManager.STATUS_SUCCESSFUL) {
+
+                        // download is successful
+                        String uri = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                        File file = new File(Uri.parse(uri).getPath());
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            Uri contentUri = FileProvider.getUriForFile(ctxt, BuildConfig.APPLICATION_ID + ".provider", file);
+                            Intent openFileIntent = new Intent(Intent.ACTION_VIEW);
+                            openFileIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            openFileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            openFileIntent.setData(contentUri);
+                            mContext.startActivity(openFileIntent);
+                            mContext.unregisterReceiver(this);
+                        } else {
+                            Intent install = new Intent(Intent.ACTION_VIEW);
+                            install.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            install.setDataAndType(Uri.parse(uri),
+                                    "application/vnd.android.package-archive");
+                            mContext.startActivity(install);
+                            mContext.unregisterReceiver(this);
+//                    finish();
+                        }
+                    } else {
+                        Log.v("Status", "Download Cancelled");
+                    }
+                } else {
+                    Log.v("Status", "Download Cancelled");
+                }
+
+            }
+        };
+        mContext.registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        dm.enqueue(request);
+        Toast.makeText(mContext, "Download Started in background, check notification for progress", Toast.LENGTH_SHORT).show();
+        if (DownloadManager.STATUS_SUCCESSFUL == 8) {
+            Log.v("Status", "Download Successful");
+        } else Log.v("Status", "Download Failed");
+
+    }
+
+    private static boolean checkInstallPermission(Context mContext) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (!mContext.getPackageManager().canRequestPackageInstalls()) {
+                if (mContext instanceof Activity) {
+                    ((Activity) mContext).startActivityForResult(
+                            new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).
+                                    setData(Uri.parse(String.format("package:%s", mContext.getPackageName()))), 1234);
+                } else {
+                    Log.e("Error", "mContext should be an instanceof Activity.");
+                }
+                return false;
+            } else return true;
+        } else return true;
+    }
+
+    public static void dismissResultDialog() {
         if (resultDialog != null)
             resultDialog.dismiss();
         resultDialog = null;
     }
+
     public static void showLoadingBar(Context context) {
         if (dialog != null) {
             dialog.dismiss();
@@ -156,6 +624,7 @@ public class AppUtils {
         dialog.setCancelable(false);
         dialog.show();
     }
+
     public static void dissmissLoadingBar() {
         if (dialog != null)
             dialog.dismiss();
@@ -172,29 +641,28 @@ public class AppUtils {
                 hashtext = "0" + hashtext;
             }
             return hashtext;
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static int getImageWidth(String dimension){
+    public static int getImageWidth(String dimension) {
         if (dimension == null)
             return 200;
         try {
             return Integer.parseInt(dimension.split("x")[0]);
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             e.printStackTrace();
             return 200;
         }
     }
 
-    public static int getImageHeight(String dimension){
+    public static int getImageHeight(String dimension) {
         if (dimension == null)
             return 200;
         try {
             return Integer.parseInt(dimension.split("x")[1]);
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             e.printStackTrace();
             return 200;
         }

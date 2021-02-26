@@ -19,10 +19,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.gson.JsonObject;
-import com.mukesh.OtpView;
 import com.ssoftwares.appmaker.BuildConfig;
 import com.ssoftwares.appmaker.R;
 import com.ssoftwares.appmaker.api.ApiClient;
