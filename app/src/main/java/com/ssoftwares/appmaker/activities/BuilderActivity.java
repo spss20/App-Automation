@@ -13,6 +13,8 @@ import android.text.InputFilter;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -93,6 +96,7 @@ public class BuilderActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private String subProductId;
     private List<Step> stepList;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +111,7 @@ public class BuilderActivity extends AppCompatActivity {
             startActivity(intent);
             return;
         }
+        setupToolbar();
         initParams();
 //        try {
 //            InputStream jsonInputStream = getAssets().open("config.json");
@@ -124,7 +129,7 @@ public class BuilderActivity extends AppCompatActivity {
 //                e.printStackTrace();
 //            }
 //            rootJson = new JSONObject(data);
-//            subProductId = 5;
+//            subProductId = "5";
 //        } catch (IOException | JSONException e) {
 //            e.printStackTrace();
 //        }
@@ -147,21 +152,13 @@ public class BuilderActivity extends AppCompatActivity {
         }
 
         rootView = findViewById(R.id.root_view);
-        TextView toolbarTitle = findViewById(R.id.toolbar_title);
-        ImageView backbtn = findViewById(R.id.back_bt);
 
-        backbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
         if (rootJson != null)
             try {
                 if (rootJson.has("title"))
-                    toolbarTitle.setText(rootJson.getString("title"));
+                    getSupportActionBar().setTitle(rootJson.getString("title"));
                 else
-                    toolbarTitle.setText(getIntent().getStringExtra("subproduct_name"));
+                    getSupportActionBar().setTitle(getIntent().getStringExtra("subproduct_name"));
                 JSONArray schema = rootJson.getJSONArray("schema");
                 for (int i = 0; i < schema.length(); i++) {
                     JSONObject element = schema.getJSONObject(i);
@@ -204,9 +201,9 @@ public class BuilderActivity extends AppCompatActivity {
                                     }
                                     rootJson = new JSONObject(data);
                                     if (rootJson.has("title"))
-                                        toolbarTitle.setText(rootJson.getString("title"));
+                                        getSupportActionBar().setTitle(rootJson.getString("title"));
                                     else
-                                        toolbarTitle.setText(getIntent().getStringExtra("subproduct_name"));
+                                        getSupportActionBar().setTitle(getIntent().getStringExtra("subproduct_name"));
                                     JSONArray schema = rootJson.getJSONArray("schema");
                                     for (int i = 0; i < schema.length(); i++) {
                                         JSONObject element = schema.getJSONObject(i);
@@ -236,6 +233,49 @@ public class BuilderActivity extends AppCompatActivity {
                             AppUtils.handleNoInternetConnection(BuilderActivity.this);
                         }
                     });
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.builder_menu , menu);
+        return true;
+    }
+
+    private void setupToolbar() {
+        toolbar = findViewById(R.id.tool_bar);
+        toolbar.setNavigationOnClickListener(v -> {
+            finish();
+        });
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    {
+        if (item.getItemId() == android.R.id.home){
+            finish();
+            return true;
+        } else if (item.getItemId() == R.id.clear_all){
+            try {
+                clearAllFields();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void clearAllFields() throws JSONException {
+        rootView.removeAllViews();
+        JSONArray schema = rootJson.getJSONArray("schema");
+        for (int i = 0; i < schema.length(); i++) {
+            JSONObject element = schema.getJSONObject(i);
+            if (element.has("value"))
+                element.remove("value");
+            inflateView(element.getString("type"), element);
         }
     }
 
