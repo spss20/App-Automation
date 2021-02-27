@@ -3,32 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activities.SubProductsActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tool_bar"
         android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
+
         android:layout_height="?actionBarSize">
 
-            <TextView
-                android:id="@+id/toolbar_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:ellipsize="end"
-                style="@style/BigHeadingtext"
-                />
+        <TextView
+            android:id="@+id/toolbar_title"
+            style="@style/BigHeadingtext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:maxLines="1" />
 
     </androidx.appcompat.widget.Toolbar>
 
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/subproduct_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="30dp"
-        android:id="@+id/subproduct_recycler"
-        />
+        android:layout_marginBottom="30dp" />
 </LinearLayout>

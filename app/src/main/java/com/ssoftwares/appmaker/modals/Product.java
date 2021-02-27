@@ -17,6 +17,15 @@ public class Product implements Serializable {
     private List<Category> categories;
     private Attachment brochure;
     private boolean isAutomated;
+    private boolean isAdminPanel;
+
+    public boolean isAdminPanel() {
+        return isAdminPanel;
+    }
+
+    public void setAdminPanel(boolean adminPanel) {
+        isAdminPanel = adminPanel;
+    }
 
     public String getId() {
         return id;

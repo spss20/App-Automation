@@ -5,8 +5,7 @@
     android:id="@+id/drawer_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:openDrawer="start">
+    android:background="@color/white">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -14,15 +13,20 @@
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/tool_bar"
                 android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
-                app:contentInsetEnd="0dp"
-                app:contentInsetRight="0dp">
+                android:backgroundTint="@color/colorPrimary"
+                android:elevation="0dp"
+                app:contentInsetRight="0dp"
+                app:contentInsetStart="0dp"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -35,26 +39,121 @@
                         android:text="Welcome Back !"
                         android:textColor="@color/black"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="gone" />
 
-                    <ImageView
+                    <TextView
+                        android:id="@+id/textViewName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/muli_bold"
+                        android:paddingStart="15dp"
+                        android:text="Hey Surya"
+
+                        android:textColor="@color/white"
+                        android:textSize="25sp"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:layout_marginTop="15dp"
                         android:layout_marginEnd="20dp"
-                        android:src="@drawable/user" />
+                        android:id="@+id/imageViewProfile"
+                        android:src="@drawable/account_icon" />
                 </RelativeLayout>
 
 
             </androidx.appcompat.widget.Toolbar>
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="25dp"
+                    android:text="Find an app you want to build"
+                    android:textSize="21sp"
+                    android:visibility="visible" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/searchCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    app:cardCornerRadius="25dp"
+                    app:cardElevation="5dp"
+                    app:cardUseCompatPadding="true"
+                    app:strokeColor="@color/grey"
+                    app:strokeWidth="0.6dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:id="@+id/imageViewSearch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            app:srcCompat="@drawable/ic_search" />
+
+                        <EditText
+                            android:id="@+id/editTextSearch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@id/imageViewSearch"
+                            android:background="@color/white"
+                            android:ellipsize="end"
+                            android:hint="Search for apps , website"
+                            android:maxLines="1"
+                            android:textColor="@color/darkBlue"
+                            android:textColorHint="@color/grey">
+
+                        </EditText>
+
+                        <ImageView
+                            android:id="@+id/closeImageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="5dp"
+                            android:visibility="visible"
+                            app:srcCompat="@drawable/ic_baseline_close_24"
+                            app:tint="#404870" />
+
+                    </RelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+
+            </LinearLayout>
+
+
         </com.google.android.material.appbar.AppBarLayout>
 
         <!-- Note: A RecyclerView can also be used -->
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/mainNested"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:visibility="gone"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
@@ -64,50 +163,6 @@
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="35dp"
-                    android:fontFamily="@font/muli_bold"
-                    android:text="Hey Surya,"
-                    android:textColor="@color/black"
-                    android:textSize="25sp"
-                    android:visibility="visible" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Find an app you want to build"
-                    android:textSize="21sp"
-                    android:visibility="visible" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="30dp"
-                    android:background="@drawable/search_bg"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:visibility="visible">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_search" />
-
-                    <EditText
-                        android:id="@+id/editTextSearch"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="16dp"
-                        android:background="@color/searchBoxGrey"
-                        android:hint="Search for anything"
-                        android:padding="5dp"
-                        android:textSize="18sp" />
-                </LinearLayout>
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -255,6 +310,19 @@
 
         </androidx.core.widget.NestedScrollView>
 
+        <RelativeLayout
+            android:id="@+id/searchLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/product_item_2" />
+        </RelativeLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

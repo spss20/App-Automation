@@ -12,6 +12,26 @@ public class SubProduct {
     JsonObject apischema;
     List<Attachment> images;
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setApischema(JsonObject apischema) {
+        this.apischema = apischema;
+    }
+
+    public void setImages(List<Attachment> images) {
+        this.images = images;
+    }
+
     public String getId() {
         return id;
     }

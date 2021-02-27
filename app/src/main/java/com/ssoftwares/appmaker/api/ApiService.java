@@ -10,6 +10,9 @@ import com.ssoftwares.appmaker.modals.Order;
 import com.ssoftwares.appmaker.modals.Product;
 import com.ssoftwares.appmaker.modals.SubProduct;
 
+import org.json.JSONArray;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MultipartBody;
@@ -75,7 +78,7 @@ public interface ApiService {
     );
 
     @GET
-    Call<JsonObject> filterProducts(
+    Call<ArrayList<Product>> filterProducts(
             @Url String url
 
     );
@@ -98,6 +101,11 @@ public interface ApiService {
     @GET("configs")
     Call<JsonArray> getConfig(
             @Query("name") String config_name
+    );
+
+    @GET("static-pages")
+    Call<JsonObject> getStatic_Pages(
+
     );
 
     @GET("settings")

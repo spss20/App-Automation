@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingTop="20dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="20dp">
+
+
+        <TextView
+            android:id="@+id/textV1"
+            style="@style/HeadingText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center_horizontal"
+            android:text="Are you sure you want to logout from app?" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="30dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/yesButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/otp_view"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
+                android:fontFamily="@font/muli_bold"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="YES"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:cornerRadius="25dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/noButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/otp_view"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
+
+                android:layout_marginRight="10dp"
+
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimary"
+                android:fontFamily="@font/muli_bold"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="NO"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:cornerRadius="25dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

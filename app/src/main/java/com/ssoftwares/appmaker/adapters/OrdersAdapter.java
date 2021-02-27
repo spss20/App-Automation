@@ -1,17 +1,17 @@
 package com.ssoftwares.appmaker.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
 import com.ssoftwares.appmaker.R;
+import com.ssoftwares.appmaker.activities.BuilderActivity;
 import com.ssoftwares.appmaker.interfaces.OnClickInterface;
 import com.ssoftwares.appmaker.modals.Order;
 
@@ -19,17 +19,14 @@ import java.util.List;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewHolder> {
 
-    private final Context mContext;
+    private Context mContext;
     private List<Order> orderList;
-    private final OnClickInterface onOrderClick;
-    private final OnClickInterface onShowResultClick;
+    private OnClickInterface onClickInterface;
 
-    public OrdersAdapter(Context mContext, List<Order> orderList, OnClickInterface onOrderClick,
-                         OnClickInterface onShowResultClick) {
+    public OrdersAdapter(Context mContext, List<Order> orderList, OnClickInterface onClickInterface) {
         this.mContext = mContext;
         this.orderList = orderList;
-        this.onOrderClick = onOrderClick;
-        this.onShowResultClick = onShowResultClick;
+        this.onClickInterface = onClickInterface;
     }
 
     @NonNull
@@ -42,17 +39,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         Order order = orderList.get(position);
+        holder.subproductName.setText(""+order.getOrderId());
 
-        holder.orderName.setText(order.getOrderName());
-        if (order.getSubproduct() != null)
-            holder.subproductName.setText(order.getSubproduct().getName());
-
-        if (order.getOrderImage() != null)
-            Picasso.get().load(order.getOrderImage().getImageUrl()).into(holder.orderImage);
-
-        holder.itemView.setOnClickListener(v -> onOrderClick.onClick(order));
-
-        holder.showOutput.setOnClickListener(v -> onShowResultClick.onClick(order));
+        holder.itemView.setOnClickListener(v -> {
+            onClickInterface.onClick(order);
+        });
     }
 
     @Override
@@ -61,17 +52,15 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
     }
 
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView orderName;
+        TextView appName;
         TextView subproductName;
-        TextView showOutput;
-        ImageView orderImage;
+        TextView productName;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
-            orderName = itemView.findViewById(R.id.order_name);
+            appName = itemView.findViewById(R.id.app_name);
             subproductName = itemView.findViewById(R.id.subproduct_name);
-            showOutput = itemView.findViewById(R.id.show_output);
-            orderImage = itemView.findViewById(R.id.order_image);
+            productName = itemView.findViewById(R.id.product_name);
         }
     }
 
