@@ -849,7 +849,8 @@ public class BuilderActivity extends AppCompatActivity {
                         MediaType.parse("application/json")
                 );
         String fileName = UUID.randomUUID().toString().substring(0, 8) + ".json";
-        MultipartBody.Part configPart = MultipartBody.Part.createFormData("files.config", fileName, requestFile);
+        MultipartBody.Part configPart = MultipartBody.Part.createFormData("files.config",
+                fileName, requestFile);
 
         MultipartBody.Part orderImage = getOrderImage();
         service.createOrder(sessionManager.getToken(), dataBody, configPart, orderImage)

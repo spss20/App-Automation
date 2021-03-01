@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
@@ -69,6 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
         buttonSubmit = findViewById(R.id.sign_up);
         loginTextView = findViewById(R.id.loginTextView);
         signupMain = findViewById(R.id.signupMain);
+        FirebaseApp.initializeApp(this);
         firebaseAuth = FirebaseAuth.getInstance();
         service = ApiClient.create();
         progressDialog = new ProgressDialog(this);

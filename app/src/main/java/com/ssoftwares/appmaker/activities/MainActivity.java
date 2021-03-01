@@ -503,9 +503,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent);
                 break;
             case R.id.about_us:
-                intent = new Intent(this, PagesActivity.class);
-                intent.putExtra("page_name", "about_us");
-                intent.putExtra("tittle", "About Us");
+                intent = new Intent(this, SplashBuilderActivity.class);
+//                intent.putExtra("page_name", "about_us");
+//                intent.putExtra("tittle", "About Us");
                 startActivity(intent);
                 break;
             case R.id.logout:

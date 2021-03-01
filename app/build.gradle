@@ -44,6 +44,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.github.yalantis:ucrop:2.2.6'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -54,6 +55,11 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.github.mukeshsolanki:android-otpview-pinview:2.1.2'
     implementation platform('com.google.firebase:firebase-bom:26.5.0')
+    implementation 'com.github.rockerhieu:emojicon:v1.4.2'
+    implementation 'ja.burhanrashid52:photoeditor:1.1.0'
+    implementation 'com.github.yukuku:ambilwarna:2.0.1'
+    implementation 'info.androidhive:imagefilters:1.0.7'
+
 
     // Declare the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies

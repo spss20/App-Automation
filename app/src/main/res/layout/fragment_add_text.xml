@@ -1,0 +1,269 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/edt_add_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="16dp"
+        android:backgroundTint="#c4c4c4"
+        android:drawableTint="#c4c4c4"
+        android:hint="Enter your text"
+        android:maxHeight="200dp"
+        android:scrollbars="vertical"
+        android:textColorLink="@color/colorPrimary"
+        app:fontFamily="@font/muli" />
+
+    <RelativeLayout
+        android:id="@+id/textEditingLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edt_add_text">
+        <Spinner
+            android:id="@+id/spinnerfonttype"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/colorcard"
+            android:background="@drawable/rounded_border" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/colorcard"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_alignTop="@+id/spinnerfonttype"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:background="@android:color/transparent"
+            app:cardCornerRadius="3dp">
+
+            <ImageView
+                android:id="@+id/colorpallete"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+
+                />
+
+        </androidx.cardview.widget.CardView>
+
+
+        <RelativeLayout
+            android:id="@+id/cardtoolbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinnerfonttype"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/rounded_border_tv"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/textaligment"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                app:srcCompat="@drawable/ic_baseline_format_align_left_24" />
+
+            <ImageView
+                android:id="@+id/textbold"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+
+                android:layout_marginLeft="20dp"
+                android:layout_toEndOf="@+id/textaligment"
+                android:layout_toRightOf="@+id/textaligment"
+                android:gravity="center"
+                app:srcCompat="@drawable/ic_baseline_format_bold_24" />
+
+            <ImageView
+                android:id="@+id/textitalic"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+
+                android:layout_marginLeft="20dp"
+                android:layout_toEndOf="@+id/textbold"
+                android:layout_toRightOf="@+id/textbold"
+                android:gravity="center"
+                app:srcCompat="@drawable/ic_baseline_format_italic_24" />
+
+            <ImageView
+                android:id="@+id/textcaps"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_toEndOf="@+id/textitalic"
+                android:layout_toRightOf="@+id/textitalic"
+                android:gravity="center"
+                app:srcCompat="@drawable/ic_baseline_format_align_center_24" />
+
+            <ImageView
+                android:id="@+id/newBox"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+
+                android:gravity="center"
+                app:srcCompat="@drawable/ic_baseline_format_underlined_24" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textview1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cardtoolbox"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/muli"
+            android:text="TextSize" />
+        <RelativeLayout
+            android:id="@+id/textsizelayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/textview1"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="16dp"
+            >
+
+            <SeekBar
+                android:id="@+id/seekBartextsize"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/textViewtextsizenumber"
+                android:indeterminateTint="@color/colorPrimary"
+                android:progressTint="@color/colorPrimary"
+                android:thumbTint="@color/colorPrimary"
+                android:background="@drawable/rounded_border_tv"/>
+
+            <TextView
+                android:id="@+id/textViewtextsizenumber"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="25"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:background="@drawable/rounded_border_tv"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/spacingtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textsizelayout"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/muli"
+            android:text="TextSpacing" />
+
+        <RelativeLayout
+            android:id="@+id/spacingSeekbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/spacingtext"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="16dp"
+            >
+
+            <SeekBar
+                android:id="@+id/seekBarspacing"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/textViewspacingnumber"
+                android:indeterminateTint="@color/colorPrimary"
+                android:progressTint="@color/colorPrimary"
+                android:thumbTint="@color/colorPrimary"
+                android:background="@drawable/rounded_border"/>
+
+            <TextView
+                android:id="@+id/textViewspacingnumber"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="25"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:background="@drawable/rounded_border_tv"/>
+
+        </RelativeLayout>
+
+
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/textSizeLayout"-->
+            <!--android:layout_below="@id/spinnerfonttype"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--&gt;-->
+            <!--<SeekBar-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:id="@+id/sizeSeekBar"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:layout_marginLeft="16dp"-->
+                <!--android:layout_toLeftOf="@+id/textSizeTextView"-->
+                <!--android:layout_marginRight="10dp"-->
+                <!--android:background="@drawable/border"-->
+                <!--/>-->
+            <!--<TextView-->
+                <!--android:layout_width="50dp"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:id="@+id/textSizeTextView"-->
+                <!--android:layout_marginRight="16dp"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:background="@drawable/border"-->
+                <!--/>-->
+
+        <!--</RelativeLayout>-->
+
+
+
+
+        <Button
+            android:id="@+id/buttonaddtext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/spacingSeekbarLayout"
+
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="15dp"
+
+            android:background="@drawable/rounded_border"
+            android:text="Add Text"
+            android:textColor="@android:color/white"
+            app:fontFamily="@font/muli" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
