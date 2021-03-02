@@ -14,6 +14,7 @@
       "type" : "enum",
       "values" : ["dokan" , "wcfm"],
       "text" : "Select Vendor Plugin Used",
+      "value" : "dokan",
       "id" : "type"
     },
     {
@@ -31,6 +32,8 @@
       "type" : "edittext",
       "hint" : "App Name",
       "id" : "appname",
+      "disable" : true,
+      "value" : "Surya Thakur",
       "regex" : "^([a-zA-Z0-9_\\s])+$",
       "minLength" : 6,
       "maxLength" : 16,
@@ -46,6 +49,15 @@
     },
     {
       "type" : "button" ,
+      "action" : "pickImage" ,
+      "mime" : "image/png",
+      "dimension" : "3000x800",
+      "text" : "Pick App Icon" ,
+      "isRequired" : true,
+      "id" : "icon2"
+    },
+    {
+      "type" : "button" ,
       "action" : "pick" ,
       "extension" : "json",
       "mime" : "*/*",
@@ -58,7 +70,8 @@
       "endpoint" : "products",
       "text" : "Select Product",
       "id" : "product",
-      "isRequired": true
+      "isRequired": true,
+      "value" : 2
     },
     {
       "type": "relation",
@@ -71,7 +84,8 @@
       "type" : "button" ,
       "action" : "submit" ,
       "text" : "Build App" ,
-      "id" : "submit"
+      "id" : "submit",
+      "disabled" : true
     }
   ]
 }

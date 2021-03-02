@@ -238,7 +238,7 @@ public class BuilderActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.builder_menu , menu);
+        getMenuInflater().inflate(R.menu.builder_menu, menu);
         return true;
     }
 
@@ -252,12 +252,11 @@ public class BuilderActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item)
-    {
-        if (item.getItemId() == android.R.id.home){
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
-        } else if (item.getItemId() == R.id.clear_all){
+        } else if (item.getItemId() == R.id.clear_all) {
             try {
                 clearAllFields();
             } catch (JSONException e) {
@@ -318,12 +317,15 @@ public class BuilderActivity extends AppCompatActivity {
                 selectCpanel.setSelectedId(selectedId);
                 getSingleCpanel(selectedId, selectCpanel);
             }
-            selectButton.setOnClickListener(v -> {
-                CpanelBottomSheetFragment cpanelFragment = CpanelBottomSheetFragment.newInstance(cpanel -> {
-                    onCpanelSelected(selectCpanel, cpanel);
+            if (element.has("disabled") && element.getBoolean("disabled")) {
+                selectButton.setEnabled(false);
+            } else
+                selectButton.setOnClickListener(v -> {
+                    CpanelBottomSheetFragment cpanelFragment = CpanelBottomSheetFragment.newInstance(cpanel -> {
+                        onCpanelSelected(selectCpanel, cpanel);
+                    });
+                    cpanelFragment.show(getSupportFragmentManager(), "CpanelDialog");
                 });
-                cpanelFragment.show(getSupportFragmentManager(), "CpanelDialog");
-            });
             rootView.addView(selectCpanel);
         } else if (endpoint.equals("products")) {
             SelectItemDynamicLayout selectProduct = (SelectItemDynamicLayout) getLayoutInflater().inflate(R.layout.select_items_button, null);
@@ -339,14 +341,17 @@ public class BuilderActivity extends AppCompatActivity {
                 selectProduct.setSelectedId(selectedId);
                 getSingleProduct(selectedId, selectProduct);
             }
-            selectButton.setOnClickListener(v -> {
-                ProductBottomSheetFragment productFragment = ProductBottomSheetFragment.newInstance(
-                        product -> {
-                            onProductSelected(selectProduct, product);
-                        }
-                );
-                productFragment.show(getSupportFragmentManager(), "ProductDialog");
-            });
+            if (element.has("disabled") && element.getBoolean("disabled")) {
+                selectButton.setEnabled(false);
+            } else
+                selectButton.setOnClickListener(v -> {
+                    ProductBottomSheetFragment productFragment = ProductBottomSheetFragment.newInstance(
+                            product -> {
+                                onProductSelected(selectProduct, product);
+                            }
+                    );
+                    productFragment.show(getSupportFragmentManager(), "ProductDialog");
+                });
             rootView.addView(selectProduct);
         }
     }
@@ -389,6 +394,10 @@ public class BuilderActivity extends AppCompatActivity {
         }
         if (element.has("value"))
             editext.getEditText().setText(element.getString("value"));
+
+        if (element.has("disabled") && element.getBoolean("disabled")) {
+            editext.setEnabled(false);
+        }
 
         editext.getEditText().setFocusable(true);
         editext.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -456,6 +465,12 @@ public class BuilderActivity extends AppCompatActivity {
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
 
+        if (element.has("disabled")) {
+            if (element.getBoolean("disabled")) {
+                spinner.setEnabled(false);
+            }
+        }
+
         if (element.has("value")) {
             String value = element.getString("value");
             for (int j = 0; j < values.length; j++) {
@@ -482,6 +497,11 @@ public class BuilderActivity extends AppCompatActivity {
             if (element.has("default")) dynamicSwitch.setChecked(element.getBoolean("default"));
             else dynamicSwitch.setChecked(false);
         }
+
+        if (element.has("disabled") && element.getBoolean("disabled")) {
+            dynamicSwitch.setEnabled(false);
+        }
+
         rootView.addView(dynamicSwitch);
 
     }
@@ -512,17 +532,22 @@ public class BuilderActivity extends AppCompatActivity {
             int requestCode = new Random().nextInt(10000);
             pickLayout.setRequestCode(requestCode);
 
-            pickFileButton.setOnClickListener(v -> {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                if (element.has("mime")) {
-                    try {
-                        intent.setType(element.getString("mime"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+            if (element.has("disabled") && element.getBoolean("disabled")) {
+                pickFileButton.setEnabled(false);
+            } else {
+                pickFileButton.setOnClickListener(v -> {
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    if (element.has("mime")) {
+                        try {
+                            intent.setType(element.getString("mime"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
-                startActivityForResult(intent, pickLayout.getRequestCode());
-            });
+                    startActivityForResult(intent, pickLayout.getRequestCode());
+                });
+            }
+
             rootView.addView(pickLayout);
 
         } else if (action.equalsIgnoreCase("pickImage")) {
@@ -595,32 +620,54 @@ public class BuilderActivity extends AppCompatActivity {
             int requestCode = new Random().nextInt(10000);
             pickLayout.setRequestCode(requestCode);
 
-            DynamicLinearLayout finalPickLayout = pickLayout;
-            pickFileButton.setOnClickListener(v -> {
-                if (checkForPermission()) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    if (element.has("mime")) {
-                        try {
-                            intent.setType(element.getString("mime"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+            if (element.has("disabled") && element.getBoolean("disabled")) {
+                pickFileButton.setEnabled(false);
+            } else {
+                DynamicLinearLayout finalPickLayout = pickLayout;
+                pickFileButton.setOnClickListener(v -> {
+                    if (checkForPermission()) {
+                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        if (element.has("mime")) {
+                            try {
+                                intent.setType(element.getString("mime"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
+                        startActivityForResult(intent, finalPickLayout.getRequestCode());
                     }
-                    startActivityForResult(intent, finalPickLayout.getRequestCode());
-                }
-            });
+                });
+                selectedImage.setOnClickListener(v -> {
+                    if (checkForPermission()) {
+                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        if (element.has("mime")) {
+                            try {
+                                intent.setType(element.getString("mime"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        startActivityForResult(intent, finalPickLayout.getRequestCode());
+                    }
+                });
+            }
+
             rootView.addView(pickLayout);
         } else if (action.equalsIgnoreCase("submit")) {
             Button submit = (Button) getLayoutInflater().inflate(R.layout.button_item, null);
             params20dpwrap.gravity = Gravity.CENTER_HORIZONTAL;
             submit.setLayoutParams(params20dpwrap);
-            submit.setOnClickListener(v -> {
-                try {
-                    submitData();
-                } catch (JSONException | IOException e) {
-                    e.printStackTrace();
-                }
-            });
+            if (element.has("disabled") && element.getBoolean("disabled")) {
+                submit.setEnabled(false);
+            } else {
+                submit.setOnClickListener(v -> {
+                    try {
+                        submitData();
+                    } catch (JSONException | IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
             rootView.addView(submit);
         }
     }
@@ -801,6 +848,7 @@ public class BuilderActivity extends AppCompatActivity {
                         AppUtils.dissmissLoadingBar();
                         if (response.body() == null || response.code() != 200) {
                             Toast.makeText(BuilderActivity.this, "Api Execution Failed", Toast.LENGTH_SHORT).show();
+
                             return;
                         }
                         if (response.body().has("outputUrl")) {
@@ -892,7 +940,7 @@ public class BuilderActivity extends AppCompatActivity {
                 DynamicEditText editText = (DynamicEditText) childView;
                 String orderName = editText.getEditText().getText().toString();
                 if (!orderName.isEmpty())
-                return orderName;
+                    return orderName;
             }
         }
         if (rootJson.has("title")) {

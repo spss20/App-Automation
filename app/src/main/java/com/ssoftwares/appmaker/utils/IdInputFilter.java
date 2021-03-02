@@ -22,7 +22,6 @@ public class IdInputFilter implements InputFilter {
     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
         Matcher matcher = mPattern.matcher(source);
         if (!matcher.matches()) {
-            Toast.makeText(mContext, "Character you entered is invalid", Toast.LENGTH_SHORT).show();
             return "";
         }
         return null;
