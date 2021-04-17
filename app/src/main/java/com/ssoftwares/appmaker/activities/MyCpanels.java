@@ -12,14 +12,20 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.JsonArray;
 import com.ssoftwares.appmaker.R;
 import com.ssoftwares.appmaker.adapters.CpanelAdapter;
 import com.ssoftwares.appmaker.api.ApiClient;
 import com.ssoftwares.appmaker.api.ApiService;
 import com.ssoftwares.appmaker.interfaces.CpanelSelectedListener;
 import com.ssoftwares.appmaker.modals.Cpanel;
+import com.ssoftwares.appmaker.modals.Step;
 import com.ssoftwares.appmaker.utils.AppUtils;
 import com.ssoftwares.appmaker.utils.SessionManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +61,7 @@ public class MyCpanels extends AppCompatActivity {
             @Override
             public void onSelected(Cpanel cpanel) {
                 Toast.makeText(MyCpanels.this, "Cpanel selected", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -65,8 +72,61 @@ public class MyCpanels extends AppCompatActivity {
         getCpanels();
     }
 
+    private CpanelSelectedListener selectedListener = new CpanelSelectedListener() {
+        @Override
+        public void onSelected(Cpanel cpanel) {
+            service.getConfig(name)
+                    .enqueue(new Callback<JsonArray>() {
+                        @Override
+                        public void onResponse(Call<JsonArray> call, Response<JsonArray> response) {
+                            if (response.body() != null) {
+                                try {
+                                    String data = response.body().getAsJsonArray().get(0).getAsJsonObject().get("data").getAsJsonObject().toString();
+                                    configHash = AppUtils.getMd5(data);
+                                    //Check if a cache of same config file already exists
+                                    if (sessionManager.getConfigHash() != null) {
+                                        if (sessionManager.getConfigHash().equals(AppUtils.getMd5(data))) {
+                                            data = sessionManager.getConfig();
+                                        }
+                                    }
+                                    rootJson = new JSONObject(data);
+                                    if (rootJson.has("title"))
+                                        getSupportActionBar().setTitle(rootJson.getString("title"));
+                                    else
+                                        getSupportActionBar().setTitle(getIntent().getStringExtra("subproduct_name"));
+                                    JSONArray schema = rootJson.getJSONArray("schema");
+                                    for (int i = 0; i < schema.length(); i++) {
+                                        JSONObject element = schema.getJSONObject(i);
+                                        inflateView(element.getString("type"), element);
+                                    }
+                                    //Get build steps array to show in dialog
+                                    if (rootJson.has("steps")) {
+                                        JSONArray stepsSchema = rootJson.getJSONArray("steps");
+                                        for (int j = 0; j < stepsSchema.length(); j++) {
+                                            JSONObject element = stepsSchema.getJSONObject(j);
+                                            Step step = new Step();
+                                            step.setOrder(element.getInt("order"));
+                                            step.setStepName(element.getString("name"));
+                                            step.setStepSlug(element.getString("slug"));
+                                            step.setStepMessage(element.getString("message"));
+                                            stepList.add(step);
+                                        }
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<JsonArray> call, Throwable t) {
+                            AppUtils.handleNoInternetConnection(BuilderActivity.this);
+                        }
+                    });
+        }
+    }
     private void getCpanels() {
-        service.getCpanels(sessionManager.getToken(), sessionManager.getUserId() , "id:DESC")
+        service.getCpanels(sessionManager.getToken(), sessionManager.getUserId())
                 .enqueue(new Callback<List<Cpanel>>() {
                     @Override
                     public void onResponse(Call<List<Cpanel>> call, Response<List<Cpanel>> response) {

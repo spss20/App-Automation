@@ -77,7 +77,7 @@ public class CpanelBottomSheetFragment extends BottomSheetDialogFragment {
     }
 
     private void getCpanels() {
-        service.getCpanels(sessionManager.getToken(), sessionManager.getUserId() , "id:DESC")
+        service.getCpanels(sessionManager.getToken(), sessionManager.getUserId())
                 .enqueue(new Callback<List<Cpanel>>() {
                     @Override
                     public void onResponse(Call<List<Cpanel>> call, Response<List<Cpanel>> response) {

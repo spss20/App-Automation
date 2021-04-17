@@ -115,8 +115,7 @@ public interface ApiService {
     @GET("cpanels")
     Call<List<Cpanel>> getCpanels(
             @Header("Authorization") String token,
-            @Query("user_id") String user_id,
-            @Query("_sort") String sort
+            @Query("user_id") String user_id
     );
 
     @GET("cpanels/{id}")
@@ -136,8 +135,7 @@ public interface ApiService {
 
     @GET("orders")
     Call<List<Order>> getOrders(
-            @Header("Authorization") String token,
-            @Query("_sort") String sort
+            @Header("Authorization") String token
     );
 
     @GET
