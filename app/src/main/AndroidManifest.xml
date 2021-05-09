@@ -29,7 +29,10 @@
             android:theme="@style/Theme.AppMaker.ActionBar" />
         <activity android:name=".activities.ForgotPassword"></activity>
         <activity android:name=".activities.MainActivity">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.MyCpanels"
@@ -53,10 +56,7 @@
         <activity
             android:name=".activities.SplashActivity"
             android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
