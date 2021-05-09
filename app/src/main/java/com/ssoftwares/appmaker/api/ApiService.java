@@ -2,6 +2,7 @@ package com.ssoftwares.appmaker.api;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.ssoftwares.appmaker.modals.AdminPanel;
 import com.ssoftwares.appmaker.modals.Banner;
 import com.ssoftwares.appmaker.modals.Category;
 import com.ssoftwares.appmaker.modals.Cpanel;
@@ -114,8 +115,12 @@ public interface ApiService {
 
     @GET("cpanels")
     Call<List<Cpanel>> getCpanels(
-            @Header("Authorization") String token,
-            @Query("user_id") String user_id
+            @Header("Authorization") String token
+    );
+
+    @GET("adminpanels")
+    Call<List<AdminPanel>> getAdminPanels(
+            @Header("Authorization") String token
     );
 
     @GET("cpanels/{id}")

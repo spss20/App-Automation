@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -32,15 +33,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.ssoftwares.appmaker.R;
 import com.ssoftwares.appmaker.api.ApiClient;
 import com.ssoftwares.appmaker.api.ApiService;
+import com.ssoftwares.appmaker.fragments.AdminPanelBottomSheetFragment;
 import com.ssoftwares.appmaker.fragments.CpanelBottomSheetFragment;
 import com.ssoftwares.appmaker.fragments.ProductBottomSheetFragment;
+import com.ssoftwares.appmaker.interfaces.AdminPanelSelectedListener;
+import com.ssoftwares.appmaker.modals.AdminPanel;
 import com.ssoftwares.appmaker.modals.Cpanel;
 import com.ssoftwares.appmaker.modals.DynamicEditText;
+import com.ssoftwares.appmaker.modals.DynamicFrameLayout;
 import com.ssoftwares.appmaker.modals.DynamicLinearLayout;
 import com.ssoftwares.appmaker.modals.DynamicSpinner;
 import com.ssoftwares.appmaker.modals.DynamicSwitch;
@@ -377,6 +383,10 @@ public class BuilderActivity extends AppCompatActivity {
     }
 
     private void inflateEditText(JSONObject element) throws JSONException {
+        if (element.getString("id").equalsIgnoreCase("baseUrl")){
+            inflateSelectAdminPanelView(element);
+            return;
+        }
         DynamicEditText editext = (DynamicEditText) getLayoutInflater().inflate(R.layout.edittext_item, null);
         editext.setApiKey(element.getString("id"));
         editext.setLayoutParams(params15dp);
@@ -433,6 +443,69 @@ public class BuilderActivity extends AppCompatActivity {
             }
         });
         rootView.addView(editext);
+    }
+
+    private void inflateSelectAdminPanelView(JSONObject element) throws JSONException {
+        DynamicFrameLayout parent = (DynamicFrameLayout) getLayoutInflater().inflate(R.layout.select_admin_panel, null);
+
+        TextInputLayout textInputLayout = parent.findViewById(R.id.admin_panel_url_layout);
+        EditText editText = parent.findViewById(R.id.admin_panel_url);
+        ImageView selectAdminPanel = parent.findViewById(R.id.select_admin_panel);
+
+        selectAdminPanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdminPanelBottomSheetFragment adminPanelSheet = AdminPanelBottomSheetFragment
+                        .newInstance(new AdminPanelSelectedListener() {
+                            @Override
+                            public void onSelected(AdminPanel panel) {
+                                editText.setText(panel.getBaseUrl());
+                                AdminPanelBottomSheetFragment fragment =
+                                        (AdminPanelBottomSheetFragment) getSupportFragmentManager()
+                                                .findFragmentByTag("ADMIN_PANEL_SHEET");
+                                if (fragment != null) {
+                                    fragment.dismiss();
+                                }
+                            }
+                        });
+                adminPanelSheet.show(getSupportFragmentManager() , "ADMIN_PANEL_SHEET");
+            }
+        });
+
+        parent.setApiKey(element.getString("id"));
+        parent.setLayoutParams(params15dp);
+        if (element.has("isRequired"))
+            parent.setRequired(element.getBoolean("isRequired"));
+        if (element.has("hint")) ((TextInputLayout) parent.getChildAt(0)).setHint(element.getString("hint"));
+        if (element.has("stringregex")) parent.setRegex(element.getString("stringregex"));
+        if (element.has("regex")) {
+            String regex = element.getString("regex");
+            editText.setFilters(new InputFilter[]{new IdInputFilter(BuilderActivity.this, regex)});
+        }
+        if (element.has("value"))
+            editText.setText(element.getString("value"));
+
+        editText.setFocusable(true);
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    int length = editText.getText().toString().length();
+                    if (length == 0) {
+                        return;
+                    }
+                    if (parent.getRegex() != null) {
+                        boolean isMatch = editText.getText().toString().matches(parent.getRegex());
+                        if (!isMatch) {
+                            textInputLayout.setError("Invalid " + editText.getHint());
+                            return;
+                        }
+                    }
+                }
+                textInputLayout.setError(null);
+            }
+        });
+        rootView.addView(parent);
     }
 
     private void inflateEnum(JSONObject element) throws JSONException {
@@ -550,7 +623,9 @@ public class BuilderActivity extends AppCompatActivity {
 
             rootView.addView(pickLayout);
 
-        } else if (action.equalsIgnoreCase("pickImage")) {
+        }
+        else if (action.equalsIgnoreCase("pickImage"))
+        {
             DynamicLinearLayout pickLayout = null;
             LinearLayout.LayoutParams imageCanvasParams = null;
 
@@ -595,7 +670,8 @@ public class BuilderActivity extends AppCompatActivity {
             pickLayout.setApiKey(element.getString("id"));
             pickLayout.setLayoutParams(params15dp);
             pickLayout.setAction(action);
-
+            if (element.has("isRequired"))
+                pickLayout.setRequired(element.getBoolean("isRequired"));
             Button pickFileButton = pickLayout.findViewById(R.id.pick_bt);
             ImageView selectedImage = pickLayout.findViewById(R.id.selected_image);
             TextView fileNameTv = pickLayout.findViewById(R.id.file_name_tv);
@@ -653,7 +729,8 @@ public class BuilderActivity extends AppCompatActivity {
             }
 
             rootView.addView(pickLayout);
-        } else if (action.equalsIgnoreCase("submit")) {
+        }
+        else if (action.equalsIgnoreCase("submit")) {
             Button submit = (Button) getLayoutInflater().inflate(R.layout.button_item, null);
             params20dpwrap.gravity = Gravity.CENTER_HORIZONTAL;
             submit.setLayoutParams(params20dpwrap);
@@ -800,6 +877,10 @@ public class BuilderActivity extends AppCompatActivity {
                 }
                 MultipartBody.Part fileBody = ApiClient.prepareFilePart(
                         "files." + childView.getApiKey(), childView);
+                if (fileBody == null){
+                    Toast.makeText(this, "Invalid Mime Type of " + childView.getApiKey().toUpperCase() , Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 filesBodyList.add(fileBody);
             } else if (view instanceof SelectItemDynamicLayout) {
                 SelectItemDynamicLayout childView = (SelectItemDynamicLayout) view;
@@ -810,7 +891,8 @@ public class BuilderActivity extends AppCompatActivity {
                     } else continue;
                 }
                 data.put(childView.getApiKey(), new JSONArray().put(childView.getSelectedId()));
-            } else if (view instanceof DynamicSpinner) {
+            }
+            else if (view instanceof DynamicSpinner) {
                 DynamicSpinner childView = (DynamicSpinner) view;
                 if (childView.getSelectedItemPosition() == 0) {
                     Toast.makeText(this, "Please select " +
@@ -819,7 +901,8 @@ public class BuilderActivity extends AppCompatActivity {
                     return;
                 }
                 data.put(childView.getApiKey(), childView.getSelectedItem().toString());
-            } else if (view instanceof DynamicSwitch) {
+            }
+            else if (view instanceof DynamicSwitch) {
                 DynamicSwitch childView = (DynamicSwitch) view;
                 data.put(childView.getApiKey(), childView.isChecked());
             }
@@ -1017,6 +1100,10 @@ public class BuilderActivity extends AppCompatActivity {
     private void processIntentData(Uri uri, DynamicLinearLayout dynamicLinearLayout, String fileName) throws IOException {
         dynamicLinearLayout.setUri(uri);
         if (dynamicLinearLayout.getAction().equalsIgnoreCase("pickImage")) {
+
+            UCrop.Options configInstance = new UCrop.Options();
+            configInstance.setCompressionFormat(Bitmap.CompressFormat.PNG);
+
             if (dynamicLinearLayout.getDimension() != null) {
                 float x = 1;
                 float y = 1;
@@ -1027,16 +1114,21 @@ public class BuilderActivity extends AppCompatActivity {
                 if (h > w)
                     y = h / w;
 
-                UCrop.of(uri, getImageFileUri())
+                Uri destination = Uri.fromFile(new File(getCacheDir() , fileName));
+                UCrop.of(uri, destination )
+                        .withOptions(configInstance)
                         .withAspectRatio(x, y)
                         .withMaxResultSize(dynamicLinearLayout.getImageWidth(), dynamicLinearLayout.getImageHeight())
                         .start(this, dynamicLinearLayout.getRequestCode());
             } else {
-                UCrop.of(uri, getImageFileUri())
+                Uri destination = Uri.fromFile(new File(getCacheDir() , fileName));
+                UCrop.of(uri, destination)
+                        .withOptions(configInstance)
                         .withMaxResultSize(1080, 1080)
                         .start(this, dynamicLinearLayout.getRequestCode());
             }
-        } else {
+        }
+        else {
             dynamicLinearLayout.setFileName(fileName);
             ((TextView) dynamicLinearLayout.findViewById(R.id.file_name_tv)).setText(fileName);
             InputStream in = getContentResolver().openInputStream(uri);
@@ -1045,10 +1137,14 @@ public class BuilderActivity extends AppCompatActivity {
         }
     }
 
-    private Uri getImageFileUri() throws IOException {
-        String imageFileName = "JPEG_" + System.currentTimeMillis() + "_";
+    private Uri getImageFileUri(String fileName) throws IOException {
+        String[] nameSpitted = fileName.split("\\.");
+        if (nameSpitted.length == 1){
+            Toast.makeText(this, "Unknown error occured", Toast.LENGTH_SHORT).show();
+            return null;
+        }
         File file = File.createTempFile(
-                imageFileName, ".jpg", getExternalCacheDir()
+                nameSpitted[0], nameSpitted[nameSpitted.length - 1], getExternalCacheDir()
         );
         return Uri.fromFile(file);
     }

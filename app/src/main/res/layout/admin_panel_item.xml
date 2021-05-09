@@ -7,7 +7,7 @@
     android:layout_height="100dp">
 
     <ImageView
-        android:id="@+id/product_image"
+        android:id="@+id/company_logo"
         android:layout_width="100dp"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
@@ -21,19 +21,19 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/product_name"
+            android:id="@+id/company_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:ellipsize="end"
-            android:text="Hungry Application"
+            android:text="Company Name"
             style="@style/MediumTextBold"
             android:layout_marginTop="10dp"
             android:textAllCaps="true"
             />
 
         <TextView
-            android:id="@+id/product_short_desc"
+            android:id="@+id/base_url"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
@@ -41,11 +41,11 @@
             android:text="User, Driver, Vendor App + Admin Panel"
             style="@style/RegularText"
             android:fontFamily="@font/muli_semibold"
-            android:layout_below="@+id/product_name"
+            android:layout_below="@+id/company_name"
             />
 
         <TextView
-            android:id="@+id/product_category"
+            android:id="@+id/product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Web Applications"

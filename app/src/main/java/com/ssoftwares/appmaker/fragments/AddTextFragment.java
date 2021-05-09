@@ -25,7 +25,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ssoftwares.appmaker.R;
 import com.ssoftwares.appmaker.demoadapter.CustomSpinnerAdapter;
 import com.ssoftwares.appmaker.demoutils.FontItem;
-import com.ssoftwares.appmaker.listeners.AddTextFragmentListener;
+import com.ssoftwares.appmaker.interfaces.AddTextFragmentListener;
 
 import java.util.ArrayList;
 import java.util.List;

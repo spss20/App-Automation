@@ -11,6 +11,13 @@
       "gravity" : "center"
     } ,
     {
+      "type": "edittext",
+      "hint": "Base Url",
+      "id": "baseUrl",
+      "stringregex": "^(https?:\\/\\/)([\\w\\d-_]+)\\.([\\w\\d-_\\.]+)\\/?\\??([^#\\n\\r]*)?#?([^\\n\\r]*)?\\/",
+      "isRequired": true
+    },
+    {
       "type" : "enum",
       "values" : ["dokan" , "wcfm"],
       "text" : "Select Vendor Plugin Used",

@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ssoftwares.appmaker.R;
-import com.ssoftwares.appmaker.listeners.EditImageFragmentListener;
+import com.ssoftwares.appmaker.interfaces.EditImageFragmentListener;
 
 
 /**

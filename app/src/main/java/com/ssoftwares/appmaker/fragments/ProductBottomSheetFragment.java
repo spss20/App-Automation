@@ -77,9 +77,9 @@ public class ProductBottomSheetFragment extends BottomSheetDialogFragment {
                             adapter.updateData(response.body());
                         } else {
                             if (response.code() == 401)
-                                Toast.makeText(getContext(), "Unauthorized", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Unauthorized : Please logout and login again.", Toast.LENGTH_SHORT).show();
                             else
-                                Toast.makeText(getContext(), "Failed to fetch cpanels list", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Failed to fetch products list", Toast.LENGTH_SHORT).show();
                         }
                     }
 

@@ -20,7 +20,7 @@ import com.ssoftwares.appmaker.activities.SplashBuilderActivity;
 import com.ssoftwares.appmaker.demoadapter.ThumbnailAdapter;
 import com.ssoftwares.appmaker.demoutils.Bitmap_Utils;
 import com.ssoftwares.appmaker.demoutils.SpacesItemDecoration;
-import com.ssoftwares.appmaker.listeners.FiltersListFragmentListener;
+import com.ssoftwares.appmaker.interfaces.FiltersListFragmentListener;
 import com.zomato.photofilters.FilterPack;
 import com.zomato.photofilters.imageprocessors.Filter;
 import com.zomato.photofilters.utils.ThumbnailItem;

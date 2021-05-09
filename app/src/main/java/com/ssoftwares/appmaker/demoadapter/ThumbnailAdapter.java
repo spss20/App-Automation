@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ssoftwares.appmaker.R;
-import com.ssoftwares.appmaker.listeners.FiltersListFragmentListener;
+import com.ssoftwares.appmaker.interfaces.FiltersListFragmentListener;
 import com.zomato.photofilters.utils.ThumbnailItem;
 
 import java.util.List;

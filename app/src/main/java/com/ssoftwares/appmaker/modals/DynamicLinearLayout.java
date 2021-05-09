@@ -19,6 +19,7 @@ public class DynamicLinearLayout extends LinearLayout {
     private String fileBase64;
     private String dimension;
 
+
     public DynamicLinearLayout(Context context) {
         super(context);
     }

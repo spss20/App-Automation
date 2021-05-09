@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,9 +46,9 @@ import com.ssoftwares.appmaker.demoutils.FontItem;
 import com.ssoftwares.appmaker.fragments.AddTextFragment;
 import com.ssoftwares.appmaker.fragments.EditImageFragment;
 import com.ssoftwares.appmaker.fragments.FilterListFragment;
-import com.ssoftwares.appmaker.listeners.AddTextFragmentListener;
-import com.ssoftwares.appmaker.listeners.EditImageFragmentListener;
-import com.ssoftwares.appmaker.listeners.FiltersListFragmentListener;
+import com.ssoftwares.appmaker.interfaces.AddTextFragmentListener;
+import com.ssoftwares.appmaker.interfaces.EditImageFragmentListener;
+import com.ssoftwares.appmaker.interfaces.FiltersListFragmentListener;
 import com.yalantis.ucrop.UCrop;
 import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter;
 import com.zomato.photofilters.imageprocessors.subfilters.ContrastSubFilter;
@@ -58,7 +57,6 @@ import com.zomato.photofilters.imageprocessors.subfilters.SaturationSubfilter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.UUID;
 
 import ja.burhanrashid52.photoeditor.OnSaveBitmap;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
@@ -67,9 +65,6 @@ import ja.burhanrashid52.photoeditor.SaveSettings;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 import com.zomato.photofilters.imageprocessors.Filter;
-import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter;
-import com.zomato.photofilters.imageprocessors.subfilters.ContrastSubFilter;
-import com.zomato.photofilters.imageprocessors.subfilters.SaturationSubfilter;
 
 public class SplashBuilderActivity extends AppCompatActivity implements FiltersListFragmentListener,
         EditImageFragmentListener, AddTextFragmentListener {

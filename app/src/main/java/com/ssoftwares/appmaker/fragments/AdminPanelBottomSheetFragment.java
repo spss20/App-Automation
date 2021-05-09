@@ -1,14 +1,9 @@
 package com.ssoftwares.appmaker.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.se.omapi.Session;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,16 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ssoftwares.appmaker.R;
-import com.ssoftwares.appmaker.activities.BuilderActivity;
-import com.ssoftwares.appmaker.adapters.CpanelAdapter;
+import com.ssoftwares.appmaker.adapters.AdminPanelAdapter;
+import com.ssoftwares.appmaker.adapters.ProductBottomSheetAdapter;
 import com.ssoftwares.appmaker.api.ApiClient;
 import com.ssoftwares.appmaker.api.ApiService;
-import com.ssoftwares.appmaker.interfaces.CpanelSelectedListener;
+import com.ssoftwares.appmaker.interfaces.AdminPanelSelectedListener;
+import com.ssoftwares.appmaker.interfaces.ProductSelectedListener;
+import com.ssoftwares.appmaker.modals.AdminPanel;
 import com.ssoftwares.appmaker.modals.Cpanel;
 import com.ssoftwares.appmaker.modals.Product;
-import com.ssoftwares.appmaker.modals.SelectItemDynamicLayout;
 import com.ssoftwares.appmaker.utils.AppUtils;
-import com.ssoftwares.appmaker.utils.Dimensions;
 import com.ssoftwares.appmaker.utils.SessionManager;
 
 import java.util.ArrayList;
@@ -38,49 +33,49 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CpanelBottomSheetFragment extends BottomSheetDialogFragment {
+public class AdminPanelBottomSheetFragment extends BottomSheetDialogFragment {
 
 
-    private CpanelSelectedListener listener;
-    private SessionManager sessionManager;
+    private AdminPanelSelectedListener listener;
     private ApiService service;
-    private CpanelAdapter adapter;
+    private AdminPanelAdapter adapter;
+    private SessionManager sessionManager;
 
-    public static CpanelBottomSheetFragment newInstance(CpanelSelectedListener listener) {
-        final CpanelBottomSheetFragment fragment = new CpanelBottomSheetFragment();
+    public static AdminPanelBottomSheetFragment newInstance(AdminPanelSelectedListener listener) {
+        final AdminPanelBottomSheetFragment fragment = new AdminPanelBottomSheetFragment();
         fragment.listener = listener;
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        service = ApiClient.create();
+        sessionManager = new SessionManager(getContext());
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        service = ApiClient.create();
-        sessionManager = new SessionManager(getContext());
-        return inflater.inflate(R.layout.activity_cpanel, container, false);
+        return inflater.inflate(R.layout.fragment_bottom_sheet, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        RecyclerView cpanelRecycler = view.findViewById(R.id.cpanel_recycler);
-        adapter = new CpanelAdapter(getContext(), new ArrayList<>(), new CpanelSelectedListener() {
-            @Override
-            public void onSelected(Cpanel cpanel) {
-                listener.onSelected(cpanel);
-            }
-        });
-        cpanelRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        cpanelRecycler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        cpanelRecycler.setAdapter(adapter);
-        getCpanels();
+        RecyclerView adminPanelRecycler = view.findViewById(R.id.items_recycler);
+        adapter = new AdminPanelAdapter(getContext(), new ArrayList<>() , listener);
+        adminPanelRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        adminPanelRecycler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        adminPanelRecycler.setAdapter(adapter);
+        getAdminPanels();
     }
 
-    private void getCpanels() {
-        service.getCpanels(sessionManager.getToken())
-                .enqueue(new Callback<List<Cpanel>>() {
+    private void getAdminPanels() {
+        service.getAdminPanels(sessionManager.getToken())
+                .enqueue(new Callback<List<AdminPanel>>() {
                     @Override
-                    public void onResponse(Call<List<Cpanel>> call, Response<List<Cpanel>> response) {
+                    public void onResponse(Call<List<AdminPanel>> call, Response<List<AdminPanel>> response) {
                         if (response.body() != null) {
                             adapter.updateData(response.body());
                         } else {
@@ -92,9 +87,10 @@ public class CpanelBottomSheetFragment extends BottomSheetDialogFragment {
                     }
 
                     @Override
-                    public void onFailure(Call<List<Cpanel>> call, Throwable t) {
+                    public void onFailure(Call<List<AdminPanel>> call, Throwable t) {
                         AppUtils.handleNoInternetConnection(getContext());
                     }
                 });
     }
+
 }
