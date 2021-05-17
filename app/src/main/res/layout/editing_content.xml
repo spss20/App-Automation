@@ -69,7 +69,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/muli_bold"
+                        android:fontFamily="@font/work_sans_semibold"
                         android:text="Background Color"
                         android:textAlignment="center"
                         android:textColor="@color/white"
@@ -104,7 +104,7 @@
             <!--                    <TextView-->
             <!--                        android:layout_width="match_parent"-->
             <!--                        android:layout_height="wrap_content"-->
-            <!--                        android:fontFamily="@font/muli"-->
+            <!--                        -->
             <!--                        android:text="Edit"-->
             <!--                        android:textAlignment="center"-->
             <!--                        android:textColor="@android:color/white"-->
@@ -203,7 +203,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/muli_bold"
+                        android:fontFamily="@font/work_sans_semibold"
                         android:text="Text"
                         android:textAlignment="center"
                         android:textColor="@android:color/white"
@@ -239,7 +239,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/muli_bold"
+                        android:fontFamily="@font/work_sans_semibold"
                         android:text="Image"
                         android:textAlignment="center"
                         android:textColor="@android:color/white"
@@ -307,7 +307,7 @@
             <!--                    <TextView-->
             <!--                        android:layout_width="wrap_content"-->
             <!--                        android:layout_height="wrap_content"-->
-            <!--                        android:fontFamily="@font/muli_bold"-->
+            <!--                        android:fontFamily="@font/work_sans_semibold"-->
             <!--                        android:text="Crop"-->
             <!--                        android:textAlignment="center"-->
             <!--                        android:textColor="@android:color/white"-->
@@ -452,7 +452,7 @@
                 android:layout_below="@+id/cardtoolbox"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/muli_bold"
+                android:fontFamily="@font/work_sans_semibold"
                 android:text="TextSize" />
 
             <RelativeLayout
@@ -497,7 +497,7 @@
                 android:layout_below="@+id/textsizelayout"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/muli_bold"
+                android:fontFamily="@font/work_sans_semibold"
                 android:text="TextSpacing" />
 
             <RelativeLayout

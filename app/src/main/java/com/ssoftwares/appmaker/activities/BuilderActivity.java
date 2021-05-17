@@ -42,8 +42,6 @@ import com.ssoftwares.appmaker.api.ApiService;
 import com.ssoftwares.appmaker.fragments.AdminPanelBottomSheetFragment;
 import com.ssoftwares.appmaker.fragments.CpanelBottomSheetFragment;
 import com.ssoftwares.appmaker.fragments.ProductBottomSheetFragment;
-import com.ssoftwares.appmaker.interfaces.AdminPanelSelectedListener;
-import com.ssoftwares.appmaker.modals.AdminPanel;
 import com.ssoftwares.appmaker.modals.Cpanel;
 import com.ssoftwares.appmaker.modals.DynamicEditText;
 import com.ssoftwares.appmaker.modals.DynamicFrameLayout;
@@ -103,6 +101,7 @@ public class BuilderActivity extends AppCompatActivity {
     private String subProductId;
     private List<Step> stepList;
     private Toolbar toolbar;
+    private boolean isCaching;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,7 +140,8 @@ public class BuilderActivity extends AppCompatActivity {
 //        }
 
         String data = getIntent().getStringExtra("config");
-        if (data != null) {
+        isCaching = getIntent().getBooleanExtra("isCachingEnabled", true);
+        if (data != null && isCaching) {
             configHash = AppUtils.getMd5(data);
             subProductId = getIntent().getStringExtra("subproduct_id");
             try {
@@ -149,8 +149,50 @@ public class BuilderActivity extends AppCompatActivity {
                 if (sessionManager.getConfigHash() != null) {
                     if (sessionManager.getConfigHash().equals(AppUtils.getMd5(data))) {
                         data = sessionManager.getConfig();
+                        rootJson = new JSONObject(data);
+                    } else {
+                        rootJson = new JSONObject(data);
+                        JSONObject oldJson = new JSONObject(sessionManager.getConfig());
+
+                        if (rootJson.getString("endpoint").equals(oldJson.getString("endpoint"))) {
+                            //Comparing between old schema and new to see if there is any common field to autofill
+                            JSONArray newSchema = rootJson.getJSONArray("schema");
+                            //Old schema
+                            JSONArray oldSchema = oldJson.getJSONArray("schema");
+
+                            for (int i = 0; i < oldSchema.length(); i++) {
+                                JSONObject viewJson = oldSchema.getJSONObject(i);
+                                String type = viewJson.getString("type");
+                                if (type.equals("constant"))
+                                    continue;
+                                if (viewJson.has("value")) {
+                                    String key = viewJson.getString("id");
+                                    String value = viewJson.getString("value");
+
+                                    for (int j = 0; j < newSchema.length(); j++) {
+                                        JSONObject newViewJson = newSchema.getJSONObject(j);
+                                        if (newViewJson.has("id") && newViewJson.getString("id").equals(key)) {
+                                            newViewJson.put("value", value);
+                                            //For dynamic linear layout for picking images which also have file name other then value
+                                            if (viewJson.has("action") && viewJson.getString("action").equals("pickImage")){
+                                                newViewJson.put("fileName" , viewJson.getString("fileName"));
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+
                     }
-                }
+                } else
+                    rootJson = new JSONObject(data);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if (data != null && !isCaching) {
+            try {
                 rootJson = new JSONObject(data);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -296,6 +338,9 @@ public class BuilderActivity extends AppCompatActivity {
             case "edittext":
                 inflateEditText(element);
                 break;
+            case "baseUrl":
+                inflateSelectAdminPanelView(element);
+                break;
             case "textview":
                 inflateTextView(element);
                 break;
@@ -383,10 +428,6 @@ public class BuilderActivity extends AppCompatActivity {
     }
 
     private void inflateEditText(JSONObject element) throws JSONException {
-        if (element.getString("id").equalsIgnoreCase("baseUrl")){
-            inflateSelectAdminPanelView(element);
-            return;
-        }
         DynamicEditText editext = (DynamicEditText) getLayoutInflater().inflate(R.layout.edittext_item, null);
         editext.setApiKey(element.getString("id"));
         editext.setLayoutParams(params15dp);
@@ -456,19 +497,16 @@ public class BuilderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AdminPanelBottomSheetFragment adminPanelSheet = AdminPanelBottomSheetFragment
-                        .newInstance(new AdminPanelSelectedListener() {
-                            @Override
-                            public void onSelected(AdminPanel panel) {
-                                editText.setText(panel.getBaseUrl());
-                                AdminPanelBottomSheetFragment fragment =
-                                        (AdminPanelBottomSheetFragment) getSupportFragmentManager()
-                                                .findFragmentByTag("ADMIN_PANEL_SHEET");
-                                if (fragment != null) {
-                                    fragment.dismiss();
-                                }
+                        .newInstance(panel -> {
+                            editText.setText(panel.getBaseUrl());
+                            AdminPanelBottomSheetFragment fragment =
+                                    (AdminPanelBottomSheetFragment) getSupportFragmentManager()
+                                            .findFragmentByTag("ADMIN_PANEL_SHEET");
+                            if (fragment != null) {
+                                fragment.dismiss();
                             }
                         });
-                adminPanelSheet.show(getSupportFragmentManager() , "ADMIN_PANEL_SHEET");
+                adminPanelSheet.show(getSupportFragmentManager(), "ADMIN_PANEL_SHEET");
             }
         });
 
@@ -476,7 +514,8 @@ public class BuilderActivity extends AppCompatActivity {
         parent.setLayoutParams(params15dp);
         if (element.has("isRequired"))
             parent.setRequired(element.getBoolean("isRequired"));
-        if (element.has("hint")) ((TextInputLayout) parent.getChildAt(0)).setHint(element.getString("hint"));
+        if (element.has("hint"))
+            ((TextInputLayout) parent.getChildAt(0)).setHint(element.getString("hint"));
         if (element.has("stringregex")) parent.setRegex(element.getString("stringregex"));
         if (element.has("regex")) {
             String regex = element.getString("regex");
@@ -624,8 +663,7 @@ public class BuilderActivity extends AppCompatActivity {
             rootView.addView(pickLayout);
 
         }
-        else if (action.equalsIgnoreCase("pickImage"))
-        {
+        else if (action.equalsIgnoreCase("pickImage")) {
             DynamicLinearLayout pickLayout = null;
             LinearLayout.LayoutParams imageCanvasParams = null;
 
@@ -867,9 +905,36 @@ public class BuilderActivity extends AppCompatActivity {
                     }
                 }
                 data.put(childView.getApiKey(), text);
+            } else if (view instanceof DynamicFrameLayout) {
+                DynamicFrameLayout childView = (DynamicFrameLayout) view;
+                TextInputLayout baseUrlLayout = childView.findViewById(R.id.admin_panel_url_layout);
+                String text = baseUrlLayout.getEditText().getText().toString();
+                if (text.isEmpty())
+                    if (childView.isRequired()) {
+                        baseUrlLayout.setError("This field can't be empty");
+                        return;
+                    } else continue;
+                if (childView.getRegex() != null && !text.matches(childView.getRegex())) {
+                    baseUrlLayout.setError("Invalid " + baseUrlLayout.getHint());
+                    return;
+                }
+                if (childView.getMinLength() != -1) {
+                    if (text.length() < childView.getMinLength()) {
+                        baseUrlLayout.setError("Minimum length should be " + childView.getMinLength() + " characters");
+                        return;
+                    }
+                }
+
+                if (childView.getMaxLength() != -1) {
+                    if (text.length() > childView.getMaxLength()) {
+                        baseUrlLayout.setError("Input exceeds the maximum length of " + childView.getMaxLength() + " characters");
+                        return;
+                    }
+                }
+                data.put(childView.getApiKey(), text);
             } else if (view instanceof DynamicLinearLayout) {
                 DynamicLinearLayout childView = (DynamicLinearLayout) view;
-                if (childView.getFileBase64() == null) {
+                if (childView.getFileName() == null || childView.getFileBase64() == null ) {
                     if (childView.isRequired()) {
                         Toast.makeText(this, "" + childView.getApiKey().toUpperCase() + " is required", Toast.LENGTH_SHORT).show();
                         return;
@@ -877,8 +942,8 @@ public class BuilderActivity extends AppCompatActivity {
                 }
                 MultipartBody.Part fileBody = ApiClient.prepareFilePart(
                         "files." + childView.getApiKey(), childView);
-                if (fileBody == null){
-                    Toast.makeText(this, "Invalid Mime Type of " + childView.getApiKey().toUpperCase() , Toast.LENGTH_SHORT).show();
+                if (fileBody == null) {
+                    Toast.makeText(this, "Invalid Mime Type of " + childView.getApiKey().toUpperCase(), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 filesBodyList.add(fileBody);
@@ -891,8 +956,7 @@ public class BuilderActivity extends AppCompatActivity {
                     } else continue;
                 }
                 data.put(childView.getApiKey(), new JSONArray().put(childView.getSelectedId()));
-            }
-            else if (view instanceof DynamicSpinner) {
+            } else if (view instanceof DynamicSpinner) {
                 DynamicSpinner childView = (DynamicSpinner) view;
                 if (childView.getSelectedItemPosition() == 0) {
                     Toast.makeText(this, "Please select " +
@@ -901,8 +965,7 @@ public class BuilderActivity extends AppCompatActivity {
                     return;
                 }
                 data.put(childView.getApiKey(), childView.getSelectedItem().toString());
-            }
-            else if (view instanceof DynamicSwitch) {
+            } else if (view instanceof DynamicSwitch) {
                 DynamicSwitch childView = (DynamicSwitch) view;
                 data.put(childView.getApiKey(), childView.isChecked());
             }
@@ -930,8 +993,7 @@ public class BuilderActivity extends AppCompatActivity {
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         AppUtils.dissmissLoadingBar();
                         if (response.body() == null || response.code() != 200) {
-                            Toast.makeText(BuilderActivity.this, "Api Execution Failed", Toast.LENGTH_SHORT).show();
-
+                            Toast.makeText(BuilderActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                             return;
                         }
                         if (response.body().has("outputUrl")) {
@@ -964,7 +1026,6 @@ public class BuilderActivity extends AppCompatActivity {
     private void createOrder(int orderId, String outputUrl) throws JSONException {
         String orderName = extractOrderName();
 
-        saveConfigValues();
         JSONObject data = new JSONObject();
         data.put("outputUrl", outputUrl);
         data.put("orderId", orderId);
@@ -1114,21 +1175,20 @@ public class BuilderActivity extends AppCompatActivity {
                 if (h > w)
                     y = h / w;
 
-                Uri destination = Uri.fromFile(new File(getCacheDir() , fileName));
-                UCrop.of(uri, destination )
+                Uri destination = Uri.fromFile(new File(getCacheDir(), fileName));
+                UCrop.of(uri, destination)
                         .withOptions(configInstance)
                         .withAspectRatio(x, y)
                         .withMaxResultSize(dynamicLinearLayout.getImageWidth(), dynamicLinearLayout.getImageHeight())
                         .start(this, dynamicLinearLayout.getRequestCode());
             } else {
-                Uri destination = Uri.fromFile(new File(getCacheDir() , fileName));
+                Uri destination = Uri.fromFile(new File(getCacheDir(), fileName));
                 UCrop.of(uri, destination)
                         .withOptions(configInstance)
                         .withMaxResultSize(1080, 1080)
                         .start(this, dynamicLinearLayout.getRequestCode());
             }
-        }
-        else {
+        } else {
             dynamicLinearLayout.setFileName(fileName);
             ((TextView) dynamicLinearLayout.findViewById(R.id.file_name_tv)).setText(fileName);
             InputStream in = getContentResolver().openInputStream(uri);
@@ -1139,7 +1199,7 @@ public class BuilderActivity extends AppCompatActivity {
 
     private Uri getImageFileUri(String fileName) throws IOException {
         String[] nameSpitted = fileName.split("\\.");
-        if (nameSpitted.length == 1){
+        if (nameSpitted.length == 1) {
             Toast.makeText(this, "Unknown error occured", Toast.LENGTH_SHORT).show();
             return null;
         }
@@ -1152,7 +1212,8 @@ public class BuilderActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        saveConfigValues();
+        if (isCaching)
+            saveConfigValues();
     }
 
     private void saveConfigValues() {
@@ -1167,6 +1228,23 @@ public class BuilderActivity extends AppCompatActivity {
                 if (view instanceof DynamicEditText) {
                     DynamicEditText childView = (DynamicEditText) view;
                     String text = childView.getEditText().getText().toString();
+                    if (text.isEmpty())
+                        continue;
+                    if (childView.getRegex() != null && !text.matches(childView.getRegex())) {
+                        continue;
+                    }
+                    for (int j = 0; j < schema.length(); j++) {
+                        JSONObject childObject = schema.getJSONObject(j);
+                        if (childObject.has("id") &&
+                                childObject.getString("id").equals(childView.getApiKey())) {
+                            childObject.put("value", text);
+                        }
+                    }
+
+                } else if (view instanceof  DynamicFrameLayout){
+                    DynamicFrameLayout childView = (DynamicFrameLayout) view;
+                    TextInputLayout adminPanelView = childView.findViewById(R.id.admin_panel_url_layout);
+                    String text = adminPanelView.getEditText().getText().toString();
                     if (text.isEmpty())
                         continue;
                     if (childView.getRegex() != null && !text.matches(childView.getRegex())) {

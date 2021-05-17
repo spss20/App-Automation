@@ -46,12 +46,8 @@ public class SubProductsActivity extends AppCompatActivity {
         if (productId == null) finish();
         service = ApiClient.create();
 
-        Toolbar toolbar = findViewById(R.id.tool_bar);
-        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setTitle(name);
-        TextView toolbarTitle = findViewById(R.id.toolbar_title);
-        toolbarTitle.setText("Build " + name);
+        getSupportActionBar().setTitle(name);
 
         RecyclerView subProductRecycler = findViewById(R.id.subproduct_recycler);
         subProductRecycler.setLayoutManager(new GridLayoutManager(this, 2));

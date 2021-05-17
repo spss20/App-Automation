@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -48,8 +49,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
             holder.subproductName.setText(order.getSubproduct().getName());
 
         if (order.getOrderImage() != null)
-            Picasso.get().load(order.getOrderImage().getImageUrl()).into(holder.orderImage);
-
+            Picasso.get().load(order.getOrderImage().getFormats().getSmall().getImageUrl()).into(holder.orderImage);
+        else
+            holder.orderImage.setImageDrawable(ContextCompat.getDrawable(mContext , R.drawable.ic_cpanel));
         holder.itemView.setOnClickListener(v -> onOrderClick.onClick(order));
 
         holder.showOutput.setOnClickListener(v -> onShowResultClick.onClick(order));

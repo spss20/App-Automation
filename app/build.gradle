@@ -59,6 +59,7 @@ dependencies {
     implementation 'ja.burhanrashid52:photoeditor:1.1.0'
     implementation 'com.github.yukuku:ambilwarna:2.0.1'
     implementation 'info.androidhive:imagefilters:1.0.7'
+    implementation 'br.com.simplepass:loading-button-android:2.2.0'
 
 
     // Declare the dependency for the Firebase Authentication library

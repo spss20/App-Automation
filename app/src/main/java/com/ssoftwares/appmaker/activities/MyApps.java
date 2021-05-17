@@ -85,9 +85,15 @@ public class MyApps extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                             if (response.isSuccessful()){
-                                Intent intent = new Intent(MyApps.this , BuilderActivity.class);
-                                intent.putExtra("config" , response.body().toString());
-                                startActivity(intent);
+                                try {
+                                    Intent intent = new Intent(MyApps.this, BuilderActivity.class);
+                                    intent.putExtra("config", response.body().toString());
+                                    intent.putExtra("isCachingEnabled" , false);
+                                    startActivity(intent);
+                                } catch (RuntimeException e){
+                                    e.printStackTrace();
+                                    Toast.makeText(MyApps.this, "An unknown error occurred, One of the reason might be huge image size", Toast.LENGTH_SHORT).show();
+                                }
                             } else
                                 Toast.makeText(MyApps.this, "Cannot fetch json file", Toast.LENGTH_SHORT).show();
                         }

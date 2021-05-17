@@ -1,11 +1,13 @@
 package com.ssoftwares.appmaker.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,25 +35,24 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
 
     ProductVerticalAdapter adapter;
     ApiService service;
-    Spinner typeSpinner;
-    SpinnerAdapter spinnerAdapter;
-    ArrayList<TagType> listType = new ArrayList<>();
+//    Spinner typeSpinner;
+//    SpinnerAdapter spinnerAdapter;
+//    ArrayList<TagType> listType = new ArrayList<>();
 
-    public void setListData() {
-
-        listType.add(new TagType("1", "All", null));
-        listType.add(new TagType("1", "Popular", "popular"));
-        listType.add(new TagType("1", "Newest", "newest"));
-        listType.add(new TagType("1", "Trending", "trending"));
-
-        // Now i have taken static values by loop.
-        // For further inhancement we can take data by webservice / json / xml;
-
-
-    }
+//    public void setListData() {
+//
+//        listType.add(new TagType("1", "All", null));
+//        listType.add(new TagType("1", "Popular", "popular"));
+//        listType.add(new TagType("1", "Newest", "newest"));
+//        listType.add(new TagType("1", "Trending", "trending"));
+//
+//        // Now i have taken static values by loop.
+//        // For further inhancement we can take data by webservice / json / xml;
+//
+//
+//    }
 
     String categoryId;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +69,13 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
 
         }
 
-        String category = getIntent().getStringExtra("category_name");
-        typeSpinner = (Spinner) findViewById(R.id.typeSpinner);
-        typeSpinner.setOnItemSelectedListener(this);
-        setListData();
-
-        spinnerAdapter = new SpinnerAdapter(this, listType);
-        typeSpinner.setAdapter(spinnerAdapter);
+//        String category = getIntent().getStringExtra("category_name");
+//        typeSpinner = (Spinner) findViewById(R.id.typeSpinner);
+//        typeSpinner.setOnItemSelectedListener(this);
+//        setListData();
+//
+//        spinnerAdapter = new SpinnerAdapter(this, listType);
+//        typeSpinner.setAdapter(spinnerAdapter);
 
 //        typeSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
@@ -84,33 +85,35 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
 //        });
 
 
-        TextView categoryName = findViewById(R.id.category_name);
-        ImageView backBtn = findViewById(R.id.back_bt);
-        categoryName.setText(category);
+//        TextView categoryName = findViewById(R.id.category_name);
+//        ImageView backBtn = findViewById(R.id.back_bt);
+//        categoryName.setText(category);
 
         if (categoryId == null && tag == null) {
             finish();
             return;
         }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getIntent().getStringExtra("category_name"));
+
         RecyclerView productRecycler = findViewById(R.id.products_recycler);
         productRecycler.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ProductVerticalAdapter(this, new ArrayList<>());
         productRecycler.setAdapter(adapter);
-        Log.d("TAG", "onCreate: Category Id"+category+"Tag-"+tag);
+//        Log.d("TAG", "onCreate: Category Id"+category+"Tag-"+tag);
         getProducts(categoryId, tag);
-        for (int i = 0; i < listType.size(); i++) {
-            if (tag != null) {
-                if (tag.equals(listType.get(i).getTag())) {
-                    typeSpinner.setSelection(i);
-                }
-            }
+//        for (int i = 0; i < listType.size(); i++) {
+//            if (tag != null) {
+//                if (tag.equals(listType.get(i).getTag())) {
+//                    typeSpinner.setSelection(i);
+//                }
+//            }
+//
+//        }
 
-        }
-
-
-        backBtn.setOnClickListener(v -> {
-            finish();
-        });
+//        backBtn.setOnClickListener(v -> {
+//            finish();
+//        });
 
     }
 
@@ -134,10 +137,19 @@ public class ProductsActivity extends AppCompatActivity implements AdapterView.O
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, "" + listType.get(position).getName(), Toast.LENGTH_SHORT).show();
-        getProducts(categoryId,
-                listType.get(position).getTag());
+//        Toast.makeText(this, "" + listType.get(position).getName(), Toast.LENGTH_SHORT).show();
+//        getProducts(categoryId,
+//                listType.get(position).getTag());
     }
 
     @Override

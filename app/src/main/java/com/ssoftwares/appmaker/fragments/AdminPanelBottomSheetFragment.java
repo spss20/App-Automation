@@ -72,7 +72,7 @@ public class AdminPanelBottomSheetFragment extends BottomSheetDialogFragment {
     }
 
     private void getAdminPanels() {
-        service.getAdminPanels(sessionManager.getToken())
+        service.getAdminPanels(sessionManager.getToken() , "id:DESC")
                 .enqueue(new Callback<List<AdminPanel>>() {
                     @Override
                     public void onResponse(Call<List<AdminPanel>> call, Response<List<AdminPanel>> response) {

@@ -36,7 +36,7 @@
             android:id="@+id/demo_credentials"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/RegularText"
+
             android:paddingTop="10dp"
             android:paddingEnd="20dp"
             android:paddingStart="20dp"

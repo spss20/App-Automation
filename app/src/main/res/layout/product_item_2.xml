@@ -39,8 +39,8 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:text="User, Driver, Vendor App + Admin Panel"
-            style="@style/RegularText"
-            android:fontFamily="@font/muli_semibold"
+
+
             android:layout_below="@+id/product_name"
             />
 
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Web Applications"
-            style="@style/RegularText"
+
             android:textSize="14sp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"

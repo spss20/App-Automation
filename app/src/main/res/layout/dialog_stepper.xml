@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     android:background="@drawable/layout_bg_4"
     android:orientation="vertical"
-    android:paddingTop="@dimen/dimen_10dp"
-    android:paddingBottom="@dimen/dimen_15dp">
+    android:paddingTop="10dp"
+    android:paddingBottom="15dp">
 
     <Button
         android:id="@+id/view_raw"
@@ -18,7 +18,7 @@
         android:layout_gravity="end"
         android:foreground="?selectableItemBackground"
         app:backgroundTint="@color/colorPrimaryTransparent"
-        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginEnd="10dp"
         />
     <com.shuhart.stepview.StepView
         android:id="@+id/step_view"
@@ -28,17 +28,17 @@
         android:padding="16dp"
         app:sv_animationType="All"
         app:sv_stepPadding="12dp"
-        app:sv_typeface="@font/iran_sans_mobile" />
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_20dp"
-        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingStart="@dimen/dimen_20dp"
-        android:paddingEnd="@dimen/dimen_20dp">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
 
         <ImageView
             android:id="@+id/copy_url"
@@ -68,9 +68,8 @@
             android:id="@+id/progress_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginStart="10dp"
             android:ellipsize="end"
-            android:fontFamily="@font/iran_sans_mobile"
             android:gravity="center"
             android:maxLines="1"
             android:text="Configuring the basic things"
@@ -81,7 +80,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <Button

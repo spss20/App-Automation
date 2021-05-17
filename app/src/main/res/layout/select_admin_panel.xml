@@ -2,7 +2,7 @@
 <com.ssoftwares.appmaker.modals.DynamicFrameLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:padding="@dimen/dimen_15dp"
+    tools:padding="15dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -28,8 +28,8 @@
         android:layout_height="35dp"
         android:src="@drawable/ic_dashboard"
         android:layout_gravity="end|center_vertical"
-        android:layout_marginEnd="@dimen/dimen_10dp"
-        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
         app:tint="@color/colorPrimary" />
 
 </com.ssoftwares.appmaker.modals.DynamicFrameLayout>

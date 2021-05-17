@@ -37,7 +37,8 @@ public class BannerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_banner, container, false);
         if (banner != null) {
             ImageView imageView = view.findViewById(R.id.banner_image);
-            Picasso.get().load(banner.getImage().getImageUrl()).into(imageView);
+            Picasso.get().load(banner.getImage().getFormats().getMedium().getImageUrl()).into(imageView);
+
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

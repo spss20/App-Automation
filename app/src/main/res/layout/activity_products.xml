@@ -7,40 +7,40 @@
     android:orientation="vertical"
     tools:context=".activities.ProductsActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="15dp">
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:padding="15dp">-->
 
-        <ImageView
-            android:id="@+id/back_bt"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center_vertical"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:elevation="0dp"
-            android:src="@drawable/ic_back"
-            app:tint="@color/grey" />
+<!--        <ImageView-->
+<!--            android:id="@+id/back_bt"-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--            android:clickable="true"-->
+<!--            android:elevation="0dp"-->
+<!--            android:src="@drawable/ic_back"-->
+<!--            app:tint="@color/grey" />-->
 
-        <TextView
-            android:id="@+id/category_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:fontFamily="@font/muli_bold"
-            android:gravity="center_vertical"
-            android:textColor="@color/textBlack"
-            android:textSize="25sp"
-            android:visibility="gone" />
+<!--        <TextView-->
+<!--            android:id="@+id/category_name"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginLeft="15dp"-->
+<!--            android:fontFamily="@font/work_sans_semibold"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:textColor="@color/textBlack"-->
+<!--            android:textSize="25sp"-->
+<!--            android:visibility="gone" />-->
 
-        <Spinner
-            android:id="@+id/typeSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
-    </LinearLayout>
+<!--        <Spinner-->
+<!--            android:id="@+id/typeSpinner"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical" />-->
+<!--    </LinearLayout>-->
 
 
     <androidx.recyclerview.widget.RecyclerView

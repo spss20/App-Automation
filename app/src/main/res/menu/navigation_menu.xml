@@ -32,6 +32,11 @@
             android:icon="@drawable/ic_clear_cache"
             android:title="Clear Cache" />
         <item
+            android:id="@+id/feature_request"
+            android:checkable="false"
+            android:icon="@drawable/ic_feature"
+            android:title="Feature Request" />
+        <item
             android:id="@+id/privacy_policy"
             android:checkable="false"
             android:icon="@drawable/ic_logout"

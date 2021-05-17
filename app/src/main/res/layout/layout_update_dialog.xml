@@ -29,7 +29,7 @@
 
         <TextView
             android:id="@+id/textV2"
-            style="@style/RegularText"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/textV1"
@@ -52,7 +52,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginBottom="10dp"
             android:backgroundTint="@color/colorPrimary"
-            android:fontFamily="@font/muli_bold"
+            android:fontFamily="@font/work_sans_semibold"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="Update Now"

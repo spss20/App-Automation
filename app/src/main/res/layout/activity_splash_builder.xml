@@ -26,9 +26,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="@dimen/dimen_10dp"
-            android:layout_marginRight="@dimen/dimen_10dp"
-            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
             <Button
@@ -102,7 +102,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="50dp"
             android:layout_marginLeft="40dp"
-            android:fontFamily="@font/muli"
+
             android:text="Splash Editor"
             android:textColor="@android:color/white"
             android:textSize="20sp"

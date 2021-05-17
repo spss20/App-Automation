@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
-            android:fontFamily="@font/muli_bold"
+            android:fontFamily="@font/work_sans_semibold"
             android:text="Marketing"
             android:textColor="@color/textBlack"
             android:textSize="20sp" />

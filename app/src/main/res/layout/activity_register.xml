@@ -140,7 +140,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_bg"
-                    android:fontFamily="@font/muli_bold"
+                    android:fontFamily="@font/work_sans_semibold"
                     android:text="Sign Up"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
@@ -153,7 +153,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/RegularText"
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Already registered?" />
@@ -165,7 +165,7 @@
                         android:layout_marginStart="5dp"
                         android:background="?selectableItemBackgroundBorderless"
                         android:clickable="true"
-                        android:fontFamily="@font/muli_bold"
+                        android:fontFamily="@font/work_sans_semibold"
                         android:text="Login"
                         android:textColor="@color/colorPrimary" />
                 </LinearLayout>

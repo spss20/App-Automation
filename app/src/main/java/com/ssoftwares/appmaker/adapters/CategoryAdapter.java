@@ -2,6 +2,7 @@ package com.ssoftwares.appmaker.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +11,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 import com.ssoftwares.appmaker.R;
+import com.ssoftwares.appmaker.activities.MainActivity;
 import com.ssoftwares.appmaker.activities.ProductsActivity;
+import com.ssoftwares.appmaker.fragments.ProductsFragment;
 import com.ssoftwares.appmaker.modals.Category;
 
 import java.util.List;
@@ -42,11 +46,21 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         Category category = categoryList.get(position);
         holder.categoryName.setText(category.getName());
         holder.categoryAppsCount.setText(category.getProducts().size() + " Apps");
-        Picasso.get().load(category.getImage().getImageUrl()).into(holder.categoryImage);
+        Picasso.get().load(category.getImage().getFormats().getSmall().getImageUrl()).into(holder.categoryImage);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("category_id" , category.getId());
+                bundle.putString("category_name" , category.getName());
+
+//                ProductsFragment fragment = new ProductsFragment();
+//                fragment.setArguments(bundle);
+//                FragmentTransaction transaction =   ((MainActivity) mContext).getSupportFragmentManager().beginTransaction();
+//                transaction.addToBackStack(null);
+//                transaction.replace(R.id.container , fragment);
+//                transaction.commit();
                 Intent intent = new Intent(mContext, ProductsActivity.class);
                 intent.putExtra("category_id", category.getId());
                 intent.putExtra("category_name", category.getName());

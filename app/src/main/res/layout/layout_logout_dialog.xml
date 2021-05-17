@@ -46,7 +46,7 @@
 
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
-                android:fontFamily="@font/muli_bold"
+                android:fontFamily="@font/work_sans_semibold"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:text="YES"
@@ -67,7 +67,7 @@
 
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
-                android:fontFamily="@font/muli_bold"
+                android:fontFamily="@font/work_sans_semibold"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:text="NO"

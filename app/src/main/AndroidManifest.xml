@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".MyApplication"
@@ -21,42 +21,48 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppMaker"
+        android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.TestActivity"></activity>
+        <activity
+            android:name=".activities.FeatureRequestActivity"
+            android:theme="@style/AppThemeWithActionBar" />
+        <activity android:name=".activities.TestActivity" />
         <activity
             android:name=".activities.MyApps"
-            android:theme="@style/Theme.AppMaker.ActionBar" />
-        <activity android:name=".activities.ForgotPassword"></activity>
-        <activity android:name=".activities.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppThemeWithActionBar" />
+        <activity android:name=".activities.ForgotPassword" />
+        <activity android:name=".activities.MainActivity"></activity>
         <activity
             android:name=".activities.MyCpanels"
-            android:theme="@style/Theme.AppMaker.ActionBar" />
+            android:theme="@style/AppThemeWithActionBar" />
         <activity android:name=".activities.LoginActivity" />
         <activity
             android:name=".activities.ProductDemoActivity"
-            android:theme="@style/Theme.AppMaker.ActionBar" />
-        <activity android:name=".activities.SubProductsActivity" />
+            android:theme="@style/AppThemeWithActionBar" />
+        <activity
+            android:name=".activities.SubProductsActivity"
+            android:theme="@style/AppThemeWithActionBar" />
         <activity
             android:name=".activities.ProductDetailActivity"
-            android:theme="@style/Theme.AppMaker.ActionBar" />
-        <activity android:name=".activities.ProductsActivity" />
+            android:theme="@style/AppThemeWithActionBar" />
+        <activity
+            android:name=".activities.ProductsActivity"
+            android:theme="@style/AppThemeWithActionBar" />
         <activity android:name=".activities.BuilderActivity" />
         <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.CategoryActivity" />
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.SplashBuilderActivity" />
         <activity android:name=".activities.PagesActivity" />
-
         <activity
             android:name=".activities.SplashActivity"
+            android:theme="@style/SplashTheme"
             android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"

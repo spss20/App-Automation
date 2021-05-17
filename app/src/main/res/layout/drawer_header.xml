@@ -20,7 +20,7 @@
         android:textSize="22sp"
         android:textColor="@color/textBlack"
         android:layout_alignParentBottom="true"
-        android:fontFamily="@font/muli_bold"
+        android:fontFamily="@font/work_sans_semibold"
         />
 
 </RelativeLayout>

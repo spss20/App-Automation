@@ -1,7 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#eb4c4c</color>
-    <color name="colorPrimaryLight">#f98166</color>
+    <color name="colorPrimary">#2A2AC0</color>
+    <color name="colorPrimaryDark" >#2A2AC0</color>
+    <color name="colorAccent" >#2A2AC0</color>
+    <color name="textPrimary">#181461</color>
+
+    <color name="bluish_grey">#ff9197a3</color>
+    <color name="half_dark__grey">#ffededed</color>
+    <color name="light_grey">#ffececec</color>
+    <color name="material_blue_grey_800">#ff37474f</color>
+    <color name="material_blue_grey_900">#ff263238</color>
+    <color name="material_blue_grey_950">#ff21272b</color>
+    <color name="material_deep_teal_200">#ff80cbc4</color>
+    <color name="material_deep_teal_500">#ff008577</color>
+    <color name="material_grey_100">#fff5f5f5</color>
+    <color name="material_grey_300">#ffe0e0e0</color>
+    <color name="material_grey_50">#fffafafa</color>
+    <color name="material_grey_600">#ff757575</color>
+    <color name="material_grey_800">#ff424242</color>
+    <color name="material_grey_850">#ff303030</color>
+    <color name="material_grey_900">#ff212121</color>
+
+    <color name="colorGreen">#ff059939</color>
+
     <color name="black">#FF000000</color>
     <color name="textBlack" >#3a3b3c</color>
     <color name="textBlue">#FF0D1333</color>
@@ -19,4 +40,6 @@
     <color name="lightestSkyBlue">#e9ecef</color>
     <color name="tranparentBlue">#66536DFE</color>
     <color name="colorPrimaryTransparent" >#1Aeb4c4c</color>
+    <color name="colorPrimaryOld">#eb4c4c</color>
+
 </resources>

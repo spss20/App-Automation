@@ -73,6 +73,7 @@ public class ApiClient {
 
     @NonNull
     public static MultipartBody.Part prepareFilePart(String keyName, DynamicLinearLayout dl) {
+        Log.v("Mime Type" , dl.getFileName());
         byte[] fileBytes = Base64.decode(dl.getFileBase64(), Base64.DEFAULT);
         // create RequestBody instance from file
         String mime;

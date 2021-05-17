@@ -60,7 +60,7 @@
             android:id="@+id/forgotPassword"
             android:background="?selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:fontFamily="@font/muli_bold"
+            android:fontFamily="@font/work_sans_semibold"
             android:text="Forgot Password?"
             android:textColor="@color/colorPrimary" />
     </LinearLayout>
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@drawable/button_bg"
-            android:fontFamily="@font/muli_bold"
+            android:fontFamily="@font/work_sans_semibold"
             android:text="Sign In"
             android:textColor="@color/white"
             android:textSize="18sp" />
@@ -90,7 +90,7 @@
             android:orientation="horizontal">
 
             <TextView
-                style="@style/RegularText"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Not registered yet?" />
@@ -102,7 +102,7 @@
                 android:layout_marginStart="5dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:fontFamily="@font/muli_bold"
+                android:fontFamily="@font/work_sans_semibold"
                 android:text="Create account."
                 android:textColor="@color/colorPrimary" />
         </LinearLayout>

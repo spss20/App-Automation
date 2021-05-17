@@ -49,25 +49,37 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-        service = ApiClient.create();
-        mainSplash = findViewById(R.id.mainSplash);
         sessionManager = new SessionManager(this);
-        new Handler().postDelayed(new Runnable() {
+        User user = sessionManager.getUser();
 
-            /*
-             * Showing splash screen with a timer. This will be useful when you
-             * want to show case your app logo / company
-             */
-
-            @Override
-            public void run() {
-                // This method will be executed once the timer is over
-                // Start your app main activity
-
-                getSettings();
-            }
-        }, 3000);
+        if (user != null) {
+            Intent intent = new Intent(SplashActivity.this,
+                    MainActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Intent intent = new Intent(SplashActivity.this,
+                    LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+//        service = ApiClient.create();
+//        mainSplash = findViewById(R.id.mainSplash);
+//        new Handler().postDelayed(new Runnable() {
+//
+//            /*
+//             * Showing splash screen with a timer. This will be useful when you
+//             * want to show case your app logo / company
+//             */
+//
+//            @Override
+//            public void run() {
+//                // This method will be executed once the timer is over
+//                // Start your app main activity
+//
+//                getSettings();
+//            }
+//        }, 3000);
         //   getSettings();
 
     }

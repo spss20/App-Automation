@@ -120,7 +120,8 @@ public interface ApiService {
 
     @GET("adminpanels")
     Call<List<AdminPanel>> getAdminPanels(
-            @Header("Authorization") String token
+            @Header("Authorization") String token,
+            @Query("_sort") String sort
     );
 
     @GET("cpanels/{id}")
@@ -146,5 +147,12 @@ public interface ApiService {
     @GET
     Call<JsonObject> fetchJson(
             @Url String url
+    );
+
+    @FormUrlEncoded
+    @POST("feature-requests")
+    Call<ResponseBody> createFeatureRequest(
+            @Header("Authorization") String token,
+            @Field("description") String description
     );
 }

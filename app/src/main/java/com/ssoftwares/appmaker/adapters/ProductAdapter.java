@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 import com.ssoftwares.appmaker.R;
 import com.ssoftwares.appmaker.activities.ProductDetailActivity;
+import com.ssoftwares.appmaker.modals.Attachment;
+import com.ssoftwares.appmaker.modals.Formats;
 import com.ssoftwares.appmaker.modals.Product;
 
 import java.util.List;
@@ -38,9 +41,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = productList.get(position);
 
-        if (product.getImages().size() != 0 && product.getImages().get(0).getImageUrl() != null)
-            Picasso.get().load(product.getImages().get(0).getImageUrl()).into(holder.productImage);
+        if (product.getImages().size() != 0 && product.getImages().get(0).getImageUrl() != null) {
+            Formats image = product.getImages().get(0).getFormats();
+            Picasso.get().load(image.getSmall().getImageUrl()).into(holder.productImage);
 
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
