@@ -45,7 +45,7 @@ public class SubProductAdapter extends RecyclerView.Adapter<SubProductAdapter.Su
             Picasso.get().load(subProduct.getImages().get(0).getImageUrl()).into(holder.subproductImage);
 
         holder.itemView.setOnClickListener(v -> {
-            if (subProduct.getDescription().equals("admin")) {
+            if (subProduct.getDescription() != null && subProduct.getDescription().equals("admin")) {
                 Intent intent = new Intent(mContext, BuilderActivity.class);
                 intent.putExtra("config_name", "admin_panel");
                 intent.putExtra("subproduct_name", subProduct.getName());

@@ -19,7 +19,10 @@ public class ImageFragment extends Fragment {
     public ImageFragment(Attachment image){
         this.image = image;
     }
-
+    public ImageFragment(){
+        image = null;
+    }
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

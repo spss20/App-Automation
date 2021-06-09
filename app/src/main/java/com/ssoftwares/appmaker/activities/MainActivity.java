@@ -274,6 +274,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent = new Intent(this , FeatureRequestActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.my_orders:
+                intent  = new Intent(this , MyOrders.class);
+                startActivity(intent);
+                break;
             case R.id.privacy_policy:
                 intent = new Intent(this, PagesActivity.class);
                 intent.putExtra("page_name", "privacy_policy");

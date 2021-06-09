@@ -44,6 +44,12 @@ public interface ApiService {
             @Field("password") String password
     );
 
+    @GET("users/{id}")
+    Call<ResponseBody> getUserOrders(
+            @Header("Authorization") String token,
+            @Path("id") String path
+    );
+
     @FormUrlEncoded
     @POST("auth/local/register")
     Call<JsonObject> register(
@@ -155,4 +161,6 @@ public interface ApiService {
             @Header("Authorization") String token,
             @Field("description") String description
     );
+
+
 }

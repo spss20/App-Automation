@@ -23,6 +23,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".activities.MyOrders"
+            android:theme="@style/AppThemeWithActionBar">
+
+        </activity>
         <activity
             android:name=".activities.FeatureRequestActivity"
             android:theme="@style/AppThemeWithActionBar" />
@@ -31,7 +35,7 @@
             android:name=".activities.MyApps"
             android:theme="@style/AppThemeWithActionBar" />
         <activity android:name=".activities.ForgotPassword" />
-        <activity android:name=".activities.MainActivity"></activity>
+        <activity android:name=".activities.MainActivity" />
         <activity
             android:name=".activities.MyCpanels"
             android:theme="@style/AppThemeWithActionBar" />

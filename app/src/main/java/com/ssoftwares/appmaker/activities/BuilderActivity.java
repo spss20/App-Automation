@@ -100,7 +100,6 @@ public class BuilderActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private String subProductId;
     private List<Step> stepList;
-    private Toolbar toolbar;
     private boolean isCaching;
 
     @Override
@@ -291,7 +290,7 @@ public class BuilderActivity extends AppCompatActivity {
     }
 
     private void setupToolbar() {
-        toolbar = findViewById(R.id.tool_bar);
+        Toolbar toolbar = findViewById(R.id.tool_bar);
         toolbar.setNavigationOnClickListener(v -> {
             finish();
         });
@@ -778,7 +777,7 @@ public class BuilderActivity extends AppCompatActivity {
                 submit.setOnClickListener(v -> {
                     try {
                         submitData();
-                    } catch (JSONException | IOException e) {
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 });
@@ -868,7 +867,7 @@ public class BuilderActivity extends AppCompatActivity {
         return true;
     }
 
-    private void submitData() throws JSONException, IOException {
+    private void submitData() throws JSONException {
 
         String endpoint = rootJson.getString("endpoint");
         //prepare data
@@ -1064,7 +1063,7 @@ public class BuilderActivity extends AppCompatActivity {
                 });
     }
 
-    private MultipartBody.Part getOrderImage() throws JSONException {
+    private MultipartBody.Part getOrderImage() {
         for (int j = 0; j < rootView.getChildCount(); j++) {
             View childView = rootView.getChildAt(j);
             if (childView instanceof DynamicLinearLayout) {
