@@ -44,8 +44,11 @@ public class AdminPanelAdapter extends RecyclerView.Adapter<AdminPanelAdapter.Ad
         holder.baseUrl.setText(adminPanel.getBaseUrl());
         holder.productName.setText(adminPanel.getProduct().getName());
 
-        Picasso.get().load(adminPanel.getCompany_logo().getFormats().getThumbnail().getImageUrl())
-                .into(holder.companyLogo);
+        if (adminPanel.getCompany_logo() != null) {
+            if (adminPanel.getCompany_logo().getFormats() != null)
+                Picasso.get().load(adminPanel.getCompany_logo().getFormats().getSmall().getImageUrl()).into(holder.companyLogo);
+            else Picasso.get().load(adminPanel.getCompany_logo().getImageUrl()).into(holder.companyLogo);
+        }
 
         holder.itemView.setOnClickListener(v -> listener.onSelected(adminPanel));
     }

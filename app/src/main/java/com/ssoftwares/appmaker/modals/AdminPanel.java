@@ -57,6 +57,8 @@ public class AdminPanel {
     }
 
     public String getBaseUrl() {
+        if (cpanel == null)
+            return "";
         return subdomain == null ?
                 "https://" + cpanel.getDomain() + "/" :
                 "https://" + subdomain + "." + cpanel.getDomain() + "/";

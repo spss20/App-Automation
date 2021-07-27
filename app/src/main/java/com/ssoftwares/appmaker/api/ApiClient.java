@@ -32,7 +32,7 @@ public class ApiClient {
     private static Retrofit retrofit;
 //    public static final String BASE_URL = "http://ssoft.xyz:1337";
 //    public static final String BASE_URL = "http://10.0.2.2:1337";
-    public static final String BASE_URL = "http://148.66.128.112:1337";
+    public static final String BASE_URL = "http://122.160.98.63:1337";
 
     public static ApiService create() {
         if (retrofit == null) {

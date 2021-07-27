@@ -48,8 +48,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
         if (order.getSubproduct() != null)
             holder.subproductName.setText(order.getSubproduct().getName());
 
-        if (order.getOrderImage() != null)
+        if (order.getOrderImage() != null) {
+            if (order.getOrderImage().getFormats() != null)
             Picasso.get().load(order.getOrderImage().getFormats().getSmall().getImageUrl()).into(holder.orderImage);
+            else Picasso.get().load(order.getOrderImage().getImageUrl()).into(holder.orderImage);
+        }
         else
             holder.orderImage.setImageDrawable(ContextCompat.getDrawable(mContext , R.drawable.ic_cpanel));
         holder.itemView.setOnClickListener(v -> onOrderClick.onClick(order));

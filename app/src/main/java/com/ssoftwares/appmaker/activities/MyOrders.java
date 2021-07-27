@@ -57,8 +57,6 @@ public class MyOrders extends AppCompatActivity {
                             Toast.makeText(MyOrders.this , response.message() , Toast.LENGTH_SHORT).show();
                             return;
                         }
-
-                        Log.v(TAG , response.body().toString());
                         try {
                             JSONObject res = new JSONObject(response.body().string());
                             while (res.keys().hasNext()){
@@ -79,7 +77,7 @@ public class MyOrders extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                        Log.v(TAG , t.getLocalizedMessage());
                     }
                 });
     }

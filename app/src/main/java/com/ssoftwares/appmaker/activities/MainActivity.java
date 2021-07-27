@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.se.omapi.Session;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container , new HomeFragment())
                 .commit();
+
     }
 
     public void changeFragment(Fragment fragment){
@@ -274,10 +276,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent = new Intent(this , FeatureRequestActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.my_orders:
-                intent  = new Intent(this , MyOrders.class);
-                startActivity(intent);
-                break;
+//            case R.id.my_orders:
+//                intent  = new Intent(this , MyOrders.class);
+//                startActivity(intent);
+//                break;
             case R.id.privacy_policy:
                 intent = new Intent(this, PagesActivity.class);
                 intent.putExtra("page_name", "privacy_policy");

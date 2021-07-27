@@ -151,37 +151,37 @@ public class BuilderActivity extends AppCompatActivity {
                         rootJson = new JSONObject(data);
                     } else {
                         rootJson = new JSONObject(data);
-                        JSONObject oldJson = new JSONObject(sessionManager.getConfig());
-
-                        if (rootJson.getString("endpoint").equals(oldJson.getString("endpoint"))) {
-                            //Comparing between old schema and new to see if there is any common field to autofill
-                            JSONArray newSchema = rootJson.getJSONArray("schema");
-                            //Old schema
-                            JSONArray oldSchema = oldJson.getJSONArray("schema");
-
-                            for (int i = 0; i < oldSchema.length(); i++) {
-                                JSONObject viewJson = oldSchema.getJSONObject(i);
-                                String type = viewJson.getString("type");
-                                if (type.equals("constant"))
-                                    continue;
-                                if (viewJson.has("value")) {
-                                    String key = viewJson.getString("id");
-                                    String value = viewJson.getString("value");
-
-                                    for (int j = 0; j < newSchema.length(); j++) {
-                                        JSONObject newViewJson = newSchema.getJSONObject(j);
-                                        if (newViewJson.has("id") && newViewJson.getString("id").equals(key)) {
-                                            newViewJson.put("value", value);
-                                            //For dynamic linear layout for picking images which also have file name other then value
-                                            if (viewJson.has("action") && viewJson.getString("action").equals("pickImage")){
-                                                newViewJson.put("fileName" , viewJson.getString("fileName"));
-                                            }
-                                        }
-                                    }
-
-                                }
-                            }
-                        }
+//                        JSONObject oldJson = new JSONObject(sessionManager.getConfig());
+//
+//                        if (rootJson.getString("endpoint").equals(oldJson.getString("endpoint"))) {
+//                            //Comparing between old schema and new to see if there is any common field to autofill
+//                            JSONArray newSchema = rootJson.getJSONArray("schema");
+//                            //Old schema
+//                            JSONArray oldSchema = oldJson.getJSONArray("schema");
+//
+//                            for (int i = 0; i < oldSchema.length(); i++) {
+//                                JSONObject viewJson = oldSchema.getJSONObject(i);
+//                                String type = viewJson.getString("type");
+//                                if (type.equals("constant"))
+//                                    continue;
+//                                if (viewJson.has("value")) {
+//                                    String key = viewJson.getString("id");
+//                                    String value = viewJson.getString("value");
+//
+//                                    for (int j = 0; j < newSchema.length(); j++) {
+//                                        JSONObject newViewJson = newSchema.getJSONObject(j);
+//                                        if (newViewJson.has("id") && newViewJson.getString("id").equals(key)) {
+//                                            newViewJson.put("value", value);
+//                                            //For dynamic linear layout for picking images which also have file name other then value
+//                                            if (viewJson.has("action") && viewJson.getString("action").equals("pickImage")){
+//                                                newViewJson.put("fileName" , viewJson.getString("fileName"));
+//                                            }
+//                                        }
+//                                    }
+//
+//                                }
+//                            }
+//                        }
 
                     }
                 } else
